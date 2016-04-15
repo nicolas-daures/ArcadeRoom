@@ -2,7 +2,7 @@
 All notable changes to ArcadeRoom will be documented in this file.
 ArcadeRoom adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.3.0] - 2016-04-XX
+## [0.3.0] - 2016-04-15
 ### Added
 - Localization system.
 - Folder wich contains localization files (french and spanish).
