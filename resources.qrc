@@ -1,0 +1,36 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>resources/images/light.png</file>
+        <file>resources/images/no_cover.png</file>
+        <file>resources/images/rating_1.png</file>
+        <file>resources/images/rating_2.png</file>
+        <file>resources/images/rating_3.png</file>
+        <file>resources/images/rating_4.png</file>
+        <file>resources/images/rating_5.png</file>
+    </qresource>
+    <qresource prefix="/styles">
+        <file>resources/styles/stylesheet.qss</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>resources/icons/black/add.png</file>
+        <file>resources/icons/black/cover.png</file>
+        <file>resources/icons/black/covers_size.png</file>
+        <file>resources/icons/black/delete.png</file>
+        <file>resources/icons/black/layout_grid3xn.png</file>
+        <file>resources/icons/black/layout_horizontal.png</file>
+        <file>resources/icons/black/layout_list.png</file>
+        <file>resources/icons/black/no_cover.png</file>
+        <file>resources/icons/white/add.png</file>
+        <file>resources/icons/white/cover.png</file>
+        <file>resources/icons/white/covers_size.png</file>
+        <file>resources/icons/white/delete.png</file>
+        <file>resources/icons/white/layout_grid3xn.png</file>
+        <file>resources/icons/white/layout_horizontal.png</file>
+        <file>resources/icons/white/layout_list.png</file>
+        <file>resources/icons/white/no_cover.png</file>
+        <file>resources/icons/black/layout_grid4xn.png</file>
+        <file>resources/icons/black/layout_grid5xn.png</file>
+        <file>resources/icons/white/layout_grid4xn.png</file>
+        <file>resources/icons/white/layout_grid5xn.png</file>
+    </qresource>
+</RCC>

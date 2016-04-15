@@ -1,0 +1,28 @@
+{
+    "constructor_name": "Sega",
+    "description": "<p>The Sega Genesis, known as the Mega Drive (Japanese: メガドライブ Hepburn: Mega Doraibu?) in most regions outside North America, is a 16-bit home video game console which was developed and sold by Sega Enterprises, Ltd. The Genesis was Sega's third console and the successor to the Master System. Sega first released the console as the Mega Drive in Japan in 1988, followed by a North American debut under the Genesis moniker in 1989. In 1990, the console was distributed as the Mega Drive by Virgin Mastertronic in Europe, by Ozisoft in Australasia, and by Tec Toy in Brazil. In South Korea, the systems were distributed by Samsung and were known as the Super Gam*Boy (Hangul: 수퍼겜보이), and later the Super Aladdin Boy (Hangul: 수퍼알라딘보이).</p><p>Designed by an R&D team supervised by Hideki Sato and Masami Ishikawa, the Genesis hardware was adapted from Sega's System 16 arcade board, centered on a Motorola 68000 processor as a primary CPU and a Zilog Z80 as a secondary processor. The system supports a library of more than 900 games created both by Sega and a wide array of third-party publishers and delivered on ROM-based cartridges. It can also play Master System games when the separately sold Power Base Converter is installed. The Genesis has benefited from several peripherals and network services, as well as multiple first-party and third-party variations of the console that focus on extending its functionality.</p><p>In Japan, the Mega Drive did not fare well against its two main competitors, Nintendo's Super Famicom and NEC's PC Engine. However, it achieved considerable success in North America, Brazil, and Europe. Contributing to its success were its library of arcade game ports, the popularity of the Genesis-exclusive Sonic the Hedgehog series, several popular sports game franchises, and aggressive youth marketing that positioned the system as the cool console for adolescents. The release of the Super Nintendo Entertainment System two years after the Genesis resulted in a fierce battle for market share in the United States and Europe that has often been termed as a \"console war\" by journalists and historians. As this contest drew increasing attention to the video game industry among the general public, the Genesis and several of its highest-profile games attracted significant legal scrutiny on matters involving reverse engineering and video game violence. Controversy surrounding violent titles such as Night Trap and Mortal Kombat led Sega to create the Videogame Rating Council, a predecessor to the Entertainment Software Rating Board.</p><p>Sega sold 30.75 million Genesis units worldwide. In addition, Tec Toy sold an estimated 3 million licensed variants of the system in Brazil, Majesco projected it would sell 1.5 million licensed variants of the system in the United States, and much smaller numbers were sold by Samsung in South Korea. The console and its games continue to be popular among game fans, game music fans, collectors, and emulation enthusiasts. As of 2015, licensed third party re-releases of the console are still being sold by AtGames in North America and Europe. Many games have been re-released in compilations for newer consoles and offered for download on various online services, such as Wii Virtual Console, Xbox Live Arcade, PlayStation Network, and Steam. The Genesis was succeeded by the Sega Saturn.</p>",	
+    "emulator_arguments": [
+    ],
+    "emulator_path": "games/MegaDrive/Emulators/Fusion/Fusion.exe",
+    "icon_height": 200,
+    "icon_path": "icons/Sega Genesis (black) icon.png",
+    "icon_width": 150,
+    "image_path": "images/megadrive.png",
+    "name": "MegaDrive",
+    "generation": "4",
+    "rom_path": "games/MegaDrive/Roms",
+    "rom_extensions": [
+        "bin",
+        "smd"
+    ],
+    "screenshot_urls": [
+        "images/megadrive_screenshot_1.jpg",
+        "images/megadrive_screenshot_2.jpg",
+        "images/megadrive_screenshot_3.jpg"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

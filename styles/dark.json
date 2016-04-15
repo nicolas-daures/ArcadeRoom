@@ -1,0 +1,8 @@
+{
+	"background": "styles/background.png",
+    "baseColor": "#353535",
+    "highlightColor": "#8e2dc5",
+	"iconStyle": "white",
+    "textColor": "#ffffff",
+    "windowColor": "#1e1e1e"
+}

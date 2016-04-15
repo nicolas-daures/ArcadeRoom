@@ -1,0 +1,15 @@
+QGroupBox
+{
+    border: 0px;
+}
+
+QToolButton
+{
+    background-color: transparent;
+    border: 0px;
+}
+
+QToolButton:hover
+{
+    //background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 black, stop: 0.5 white, stop:1 black);
+}

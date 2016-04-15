@@ -1,0 +1,29 @@
+{
+    "constructor_name": "SNK",
+    "description": "<p>Neo Geo (Japanese: ネオジオ Hepburn: Neo Jio?), stylised as NEO・GEO, also written as NEOGEO, is a family of video game hardware developed by SNK. On the market from 1990 to 2004, the brand originated with the release of an arcade system, the Neo Geo MVS and its home console counterpart, the Neo Geo AES. Both the arcade system and console were powerful for the time and the AES allows for perfect compatibility of games released for the MVS. However, the high price point for both the AES console and its games prevented it from directly competing with its contemporaries, the Sega Mega Drive (Genesis) and Super NES (Super Famicom). However the MVS arcade became very successful in stores in Japan and North America.</p><p>Years later, SNK would release the Neo Geo CD, a more cost effective console with games released on compact discs. The console was met with limited success, due in part to its slow CD-ROM drive. In an attempt to compete with increasingly popular 3D games, SNK released the Hyper Neo Geo 64 arcade system in 1997 as the successor to its aging MVS. The system did not fare well and only a few games were released for it. A planned home console based on the hardware was never released. SNK later extended the brand by releasing two handheld consoles, the Neo Geo Pocket, and later Neo Geo Pocket Color, which briefly competed with Nintendo's Game Boy. The latter has been well praised, despite its short lifespan. Soon after their release, SNK encountered various legal and financial issues - however the original Neo Geo MVS and AES continued getting new games under new ownership until officially being discontinued in 2004, ending the brand.</p><p>Regardless of the failure of later Neo Geo hardware, games for the original MVS and AES have been well received. The system spawned several long-running and critically acclaimed series, mostly 2D fighters, including The King of Fighters and Samurai Shodown. In December 2012, SNK Playmore released a handheld console based on the original AES, the Neo Geo X. As of March 1997, the Neo Geo had sold 980,000 units worldwide</p>",
+    "emulator_arguments": [
+        "-g",
+        "-nogui"
+    ],
+    "emulator_path": "games/Neo Geo/Emulators/raine/raine32.exe",
+    "icon_height": 200,
+    "icon_path": "icons/NeoGeo icon.png",
+    "icon_width": 150,
+    "image_path": "images/neogeo.png",
+    "name": "Neo Geo",
+    "generation": "4",
+    "rom_path": "games/Neo Geo/Roms",
+    "rom_extensions": [
+        "zip"
+    ],
+    "screenshot_urls": [
+        "images/neogeo_screenshot_1.jpg",
+        "images/neogeo_screenshot_2.gif",
+        "images/neogeo_screenshot_3.png"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

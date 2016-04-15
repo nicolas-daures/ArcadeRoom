@@ -1,0 +1,27 @@
+{
+    "constructor_name": "SNK",
+    "description": "<p>The Neo Geo Pocket is a monochrome handheld video game console released by SNK. It was the company's first handheld system and is part of the Neo Geo family. It debuted in Japan in late 1998, however never saw a western release, being exclusive to Japan and smaller Asian markets such as Hong Kong.</p><p>The Neo Geo Pocket is considered to be an unsuccessful console. It was immediately succeeded by the Neo Geo Pocket Color, a full color device allowing the system to compete more easily with the dominant Game Boy Color handheld, and which also saw a western release. Though the system enjoyed only a short life, there were some significant games released on the system such as Samurai Shodown, and King of Fighters R-1.</p>",
+    "emulator_arguments": [
+    ],
+    "emulator_path": "games/Neo Geo Pocket/Emulators/NeoPop/NeoPop-Win32.exe",
+    "icon_height": 150,
+    "icon_path": "icons/NeoGeo Pocket icon.png",
+    "icon_width": 150,
+    "image_path": "images/neogeopocket.png",
+    "name": "Neo Geo Pocket",
+    "generation": "5",
+    "rom_path": "games/Neo Geo Pocket/Roms",
+    "rom_extensions": [
+        "ngc"
+    ],
+    "screenshot_urls": [
+        "images/neogeopocket_screenshot_1.jpg",
+        "images/neogeopocket_screenshot_2.gif",
+        "images/neogeopocket_screenshot_3.png"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

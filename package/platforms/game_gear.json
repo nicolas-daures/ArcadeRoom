@@ -1,0 +1,27 @@
+{
+    "constructor_name": "Sega",
+    "description": "<p>The Sega Game Gear (ゲームギア Gēmu Gia?) is an 8-bit handheld game console released by Sega on October 6, 1990 in Japan, 1991 in North America and Europe, and Australia in 1992. The Game Gear primarily competed with Nintendo's Game Boy, the Atari Lynx and NEC's TurboExpress. The handheld shares much of its hardware with the Sega Master System and is able to play its own titles as well as those of the Master System, the latter being made possible by the use of an adapter. Containing a full-color backlit screen with a landscape format, Sega positioned the Game Gear as a technologically superior handheld to the Game Boy.</p><p>Though the Game Gear was rushed to market, its unique game library and price point gave it an edge over the Atari Lynx and TurboExpress. However, due to issues with its short battery life, lack of original titles, and weak support from Sega, the Game Gear was unable to surpass the Game Boy, selling 10.62 million units by March 1996. The Game Gear was succeeded by the Sega Nomad in 1995 and discontinued in 1997. It was re-released as a budget system by Majesco in 2000, under license by Sega.</p><p>Reception of the Game Gear was mixed, with praise for its full-color backlit screen and processing power for its time, criticisms over its large size and battery life, and uneven reception over the quality of its game library.</p>",
+    "emulator_arguments": [
+    ],
+    "emulator_path": "games/Game Gear/Emulators/Fusion/Fusion.exe",
+    "icon_height": 200,
+    "icon_path": "icons/GameGear icon.png",
+    "icon_width": 150,
+    "image_path": "images/gamegear.png",
+    "name": "Game Gear",
+    "generation": "4",
+    "rom_path": "games/Game Gear/Roms",
+    "rom_extensions": [
+        "gg"
+    ],
+    "screenshot_urls": [
+        "images/gamegear_screenshot_1.gif",
+        "images/gamegear_screenshot_2.gif",
+        "images/gamegear_screenshot_3.jpg"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

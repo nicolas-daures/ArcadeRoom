@@ -1,0 +1,28 @@
+{
+    "constructor_name": "Nintendo",
+    "description": "<p>The Game Boy Advance (Japanese: ゲームボーイアドバンス Hepburn: Gēmu Bōi Adobansu?), often shortened to GBA, is a 32-bit handheld video game console developed, manufactured and marketed by Nintendo. It is the successor to the Game Boy Color. It was released in Japan on March 21, 2001; in North America on June 11, 2001; in Australia and Europe on June 22, 2001; and in the People's Republic of China on June 8, 2004 (excluding Hong Kong).</p><p>Nintendo's competitors in the handheld market were the Neo Geo Pocket Color, WonderSwan, GP32, Tapwave Zodiac, and the N-Gage. Despite the competitors' best efforts, Nintendo maintained a majority market share with the Game Boy Advance.</p><p>	Wikimedia Commons has media related to Game Boy Advance.</p><p>As of June 30, 2010, the Game Boy Advance series has sold 81.51 million units worldwide. Its successor, the Nintendo DS, was released in November 2004.</p>",
+    "emulator_arguments": [
+    ],
+    "emulator_path": "games/Game Boy Advance/Emulators/VisualBoyAdvance/VisualBoyAdvance.exe",
+    "icon_height": 150,
+    "icon_path": "icons/Gameboy Advance (purple) icon.png",
+    "icon_width": 150,
+    "image_path": "images/gameboyadvance.png",
+    "name": "Game Boy Advance",
+    "generation": "6",
+    "rom_path": "games/Game Boy Advance/Roms",
+    "rom_extensions": [
+        "zip",
+        "gba"
+    ],
+    "screenshot_urls": [
+        "images/gameboyadvance_screenshot_1.gif",
+        "images/gameboyadvance_screenshot_2.gif",
+        "images/gameboyadvance_screenshot_3.gif"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

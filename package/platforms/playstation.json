@@ -1,0 +1,32 @@
+{
+    "constructor_name": "Sony",
+    "description": "<p>PlayStation (Japanese: プレイステーション Hepburn: Pureisutēshon?, officially abbreviated PS) is a series of video game consoles created and developed by Sony Computer Entertainment. The brand was first introduced on December 3, 1994 in Japan with the launch of the original PlayStation console. It now consists of four home consoles, as well as a media center, an online service, a line of controllers, two handhelds and a phone, as well as multiple magazines.</p><p>The original console in the series, the PlayStation, was the first video game console to ship 100 million units, 9 years and 6 months after its initial launch. Its successor, the PlayStation 2, was released in 2000. The PlayStation 2 is the best-selling home console to date, having reached over 155 million units sold as of December 28, 2012. Sony's next console, the PlayStation 3, was released in 2006 and has sold over 80 million consoles worldwide as of November 2013. Sony's latest console, the PlayStation 4, was released in 2013, selling 1 million consoles in its first 24 hours on sale, becoming the fastest selling console in history.</p><p>The first handheld game console in the PlayStation series, the PlayStation Portable or PSP, has sold a total of 80 million units worldwide as of November 2013. Its successor, the PlayStation Vita, which launched in Japan on December 17, 2011 and in most other major territories in February 2012 has sold 4 million units as of January 2013. PlayStation TV is a microconsole and a non-portable variant of the PlayStation Vita handheld game console. Other hardware released as part of the PlayStation series includes the PSX, a digital video recorder which was integrated with the PlayStation and PlayStation 2, though it was short lived due to its high price and was never released outside Japan, as well as a Sony Bravia television set which has an integrated PlayStation 2. The main series of controllers utilized by the PlayStation series is the DualShock, which is a line of vibration-feedback gamepad having sold 28 million controllers as of June 28, 2008.</p><p>The PlayStation Network is an online service with over 110 million users worldwide (as of July 2013). It comprises an online virtual market, the PlayStation Store, which allows the purchase and download of games and various forms of multimedia, a subscription-based online service known as PlayStation Plus and a social gaming networking service called PlayStation Home, which had over 41 million users worldwide at the time of its closure in March 2015. PlayStation Mobile (formerly PlayStation Suite) is a software framework that provides PlayStation content on mobile devices. Version 1.xx supports both PlayStation Vita, PlayStation TV and certain devices that run the Android operating system, whereas version 2.00 released in 2014 would only target PlayStation Vita and (optionally) PlayStation TV. Content set to be released under the framework consist of only original PlayStation games currently.</p><p>7th generation PlayStation products also use the XrossMediaBar, which is an award-winning graphical user interface. A new touch screen-based user interface called LiveArea was launched for the PlayStation Vita, which integrates social networking elements into the interface. Additionally, PlayStation 2 and original PlayStation 3 consoles also featured support for Linux-based operating systems, though this has since been discontinued. The series has also been known for its numerous marketing campaigns, the latest of which being the \"Greatness Awaits\" commercials in the United States.</p><p>The series also has a strong line-up of first-party titles due to Sony Computer Entertainment Worldwide Studios, a group of fifteen first-party developers owned by Sony Computer Entertainment which are dedicated to developing first-party games for the series. In addition, the series features various budget re-releases of titles by Sony with different names for each region; these include the Greatest Hits, Platinum, Essentials, Favorites (this in Latin America) and The Best ranges of titles.</p>",
+    "emulator_arguments": [
+        "-nogui",
+        "-slowboot",
+        "-analog",
+        "-loadbin"
+    ],
+    "emulator_path": "games/PlayStation/Emulators/epsx/ePSXe.exe",
+    "icon_height": 150,
+    "icon_path": "icons/Playstation 1 icon.png",
+    "icon_width": 150,
+    "image_path": "images/playstation.png",
+    "name": "PlayStation",
+    "generation": "5",
+    "rom_path": "games/PlayStation/Roms",
+    "rom_extensions": [
+        "cue",
+        "ecm"
+    ],
+    "screenshot_urls": [
+        "images/playstation_screenshot_1.jpg",
+        "images/playstation_screenshot_2.jpg",
+        "images/playstation_screenshot_3.jpg"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

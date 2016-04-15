@@ -1,0 +1,27 @@
+{
+    "constructor_name": "Nintendo",
+    "description": "<p>The Game Boy Color (ゲームボーイカラー Gēmu Bōi Karā?), referred to as GBC, is a handheld game console manufactured by Nintendo. It was released on October 21, 1998 in Japan and was released in November of the same year in international markets. It is the successor of the Game Boy.</p><p>The Game Boy Color, as suggested by the name, features a color screen. It is slightly thicker and taller than the Game Boy Light, which is a redesigned Game Boy released in 1998. As with the original Game Boy, it has an 8-bit processor and the custom Zilog Z80 central processing unit (CPU). The original name - with its American English spelling of \"color\" - remained unchanged even in markets where \"colour\" was the accepted English spelling, such as the UK, Ireland, Canada, Australia, South Africa, and New Zealand.</p><p>While mostly retaining the same hardware as the original Game Boy, the Game Boy Color's primary competitors were the much more advanced Neo Geo Pocket by SNK and the WonderSwan by Bandai (released in Japan only), though the Game Boy Color outsold these by a huge margin. The Game Boy and Game Boy Color combined have sold 118.69 million units worldwide. It was discontinued in 2003, shortly after the release of the Game Boy Advance SP.</p>",
+    "emulator_arguments": [
+    ],
+    "emulator_path": "games/Game Boy Color/Emulators/VisualBoyAdvance/VisualBoyAdvance.exe",
+    "icon_height": 150,
+    "icon_path": "icons/Gameboy Color icon.png",
+    "icon_width": 150,
+    "image_path": "images/gameboycolor.png",
+    "name": "Game Boy Color",
+    "generation": "5",
+    "rom_path": "games/Game Boy Color/Roms",
+    "rom_extensions": [
+        "zip"
+    ],
+    "screenshot_urls": [
+        "images/gameboycolor_screenshot_1.jpg",
+        "images/gameboycolor_screenshot_2.jpg",
+        "images/gameboycolor_screenshot_3.gif"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

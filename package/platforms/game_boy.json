@@ -1,0 +1,27 @@
+{
+    "constructor_name": "Nintendo",
+    "description": "<p>The Game Boy (Japanese: ゲームボーイ Hepburn: Gēmu Bōi?) is an 8-bit handheld video game device developed and manufactured by Nintendo. It was released in Japan on April 21, 1989, in North America on July 31, 1989, and in Europe on September 28, 1990. It is the first handheld console in the Game Boy line, and was created by Gunpei Yokoi and Nintendo Research & Development 1—the same staff who had designed the Game & Watch series as well as several popular games for the Nintendo Entertainment System. Redesigned versions were released in 1996 and 1998, in the form of Game Boy Pocket, and Game Boy Light (Japan only), respectively.</p><p>The Game Boy is Nintendo's second handheld system following the Game & Watch series introduced in 1980, and it combined features from both the Nintendo Entertainment System and Game & Watch. It was originally bundled with the puzzle game Tetris.</p><p>As part of the fourth generation of gaming, the Game Boy competed with the Sega Game Gear, Atari Lynx, and the TurboExpress. Despite these other handheld consoles, the Game Boy was a tremendous success. The Game Boy and its successor, the Game Boy Color, have both combined sold 118.69 million units worldwide. Upon its release in the United States, it sold its entire shipment of one million units within a few weeks</p>",
+    "emulator_arguments": [
+    ],
+    "emulator_path": "games/Game Boy/Emulators/VisualBoyAdvance/VisualBoyAdvance.exe",
+    "icon_height": 150,
+    "icon_path": "icons/Gameboy icon.png",
+    "icon_width": 150,
+    "image_path": "images/gameboy.png",
+    "name": "Game Boy",
+    "generation": "4",
+    "rom_path": "games/Game Boy/Roms",
+    "rom_extensions": [
+        "zip"
+    ],
+    "screenshot_urls": [
+        "images/gameboy_screenshot_1.jpg",
+        "images/gameboy_screenshot_2.jpg",
+        "images/gameboy_screenshot_3.jpg"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

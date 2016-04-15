@@ -1,0 +1,30 @@
+{
+    "constructor_name": "Sony",
+    "description": "<p>The PlayStation 2 (PS2), is a home video game console that was manufactured by Sony Computer Entertainment. It is Sony's second installment in the PlayStation Series. It was released on March 4, 2000, in Japan followed by North America and Europe later the same year. The sixth-generation console competed with the Sega Dreamcast, Microsoft Xbox, and Nintendo GameCube.</p><p>The PlayStation 2 is the best-selling video game console in history, selling over 155 million units, 150 million confirmed by Sony in 2011. More than 3,874 game titles have been released for the PS2 since launch, and more than 1.5 billion copies have been sold. Sony later manufactured several smaller, lighter revisions of the console known as \"slimline\" models, and in 2006 introduced the successor, the PlayStation 3.</p><p>Even with the PlayStation 3 release, the PlayStation 2 remained popular well into the seventh generation and continued to be produced until January 4, 2013, when Sony finally announced that the PlayStation 2 had been discontinued after 13 years of production – one of the longest runs for a video game console. Despite the announcement, new games for the console continued to be produced until the end of 2013, including Final Fantasy XI: Seekers of Adoulin for Japan, Pro Evolution Soccer 2014 for North America and Europe, and FIFA 14 for Brazil. Sony unveiled the PlayStation 4 console the following month on February 20, 2013</p>",
+    "emulator_arguments": [
+        "--nogui",
+        "--fullscreen",
+        "--fullboot"
+    ],
+    "emulator_path": "games/PlayStation 2/Emulators/pcsx2/pcsx2-r5875.exe",
+    "icon_height": 200,
+    "icon_path": "icons/Playstation 2 (silver) icon.png",
+    "icon_width": 150,
+    "image_path": "images/playstation2.png",
+    "name": "PlayStation 2",
+    "generation": "6",
+    "rom_path": "games/PlayStation 2/Roms",
+    "rom_extensions": [
+        "iso"
+    ],
+    "screenshot_urls": [
+        "images/playstation2_screenshot_1.jpg",
+        "images/playstation2_screenshot_2.jpg",
+        "images/playstation2_screenshot_3.jpg"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

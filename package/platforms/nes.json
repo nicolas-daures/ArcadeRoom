@@ -1,0 +1,27 @@
+{
+    "constructor_name": "Nintendo",
+    "description": "<p>The Nintendo Entertainment System (also abbreviated as NES) is an 8-bit home video game console that was developed and manufactured by Nintendo. It was initially released in Japan as the Family Computer (Japanese: ファミリーコンピュータ Hepburn: Famirī Konpyūta?) (also known by the portmanteau abbreviation Famicom (ファミコン Famikon?) and abbreviated as FC) on July 15, 1983, and was later released in North America during 1985, in Europe during 1986, and Australia in 1987. In South Korea, it was known as the Hyundai Comboy (현대 컴보이 Hyeondae Keomboi) and was distributed by SK Hynix which then was known as Hyundai Electronics. It was succeeded by the Super Nintendo Entertainment System.</p><p>The best-selling gaming console of its time, the NES helped revitalize the US video game industry following the video game crash of 1983. With the NES, Nintendo introduced a now-standard business model of licensing third-party developers, authorizing them to produce and distribute titles for Nintendo's platform.</p><p>In 2009, the Nintendo Entertainment System was named the single greatest video game console in history by IGN, in a list of 25. It is the second greatest console behind only the Sega Dreamcast in PC Magazine's Top 10 Video Game Consoles of All Time.</p>",
+    "emulator_arguments": [
+    ],
+    "emulator_path": "games/Nes/Emulators/punes/punes64.exe",
+    "icon_height": 200,
+    "icon_path": "icons/Nintendo (gray icon.png",
+    "icon_width": 150,
+    "image_path": "images/nes.png",
+    "name": "Nes",
+    "generation": "3",
+    "rom_path": "games/Nes/Roms",
+    "rom_extensions": [
+        "zip"
+    ],
+    "screenshot_urls": [
+        "images/nes_screenshot_1.jpg",
+        "images/nes_screenshot_2.jpg",
+        "images/nes_screenshot_3.jpg"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}

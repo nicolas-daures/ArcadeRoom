@@ -1,0 +1,27 @@
+{
+    "constructor_name": "SNK",
+    "description": "<p>Neo Geo CD (Japanese: ネオジオCD Hepburn: Neo Jio Shī Dī?) is the second home video game console of SNK Corporation's Neo Geo family, released in September 1994, four years after its cartridge-based equivalent. This is the same platform, converted to the cheaper CD format retailing at $49 to $79 per title, compared to the $300 cartridges. The system was originally priced at US$399, or £399 in the UK. The unit's 1X CD-ROM drive is slow, with very long loading times of up to 56 Mbit of data per load.[citation needed] The system can also play Audio CDs. All three versions of the system have no region-lock.</p><p>The Neo Geo CD was launched bundled with a control pad instead of a joystick like the AES version. However, the original AES joystick can be used with all three Neo Geo CD models.</p><p>As of March 1997, the Neo Geo CD had sold 570,000 units worldwide</p>",
+    "emulator_arguments": [
+    ],
+    "emulator_path": "games/Neo Geo CD/Emulators/raine/raine32.exe",
+    "icon_height": 200,
+    "icon_path": "icons/NeoGeo CD icon.png",
+    "icon_width": 150,
+    "image_path": "images/neogeocd.png",
+    "name": "Neo Geo CD",
+    "generation": "4",
+    "rom_path": "games/Neo Geo CD/Roms",
+    "rom_extensions": [
+        "zip"
+    ],
+    "screenshot_urls": [
+        "images/neogeocd_screenshot_1.jpg",
+        "images/neogeocd_screenshot_2.gif",
+        "images/neogeocd_screenshot_3.png"
+    ],
+    "video_urls": [
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo",
+        "https://www.youtube.com/embed/l39zPWBuyHo"
+    ]
+}
