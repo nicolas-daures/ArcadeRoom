@@ -45,6 +45,6 @@ Copyright (c) 2016 Fabrice BALLESIO, Nicolas DAURES and other contributors
 
 Licensed under the MIT License
 
-[VAR_WEBSITE_ARCADEROOM]: http://nicodaures.free.fr/arcaderoom/index.html
+[VAR_WEBSITE_ARCADEROOM]: http://www.arcaderoom.org/
 [VAR_WEBSITE_QT]: http://www.qt.io/
 [VAR_WEBSITE_WIKI]: https://github.com/Dingodino/ArcadeRoom/wiki
