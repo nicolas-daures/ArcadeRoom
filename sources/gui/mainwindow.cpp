@@ -39,7 +39,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_pUI(new Ui::MainWindow),
-    m_sResourcePath(QDir::currentPath() + "/games"),
+    m_sAppDirectory(QApplication::applicationDirPath()),
+    m_sResourcePath(QApplication::applicationDirPath() + "/games"),
     m_iCurrentGameCount(-1),
     m_iCurrentGamePosition(0),
     m_pPlatformWidget(NULL),
@@ -637,7 +638,7 @@ void MainWindow::on_tickTriggered()
     {
         Game* pGame = m_FilteredGames[m_iCurrentGameCount];
 
-        QString current = pGame->getPlatform()->getRomPath() + "/" + pGame->getRomRelativePath();
+        QString current = m_sAppDirectory + "/" + pGame->getPlatform()->getRomPath() + "/" + pGame->getRomRelativePath();
 
         // Get cover files
         QStringList coverFilter;
@@ -857,7 +858,7 @@ void MainWindow::_loadGeneralPreferences()
     m_pGeneralPreferences = new Preferences();
 
     // Open the general preferences file
-    QFile loadFile("preferences.json");
+    QFile loadFile(m_sAppDirectory + "/preferences.json");
     if (!loadFile.open(QIODevice::ReadOnly))
     {
         m_pGeneralPreferences->setStyleName("Dark");
@@ -1204,7 +1205,7 @@ void MainWindow::_setLanguage(QString a_sLanguage)
 void MainWindow::_setStyle(QString a_sStyleName)
 {
     // Load style file from disk if exists
-    QFile loadFile("styles/" + a_sStyleName + ".json");
+    QFile loadFile(m_sAppDirectory + "/styles/" + a_sStyleName + ".json");
     if (!loadFile.open(QIODevice::ReadOnly))
     {
         qWarning("Couldn't open style file.");
@@ -1361,7 +1362,7 @@ void MainWindow::_fillTreeView()
             if (criteria == *it)
             {
                 QTreeWidgetItem* pSubItem = new QTreeWidgetItem(QStringList(pPlatform->getName()));
-                pSubItem->setIcon(0, QIcon(pPlatform->getIconPath()));
+                pSubItem->setIcon(0, QIcon(m_sAppDirectory + "/" + pPlatform->getIconPath()));
                 pItem->addChild(pSubItem);
             }
         }
@@ -1417,22 +1418,22 @@ void MainWindow::_refreshPlatformPanel()
         }
 
         // Load image
-        QPixmap pixmap = QPixmap(pPlatform->getImagePath());
+        QPixmap pixmap = QPixmap(m_sAppDirectory + "/" + pPlatform->getImagePath());
         QLabel* pImage = m_pPlatformWidget->findChild<QLabel*>("image");
         pImage->setPixmap(pixmap);
 
         // Load screenshots
         if (pPlatform->getScreenshotUrls().size() >= 3)
         {
-            QPixmap pixmapScr1 = QPixmap(pPlatform->getScreenshotUrls()[0]);
+            QPixmap pixmapScr1 = QPixmap(m_sAppDirectory + "/" + pPlatform->getScreenshotUrls()[0]);
             QLabel* pScreenshotScr1 = m_pPlatformWidget->findChild<QLabel*>("screenshot_1");
             pScreenshotScr1->setPixmap(pixmapScr1);
 
-            QPixmap pixmapScr2 = QPixmap(pPlatform->getScreenshotUrls()[1]);
+            QPixmap pixmapScr2 = QPixmap(m_sAppDirectory + "/" + pPlatform->getScreenshotUrls()[1]);
             QLabel* pScreenshotScr2 = m_pPlatformWidget->findChild<QLabel*>("screenshot_2");
             pScreenshotScr2->setPixmap(pixmapScr2);
 
-            QPixmap pixmapScr3 = QPixmap(pPlatform->getScreenshotUrls()[2]);
+            QPixmap pixmapScr3 = QPixmap(m_sAppDirectory + "/" + pPlatform->getScreenshotUrls()[2]);
             QLabel* pScreenshotScr3 = m_pPlatformWidget->findChild<QLabel*>("screenshot_3");
             pScreenshotScr3->setPixmap(pixmapScr3);
         }
@@ -1549,7 +1550,7 @@ QGroupBox* MainWindow::_createGameGroupBox(Game* a_pGame, bool a_bIsCoverExists,
 void MainWindow::_loadMetadatas()
 {
     // Open the metadatas file
-    QFile loadFile("metadatas.json");
+    QFile loadFile(m_sAppDirectory + "/metadatas.json");
     if (!loadFile.open(QIODevice::ReadOnly))
     {
         return;

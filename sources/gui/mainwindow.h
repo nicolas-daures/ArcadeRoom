@@ -525,6 +525,9 @@ private:
     // Main window of the application
     Ui::MainWindow*             m_pUI;
 
+    // Application directory
+    QString                     m_sAppDirectory;
+
     // Database which contains platforms, games and collections
     Database                    m_Database;
 
