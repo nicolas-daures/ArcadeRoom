@@ -1135,7 +1135,7 @@ void MainWindow::_runGame(Game* a_pGame)
     QFileInfo fileInfo(gamePath);
     if (!fileInfo.isAbsolute())
     {
-        gamePath = fileInfo.absoluteFilePath();
+        gamePath = m_sAppDirectory + '/' + gamePath;
     }
 
     QStringList arguments;

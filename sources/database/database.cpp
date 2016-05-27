@@ -233,6 +233,11 @@ void Database::saveCollection(const QString& a_sName)
     Collection* pCollection = m_CollectionMap[a_sName];
     if (pCollection != NULL)
     {
+        QDir directory = QDir(QString(QApplication::applicationDirPath() + "/collections"));
+        if (!directory.exists())
+        {
+            directory.mkdir(".");
+        }
         QFile saveFile(QString(QApplication::applicationDirPath() + "/collections/" + a_sName + ".json"));
         if (!saveFile.open(QIODevice::WriteOnly))
         {
