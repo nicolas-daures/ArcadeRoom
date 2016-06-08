@@ -25,7 +25,7 @@ Open ArcadeRoom.pro file with QtCreator. Execute qmake, compile and run.
 ## Install
 
 ArcadeRoom is available on Windows, MAC OS X and linux.<br>
-Refer to the [following wiki page][VAR_WEBSITE_WIKI_INSTALL] for the install procedures.
+Refer to the following [wiki page][VAR_WEBSITE_WIKI_INSTALL] for the install procedures.
 
 ## Usage and Packages
 
