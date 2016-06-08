@@ -19,25 +19,19 @@ Find out more by referring to ArcadeRoom [website][VAR_WEBSITE_ARCADEROOM] and [
 
 ## Build
 
-ArcadeRoom depends on [Qt5][VAR_WEBSITE_QT].
-
+ArcadeRoom depends on [Qt5][VAR_WEBSITE_QT].<br>
 Open ArcadeRoom.pro file with QtCreator. Execute qmake, compile and run.
 
-## Usage
+## Install
 
-See complete command line reference at ...
+ArcadeRoom is available on Windows, MAC OS X and linux.<br>
+Refer to the [following wiki page][VAR_WEBSITE_WIKI_INSTALL] for the install procedures.
 
-### Installing packages
+## Usage and Packages
 
-TODO
-
-### Using packages
-
-TODO
-
-## Contributing
-
-TODO
+ArcadeRoom is plently configurable through various packages.<br>
+Each of them contains metadata files for games, platforms or visual style.<br>
+Find out more by referring to the following [wiki page][VAR_WEBSITE_WIKI_USAGE].
 
 ## License
 
@@ -48,3 +42,5 @@ Licensed under the MIT License
 [VAR_WEBSITE_ARCADEROOM]: http://www.arcaderoom.org/
 [VAR_WEBSITE_QT]: http://www.qt.io/
 [VAR_WEBSITE_WIKI]: https://github.com/Dingodino/ArcadeRoom/wiki
+[VAR_WEBSITE_WIKI_INSTALL]: https://github.com/Dingodino/ArcadeRoom/wiki/Install
+[VAR_WEBSITE_WIKI_USAGE]: https://github.com/Dingodino/ArcadeRoom/wiki/Usage-and-packages
