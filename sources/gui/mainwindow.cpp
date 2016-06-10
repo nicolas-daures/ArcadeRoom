@@ -867,7 +867,7 @@ void MainWindow::_loadGeneralPreferences()
     QFile loadFile(m_sAppDirectory + "/preferences.json");
     if (!loadFile.open(QIODevice::ReadOnly))
     {
-        m_pGeneralPreferences->setStyleName("Dark");
+        m_pGeneralPreferences->setStyleName("dark");
         m_pGeneralPreferences->setShowNoCovers(true);
 
         m_pUI->actionConsoles->setChecked(true);
@@ -879,7 +879,7 @@ void MainWindow::_loadGeneralPreferences()
         m_pUI->actionStatus_Bar->setChecked(true);
         m_pUI->statusbar->setVisible(true);
 
-        _setStyle("Dark");
+        _setStyle("dark");
 
         return;
     }
