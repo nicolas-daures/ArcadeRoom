@@ -2,6 +2,13 @@
 All notable changes to ArcadeRoom will be documented in this file.
 ArcadeRoom adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.1] - 2016-06-10
+### Fixed
+- Fix screenshots when url is missing.
+- Fix game refresh when delete the last collection.
+- Fix bad application directory used on Mac OS X.
+- Fix missing libraries on Windows, Linux and Mac OS X.
+
 ## [0.3.0] - 2016-04-15
 ### Added
 - Localization system.

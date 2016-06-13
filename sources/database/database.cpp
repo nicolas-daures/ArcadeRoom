@@ -1,4 +1,5 @@
 #include "database.h"
+#include <QApplication>
 #include <QDir>
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -137,7 +138,7 @@ Collection* Database::createCollection(const QString a_sName)
 
 void Database::deleteCollection(Collection* a_pCollection)
 {
-    QFile file(QString(QDir::currentPath() + "/collections/" + a_pCollection->getName() + ".json"));
+    QFile file(QString(QApplication::applicationDirPath() + "/collections/" + a_pCollection->getName() + ".json"));
     file.remove();
 
     m_CollectionMap.remove(a_pCollection->getName());
@@ -152,7 +153,7 @@ void Database::loadPlatforms()
     // Get platform description files
     QStringList platformFilter;
     platformFilter << "*.json";
-    QDir directory(QDir::currentPath() + "/platforms");
+    QDir directory(QApplication::applicationDirPath() + "/platforms");
     QStringList platformFiles = directory.entryList(platformFilter);
 
     // Deserialize each platform
@@ -188,7 +189,7 @@ void Database::loadCollections()
     // Get collection description files
     QStringList collectionFilter;
     collectionFilter << "*.json";
-    QDir directory(QDir::currentPath() + "/collections");
+    QDir directory(QApplication::applicationDirPath() + "/collections");
     QStringList collectionFiles = directory.entryList(collectionFilter);
 
     // Deserialize each collection
@@ -232,7 +233,12 @@ void Database::saveCollection(const QString& a_sName)
     Collection* pCollection = m_CollectionMap[a_sName];
     if (pCollection != NULL)
     {
-        QFile saveFile(QString(QDir::currentPath() + "/collections/" + a_sName + ".json"));
+        QDir directory = QDir(QString(QApplication::applicationDirPath() + "/collections"));
+        if (!directory.exists())
+        {
+            directory.mkdir(".");
+        }
+        QFile saveFile(QString(QApplication::applicationDirPath() + "/collections/" + a_sName + ".json"));
         if (!saveFile.open(QIODevice::WriteOnly))
         {
             qWarning("Couldn't open collection file.");

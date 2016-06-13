@@ -193,7 +193,7 @@ void PreferencesWindows::_loadStyles()
     // Get style description files
     QStringList styleFilter;
     styleFilter << "*.json";
-    QDir directory(QDir::currentPath() + "/styles");
+    QDir directory(QApplication::applicationDirPath() + "/styles");
     QStringList styleFiles = directory.entryList(styleFilter);
 
     // Remove all previously added styles
@@ -216,7 +216,7 @@ void PreferencesWindows::_updateGeneral()
     // List available language files
     QStringList languageFileFilter;
     languageFileFilter << "*.qm";
-    QDir directory(QDir::currentPath() + "/locales");
+    QDir directory(QApplication::applicationDirPath() + "/locales");
     QStringList languageFiles = directory.entryList(languageFileFilter);
 
     // Remove file extension
