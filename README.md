@@ -31,7 +31,7 @@ Refer to the following [wiki page][VAR_WEBSITE_WIKI_INSTALL] for the install pro
 
 ArcadeRoom is plently configurable through various packages.<br>
 Each of them contains metadata files for games, platforms or visual styles.<br>
-Find out more by referring to the following [wiki page][VAR_WEBSITE_WIKI_USAGE].
+Find out more by referring to the [wiki][VAR_WEBSITE_WIKI].
 
 ## License
 
