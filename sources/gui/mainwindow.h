@@ -369,9 +369,9 @@ private:
 
     /***********************************************************
      * @brief Parse the rom list from given platform directory.
-     * @param a_sPlatformName : platform's name
+     * @param a_pPlatform : platform
      ***********************************************************/
-    void                        _parseGamesFromDirectory(const QString& a_sPlatformName);
+    void                        _parseGamesFromDirectory(Platform* a_pPlatform);
 
     /***********************************************************
      * @brief Apply a style to given button.

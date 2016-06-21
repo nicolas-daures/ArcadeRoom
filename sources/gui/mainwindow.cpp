@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Load games
     foreach (Platform* pPlatform, m_Database.getPlatforms())
     {
-        _parseGamesFromDirectory(pPlatform->getName());
+        _parseGamesFromDirectory(pPlatform);
     }
 
     // Load metadatas
@@ -1048,11 +1048,11 @@ void MainWindow::_loadGamesFromDirectory(const QString& a_sPlatformName)
     }
 }
 
-void MainWindow::_parseGamesFromDirectory(const QString& a_sPlatformName)
+void MainWindow::_parseGamesFromDirectory(Platform* a_pPlatform)
 {
     // Parse the roms directory
     QStringList filesAndDirectories;
-    QDirIterator directories(m_sResourcePath + "/" + a_sPlatformName + "/Roms",
+    QDirIterator directories(a_pPlatform->getRomPath(),
                              QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
     while(directories.hasNext())
     {
@@ -1060,21 +1060,18 @@ void MainWindow::_parseGamesFromDirectory(const QString& a_sPlatformName)
         filesAndDirectories << directories.filePath();
     }
 
-    // Get the platform
-    Platform* pPlatform = m_Database.getPlatform(a_sPlatformName);
-
     // Fill game list
     foreach (QString sGameDir, filesAndDirectories)
     {
         // Get rom files
-        QStringList romFilter = _getRomFilter(pPlatform);
+        QStringList romFilter = _getRomFilter(a_pPlatform);
         QDir directory(sGameDir);
         QStringList romFiles = directory.entryList(romFilter);
 
         if (romFiles.size() > 0)
         {
             // Add the game to database
-            Game* pGame = m_Database.createGame(romFiles[0], QString(directory.dirName()), pPlatform);
+            Game* pGame = m_Database.createGame(romFiles[0], QString(directory.dirName()), a_pPlatform);
             if (pGame != NULL)
             {
                 m_Games.append(pGame);
