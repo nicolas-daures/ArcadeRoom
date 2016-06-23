@@ -13,7 +13,8 @@ Preferences::Preferences()
   m_bShowToolsBar(true),
   m_bShowStatusBar(true),
   m_fCoverSizeFactor(1.0f),
-  m_iLayoutType(0)
+  m_iLayoutType(0),
+  m_iIndexCriteria(0)
 {
 
 }
@@ -111,6 +112,17 @@ void Preferences::setLayoutType(uint a_uiLayoutType)
     emit layoutTypeChanged(a_uiLayoutType);
 }
 
+uint Preferences::getPlatformSortingCriteria() const
+{
+    return m_iIndexCriteria;
+}
+
+void Preferences::setPlatformSortingCriteria(uint a_uiIndexCriteria)
+{
+    m_iIndexCriteria = a_uiIndexCriteria;
+    emit platformSortingCriteriaChanged(a_uiIndexCriteria);
+}
+
 
 //====================================================================================
 // Operations
@@ -127,6 +139,7 @@ void Preferences::read(const QJsonObject& a_json)
     m_bShowStatusBar = a_json["showStatusBar"].toBool();
     m_fCoverSizeFactor = (float)a_json["coverSizeFactor"].toDouble();
     m_iLayoutType = (uint)a_json["layoutType"].toInt();
+    m_iIndexCriteria = a_json["indexPlatformSortingCriteria"].toInt();
 }
 
 void Preferences::write(QJsonObject& a_json) const
@@ -140,4 +153,5 @@ void Preferences::write(QJsonObject& a_json) const
     a_json["showStatusBar"] = m_bShowStatusBar;
     a_json["coverSizeFactor"] = m_fCoverSizeFactor;
     a_json["layoutType"] = m_iLayoutType;
+    a_json["indexPlatformSortingCriteria"]= m_iIndexCriteria;
 }

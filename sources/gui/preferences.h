@@ -47,6 +47,9 @@ public:
     uint                        getLayoutType() const;
     void                        setLayoutType(uint a_uiLayoutType);
 
+    uint                        getPlatformSortingCriteria() const;
+    void                        setPlatformSortingCriteria(uint a_iIndexCriteria);
+
 
     //====================================================================================
     // Operations
@@ -119,6 +122,12 @@ signals:
      ***********************************************************/
     void                        layoutTypeChanged(uint a_uiLayoutType);
 
+    /***********************************************************
+     * @brief Called when the platform sorting criteria changed.
+     * @param a_iIndexCriteria : index in combobox of new criteria
+     ***********************************************************/
+    void                        platformSortingCriteriaChanged(uint a_iIndexCriteria);
+
 
 private:
 
@@ -134,6 +143,8 @@ private:
     bool                        m_bShowStatusBar;
     float                       m_fCoverSizeFactor;
     int                         m_iLayoutType;
+    int                         m_iIndexCriteria;
+
 };
 
 #endif // PLATFORMWIDGET_H

@@ -769,6 +769,12 @@ void MainWindow::on_comboBoxPlatformSorting_activated()
 {
     // Modify tree view when a new platform sorting criteria is selected
     _fillTreeView();
+
+    // Update general preferences
+    // Get the selected criteria to sort platforms in tree view
+    uint indexCriteria = m_pUI->comboBoxPlatformSorting->currentIndex();
+    m_pGeneralPreferences->setPlatformSortingCriteria(indexCriteria);
+    on_generalPreferencesChanged();
 }
 
 //====================================================================================
@@ -906,6 +912,9 @@ void MainWindow::_loadGeneralPreferences()
 
     // Apply preferences
     _setStyle(m_pGeneralPreferences->getStyleName());
+
+    // Platform sorting criteria is done at combobox filling in
+    // _refreshComboBoxPlatformSorting method
 
     // Qt5 crash when set current index of combobox. Maybe the combo box is not ready.
     //int iLayoutType = m_pGeneralPreferences->getLayoutType();
@@ -1470,10 +1479,10 @@ void MainWindow::_refreshComboBoxPlatformSorting()
     // Get index of current selected item
     int currentIndex = m_pUI->comboBoxPlatformSorting->currentIndex();
 
-    // If empty combobox, the first item will be selected.
+    // If empty combobox, the saved item in general preferences will be selected.
     if (currentIndex < 0)
     {
-        currentIndex = 0;
+        currentIndex = m_pGeneralPreferences->getPlatformSortingCriteria();
     }
 
     // No emit signal during refresh.
