@@ -12,6 +12,7 @@
 #include <QInputDialog>
 #include <QJsonDocument>
 #include <QWebView>
+#include <QDesktopServices>
 #include <QPlainTextEdit>
 #include <QTableWidget>
 #include <QScrollArea>
@@ -467,6 +468,18 @@ void MainWindow::on_actionPreferences_triggered()
         // Show preferences window (hidden when closed)
         m_pPreferencesWindow->show();
     }
+}
+
+void MainWindow::on_actionDocumentation_triggered()
+{
+    // Open documentation website in default browser
+    QDesktopServices::openUrl(QUrl("https://github.com/Dingodino/ArcadeRoom/wiki"));
+}
+
+void MainWindow::on_actionWebsite_triggered()
+{
+    // Open ArcadeRom website in default browser
+    QDesktopServices::openUrl(QUrl("http://www.arcaderoom.org/"));
 }
 
 void MainWindow::on_actionAbout_triggered()

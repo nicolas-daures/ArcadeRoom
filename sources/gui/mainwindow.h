@@ -173,6 +173,18 @@ private slots:
 
     /***********************************************************
      * @brief Called when the about action is triggered.
+     *        Open documentation website in default browser.
+     ***********************************************************/
+    void                        on_actionDocumentation_triggered();
+
+    /***********************************************************
+     * @brief Called when the website action is triggered.
+     *        Open ArcadeRoom website in default browser.
+     ***********************************************************/
+    void                        on_actionWebsite_triggered();
+
+    /***********************************************************
+     * @brief Called when the about action is triggered.
      *        Open a dialog which contains ArcadeRoom informations.
      ***********************************************************/
     void                        on_actionAbout_triggered();
