@@ -11,7 +11,7 @@
 #include <QFile>
 #include <QInputDialog>
 #include <QJsonDocument>
-#include <QWebView>
+#include <QWebEngineView>
 #include <QDesktopServices>
 #include <QPlainTextEdit>
 #include <QTableWidget>
