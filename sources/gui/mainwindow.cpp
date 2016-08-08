@@ -40,7 +40,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_pUI(new Ui::MainWindow),
-    m_sResourcePath(QDir::currentPath() + "/games"),
+    m_sAppDirectory(QApplication::applicationDirPath()),
+    m_sResourcePath(QApplication::applicationDirPath() + "/games"),
     m_iCurrentGameCount(-1),
     m_iCurrentGamePosition(0),
     m_pPlatformWidget(NULL),
@@ -389,6 +390,12 @@ void MainWindow::on_collectionDeleteButton_clicked()
             }
             _refreshGridLayout(pNewCollection);
         }
+        else
+        {
+            m_sCurrentCollection = "";
+            m_sCurrentPlatform = m_Database.getPlatforms()[0]->getName();
+            _refreshGridLayout(m_Database.getPlatform(m_sCurrentPlatform));
+        }
     }
 }
 
@@ -518,7 +525,7 @@ void MainWindow::on_styleNameChanged(QString a_sStyleName)
 void MainWindow::on_generalPreferencesChanged()
 {
     // Write preferences json file
-    QFile saveFile("preferences.json");
+    QFile saveFile(m_sAppDirectory + "/preferences.json");
 
     if (!saveFile.open(QIODevice::WriteOnly))
     {
@@ -650,7 +657,7 @@ void MainWindow::on_tickTriggered()
     {
         Game* pGame = m_FilteredGames[m_iCurrentGameCount];
 
-        QString current = pGame->getPlatform()->getRomPath() + "/" + pGame->getRomRelativePath();
+        QString current = m_sAppDirectory + "/" + pGame->getPlatform()->getRomPath() + "/" + pGame->getRomRelativePath();
 
         // Get cover files
         QStringList coverFilter;
@@ -876,10 +883,10 @@ void MainWindow::_loadGeneralPreferences()
     m_pGeneralPreferences = new Preferences();
 
     // Open the general preferences file
-    QFile loadFile("preferences.json");
+    QFile loadFile(m_sAppDirectory + "/preferences.json");
     if (!loadFile.open(QIODevice::ReadOnly))
     {
-        m_pGeneralPreferences->setStyleName("Dark");
+        m_pGeneralPreferences->setStyleName("dark");
         m_pGeneralPreferences->setShowNoCovers(true);
 
         m_pUI->actionConsoles->setChecked(true);
@@ -891,7 +898,7 @@ void MainWindow::_loadGeneralPreferences()
         m_pUI->actionStatus_Bar->setChecked(true);
         m_pUI->statusbar->setVisible(true);
 
-        _setStyle("Dark");
+        _setStyle("dark");
 
         return;
     }
@@ -1147,7 +1154,7 @@ void MainWindow::_runGame(Game* a_pGame)
     QFileInfo fileInfo(gamePath);
     if (!fileInfo.isAbsolute())
     {
-        gamePath = fileInfo.absoluteFilePath();
+        gamePath = m_sAppDirectory + '/' + gamePath;
     }
 
     QStringList arguments;
@@ -1223,7 +1230,8 @@ void MainWindow::_setLanguage(QString a_sLanguage)
 void MainWindow::_setStyle(QString a_sStyleName)
 {
     // Load style file from disk if exists
-    QFile loadFile("styles/" + a_sStyleName + ".json");
+    qWarning(m_sAppDirectory.toStdString().c_str());
+    QFile loadFile(m_sAppDirectory + "/styles/" + a_sStyleName + ".json");
     if (!loadFile.open(QIODevice::ReadOnly))
     {
         qWarning("Couldn't open style file.");
@@ -1380,7 +1388,7 @@ void MainWindow::_fillTreeView()
             if (criteria == *it)
             {
                 QTreeWidgetItem* pSubItem = new QTreeWidgetItem(QStringList(pPlatform->getName()));
-                pSubItem->setIcon(0, QIcon(pPlatform->getIconPath()));
+                pSubItem->setIcon(0, QIcon(m_sAppDirectory + "/" + pPlatform->getIconPath()));
                 pItem->addChild(pSubItem);
             }
         }
@@ -1436,25 +1444,27 @@ void MainWindow::_refreshPlatformPanel()
         }
 
         // Load image
-        QPixmap pixmap = QPixmap(pPlatform->getImagePath());
+        QPixmap pixmap = QPixmap(m_sAppDirectory + "/" + pPlatform->getImagePath());
         QLabel* pImage = m_pPlatformWidget->findChild<QLabel*>("image");
         pImage->setPixmap(pixmap);
 
         // Load screenshots
-        if (pPlatform->getScreenshotUrls().size() >= 3)
-        {
-            QPixmap pixmapScr1 = QPixmap(pPlatform->getScreenshotUrls()[0]);
-            QLabel* pScreenshotScr1 = m_pPlatformWidget->findChild<QLabel*>("screenshot_1");
-            pScreenshotScr1->setPixmap(pixmapScr1);
+        QStringList screenshotUrls = pPlatform->getScreenshotUrls();
 
-            QPixmap pixmapScr2 = QPixmap(pPlatform->getScreenshotUrls()[1]);
-            QLabel* pScreenshotScr2 = m_pPlatformWidget->findChild<QLabel*>("screenshot_2");
-            pScreenshotScr2->setPixmap(pixmapScr2);
+        QString url1 = screenshotUrls.count() > 0 ? m_sAppDirectory + "/" + screenshotUrls[0] : "";
+        QPixmap pixmapScr1 = QPixmap(url1);
+        QLabel* pScreenshotScr1 = m_pPlatformWidget->findChild<QLabel*>("screenshot_1");
+        pScreenshotScr1->setPixmap(pixmapScr1);
 
-            QPixmap pixmapScr3 = QPixmap(pPlatform->getScreenshotUrls()[2]);
-            QLabel* pScreenshotScr3 = m_pPlatformWidget->findChild<QLabel*>("screenshot_3");
-            pScreenshotScr3->setPixmap(pixmapScr3);
-        }
+        QString url2 = screenshotUrls.count() > 1 ? m_sAppDirectory + "/" + screenshotUrls[1] : "";
+        QPixmap pixmapScr2 = QPixmap(url2);
+        QLabel* pScreenshotScr2 = m_pPlatformWidget->findChild<QLabel*>("screenshot_2");
+        pScreenshotScr2->setPixmap(pixmapScr2);
+
+        QString url3 = screenshotUrls.count() > 1 ? m_sAppDirectory + "/" + screenshotUrls[2] : "";
+        QPixmap pixmapScr3 = QPixmap(url3);
+        QLabel* pScreenshotScr3 = m_pPlatformWidget->findChild<QLabel*>("screenshot_3");
+        pScreenshotScr3->setPixmap(pixmapScr3);
 
         // TODO : Qt5 crashes when update layout and style of embed youtube video
         // Load videos
@@ -1568,7 +1578,7 @@ QGroupBox* MainWindow::_createGameGroupBox(Game* a_pGame, bool a_bIsCoverExists,
 void MainWindow::_loadMetadatas()
 {
     // Open the metadatas file
-    QFile loadFile("metadatas.json");
+    QFile loadFile(m_sAppDirectory + "/metadatas.json");
     if (!loadFile.open(QIODevice::ReadOnly))
     {
         return;
@@ -1599,7 +1609,7 @@ void MainWindow::_loadMetadatas()
 void MainWindow::_saveMetadatas()
 {
     // Save game metadatas
-    QFile saveFile("metadatas.json");
+    QFile saveFile(m_sAppDirectory + "/metadatas.json");
     if (!saveFile.open(QIODevice::WriteOnly))
     {
         qWarning("Couldn't open or create metadatas file.");
