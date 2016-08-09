@@ -25,7 +25,7 @@
 #include "style.h"
 
 // ArcadeRoom version
-#define ARCADE_ROOM_VERSION "v0.3"
+#define ARCADE_ROOM_VERSION "v0.4.0"
 
 // Tooltip content for tools bar buttons of game tab
 #define TOOLTIP_GAME_TAB_TOOLS_BAR_COVER    "Display no cover rom"

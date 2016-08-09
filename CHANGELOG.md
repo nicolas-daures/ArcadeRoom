@@ -2,6 +2,10 @@
 All notable changes to ArcadeRoom will be documented in this file.
 ArcadeRoom adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] - 2016-09-XX
+### Added
+- Update to Qt 5.7.
+
 ## [0.3.1] - 2016-06-10
 ### Fixed
 - Fix screenshots when url is missing.
