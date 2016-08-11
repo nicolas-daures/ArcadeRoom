@@ -28,7 +28,10 @@ SOURCES +=\
     sources/commands/commandmanager.cpp \
     sources/gui/platformwidget.cpp \
     sources/gui/preferences.cpp \
-    sources/gui/style.cpp
+    sources/gui/style.cpp \
+    sources/gui/platformlistwidget.cpp \
+    sources/gui/collectionlistwidget.cpp \
+    sources/gui/gamelistwidget.cpp
 
 HEADERS  += \
     sources/database/collection.h \
@@ -45,11 +48,17 @@ HEADERS  += \
     sources/commands/commandmanager.h \
     sources/gui/platformwidget.h \
     sources/gui/preferences.h \
-    sources/gui/style.h
+    sources/gui/style.h \
+    sources/gui/platformlistwidget.h \
+    sources/gui/collectionlistwidget.h \
+    sources/gui/gamelistwidget.h
 
 FORMS    += mainwindow.ui \
     preferenceswindows.ui \
-    platformwidget.ui
+    platformwidget.ui \
+    platformlistwidget.ui \
+    collectionlistwidget.ui \
+    gamelistwidget.ui
 
 RESOURCES += \
     resources.qrc

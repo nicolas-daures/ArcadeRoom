@@ -19,6 +19,9 @@
 #include "sources/database/collection.h"
 #include "sources/database/database.h"
 #include "sources/commands/commandmanager.h"
+#include "platformlistwidget.h"
+#include "collectionlistwidget.h"
+#include "gamelistwidget.h"
 #include "platformwidget.h"
 #include "preferences.h"
 #include "preferenceswindows.h"
@@ -83,8 +86,10 @@ private slots:
     /***********************************************************
      * @brief Called when a tree's item is clicked.
      *        Change the current platform.
+     * @param a_pNext : current tree item
+     * @param a_pPrevious : previous tree item
      ***********************************************************/
-    void                        on_treeWidget_clicked();
+    void                        on_treeWidget_clicked(QTreeWidgetItem* a_pNext, QTreeWidgetItem* a_pPrevious);
 
     /***********************************************************
      * @brief Called when the search button in treeview is pressed.
@@ -326,8 +331,9 @@ private slots:
 
     /***********************************************************
      * @brief Called when select a platform sorting criteria
+     * @param a_iIndex : new current index
      ***********************************************************/
-    void                        on_comboBoxPlatformSorting_activated();
+    void                        on_comboBoxPlatformSorting_activated(int a_iIndex);
 
 
 private:
@@ -559,8 +565,17 @@ private:
     int                         m_iCurrentGameCount;
     int                         m_iCurrentGamePosition;
 
+    // Widget to display platform list
+    PlatformListWidget*         m_pPlatformListWidget;
+
     // Widget to display platform informations
     PlatformWidget*             m_pPlatformWidget;
+
+    // Widget to display collection list
+    CollectionListWidget*       m_pCollectionListWidget;
+
+    // Widget to display game list
+    GameListWidget*             m_pGameListWidget;
 
     // Game layout to display games
     QWidget*                    m_pCurrentGameWidget;
