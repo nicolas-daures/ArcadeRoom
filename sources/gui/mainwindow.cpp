@@ -374,27 +374,33 @@ void MainWindow::on_collectionDeleteButton_clicked()
 {
     if (m_sCurrentCollection != "")
     {
-        // Delete the collection
-        _deleteCollection(m_sCurrentCollection);
+        int confirmDestroy = QMessageBox::question(this, tr("Delete collection"), tr("Do you really want to destroy this collection ?"), QMessageBox::Yes | QMessageBox::No);
 
-        // Select another collection
-        QList<Collection*> collections = m_Database.getCollections();
-        if (collections.size() > 0)
+        if (confirmDestroy == QMessageBox::Yes)
         {
-            Collection* pNewCollection = collections[0];
-            QString sNewCollectionName = pNewCollection->getName();
-            QList<QListWidgetItem*> pItemsFound = m_pUI->collectionList->findItems(sNewCollectionName, Qt::MatchRecursive);
-            if (pItemsFound.size() > 0)
+
+            // Delete the collection
+            _deleteCollection(m_sCurrentCollection);
+
+            // Select another collection
+            QList<Collection*> collections = m_Database.getCollections();
+            if (collections.size() > 0)
             {
-                m_pUI->collectionList->setCurrentItem(pItemsFound[0]);
+                Collection* pNewCollection = collections[0];
+                QString sNewCollectionName = pNewCollection->getName();
+                QList<QListWidgetItem*> pItemsFound = m_pUI->collectionList->findItems(sNewCollectionName, Qt::MatchRecursive);
+                if (pItemsFound.size() > 0)
+                {
+                    m_pUI->collectionList->setCurrentItem(pItemsFound[0]);
+                }
+                _refreshGridLayout(pNewCollection);
             }
-            _refreshGridLayout(pNewCollection);
-        }
-        else
-        {
-            m_sCurrentCollection = "";
-            m_sCurrentPlatform = m_Database.getPlatforms()[0]->getName();
-            _refreshGridLayout(m_Database.getPlatform(m_sCurrentPlatform));
+            else
+            {
+                m_sCurrentCollection = "";
+                m_sCurrentPlatform = m_Database.getPlatforms()[0]->getName();
+                _refreshGridLayout(m_Database.getPlatform(m_sCurrentPlatform));
+            }
         }
     }
 }

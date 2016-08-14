@@ -148,87 +148,97 @@
         <translation type="vanished">Génération</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="351"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="353"/>
         <source>Add a collection</source>
         <translation>Ajouter une collection</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="352"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="354"/>
         <source>Collection&apos;s name:</source>
         <translation>Nom de la collection :</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="353"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="355"/>
         <source>Collection Name</source>
         <translation>Nom de la collection</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="366"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="368"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="366"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="368"/>
         <source>This collection already exists !</source>
         <translation>Cette collection existe déjà !</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="474"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="377"/>
+        <source>Delete collection</source>
+        <translation>Supprimer collection</translation>
+    </message>
+    <message>
+        <location filename="../sources/gui/mainwindow.cpp" line="377"/>
+        <source>Do you really want to destroy this collection ?</source>
+        <translation>Souhaitez-vous vraiment supprimer cette collection ?</translation>
+    </message>
+    <message>
+        <location filename="../sources/gui/mainwindow.cpp" line="500"/>
         <source>About ArcadeRoom</source>
         <translation>A propos d&apos;ArcadeRoom</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="474"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="500"/>
         <source>ArcadeRoom </source>
         <translation>ArcadeRoom </translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="475"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="501"/>
         <source>Old games organizer with pretty user interface</source>
         <translation>Organiseur de vieux jeux avec une jolie interface utilisateur</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="476"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="502"/>
         <source>Copyright © 2015 - 2016 Fabrice Ballesio and Nicolas Daures</source>
         <translation>Copyright © 2015 - 2016 Fabrice Ballesio et Nicolas Daures</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="477"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="503"/>
         <source>All rights reserved.</source>
         <translation>Tout droits réservés.</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="825"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="855"/>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="825"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="855"/>
         <source>Platform</source>
         <translation>Plate-forme</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="825"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="855"/>
         <source>Note</source>
         <translation>Note</translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="1428"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="1497"/>
         <source>     Consoles: </source>
         <translation>     Consoles : </translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="1429"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="1498"/>
         <source>     Displayed Games: </source>
         <translation>     Jeux Affichés : </translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="1430"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="1499"/>
         <source>     Total Games: </source>
         <translation>     Total Jeux : </translation>
     </message>
     <message>
-        <location filename="../sources/gui/mainwindow.cpp" line="1590"/>
+        <location filename="../sources/gui/mainwindow.cpp" line="1659"/>
         <source>Command List</source>
         <translation>Liste des commandes</translation>
     </message>
