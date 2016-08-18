@@ -22,8 +22,8 @@ public:
     // Operations
     //====================================================================================
 
-    void            undo() Q_DECL_OVERRIDE;
-    void            redo() Q_DECL_OVERRIDE;
+    void                            undo() Q_DECL_OVERRIDE;
+    void                            redo() Q_DECL_OVERRIDE;
 
 
 protected:

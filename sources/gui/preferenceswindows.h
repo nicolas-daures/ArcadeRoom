@@ -33,8 +33,7 @@ public:
     // Constructors
     //====================================================================================
 
-    explicit PreferencesWindows(QWidget *parent = 0,
-                                Preferences* a_pGeneralPreferences = NULL);
+    explicit PreferencesWindows(QWidget *parent = 0);
     ~PreferencesWindows();
 
     //====================================================================================
@@ -180,14 +179,13 @@ private:
     // Fields
     //====================================================================================
 
-    Ui::PreferencesWindows*     ui;
+    Ui::PreferencesWindows*             ui;
 
     // Platform name <-> Platform preferences
-    QMap<QString, preferencesPlatform> m_PlatformPreferencesMap;
+    QMap<QString, preferencesPlatform>  m_PlatformPreferencesMap;
 
     // Preferences
-    Preferences*                m_pGeneralPreferences;
-    Preferences                 m_CurrentPreferences;
+    Preferences                         m_CurrentPreferences;
 };
 
 #endif // PREFERENCESWINDOWS_H

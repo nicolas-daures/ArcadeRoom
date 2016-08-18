@@ -11,10 +11,9 @@
 // Constructors
 //====================================================================================
 
-PreferencesWindows::PreferencesWindows(QWidget *parent, Preferences* a_pGeneralPreferences) :
+PreferencesWindows::PreferencesWindows(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::PreferencesWindows),
-    m_pGeneralPreferences(a_pGeneralPreferences)
+    ui(new Ui::PreferencesWindows)
 {
     ui->setupUi(this);
 
@@ -115,27 +114,27 @@ void PreferencesWindows::on_buttonApply_clicked()
     // General preferences
     bool bPreferencesChanged = false;
 
-    QString oldStyleName = m_pGeneralPreferences->getStyleName();
+    QString oldStyleName = PreferenceService::getInstance()->getStyleName();
     QString newStyleName = m_CurrentPreferences.getStyleName();
     if (oldStyleName != newStyleName)
     {
-        m_pGeneralPreferences->setStyleName(newStyleName);
+        PreferenceService::getInstance()->setStyleName(newStyleName);
         bPreferencesChanged = true;
     }
 
-    bool oldShowNoCovers = m_pGeneralPreferences->getShowNoCovers();
+    bool oldShowNoCovers = PreferenceService::getInstance()->getShowNoCovers();
     bool newShowNoCovers = m_CurrentPreferences.getShowNoCovers();
     if (oldShowNoCovers != newShowNoCovers)
     {
-        m_pGeneralPreferences->setShowNoCovers(newShowNoCovers);
+        PreferenceService::getInstance()->setShowNoCovers(newShowNoCovers);
         bPreferencesChanged = true;
     }
 
-    QString oldLanguage = m_pGeneralPreferences->getLanguage();
+    QString oldLanguage = PreferenceService::getInstance()->getLanguage();
     QString newLanguage = m_CurrentPreferences.getLanguage();
     if (oldLanguage != newLanguage)
     {
-        m_pGeneralPreferences->setLanguage(newLanguage);
+        PreferenceService::getInstance()->setLanguage(newLanguage);
         bPreferencesChanged = true;
     }
 
@@ -205,7 +204,7 @@ void PreferencesWindows::_loadStyles()
         QString styleName = styleFilePath.replace(".json", "");
         ui->styleComboBox->addItem(styleName);
     }
-    ui->styleComboBox->setCurrentText(m_pGeneralPreferences->getStyleName());
+    ui->styleComboBox->setCurrentText(PreferenceService::getInstance()->getStyleName());
 }
 
 void PreferencesWindows::_updateGeneral()
@@ -232,7 +231,7 @@ void PreferencesWindows::_updateGeneral()
 
     // Set language combobox to favorite language (if available).
     languageFiles << DEFAULT_LANGUAGE;
-    QString preferredLanguage = m_pGeneralPreferences->getLanguage();
+    QString preferredLanguage = PreferenceService::getInstance()->getLanguage();
     if (languageFiles.contains(preferredLanguage))
     {
         ui->languageComboBox->setCurrentText(preferredLanguage);

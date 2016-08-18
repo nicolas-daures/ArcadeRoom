@@ -32,7 +32,6 @@ const QString& Preferences::getLanguage() const
 void Preferences::setLanguage(const QString& a_sLanguage)
 {
     m_sLanguage = a_sLanguage;
-    emit languageChanged(a_sLanguage);
 }
 
 const QString& Preferences::getStyleName() const
@@ -43,7 +42,6 @@ const QString& Preferences::getStyleName() const
 void Preferences::setStyleName(const QString& a_sStyleName)
 {
     m_sStyleName = a_sStyleName;
-    emit styleNameChanged(a_sStyleName);
 }
 
 bool Preferences::getShowNoCovers() const
@@ -54,7 +52,6 @@ bool Preferences::getShowNoCovers() const
 void Preferences::setShowNoCovers(bool a_bShowNoCovers)
 {
     m_bShowNoCovers = a_bShowNoCovers;
-    emit showNoCoversChanged(a_bShowNoCovers);
 }
 
 bool Preferences::getShowConsoles() const
@@ -65,7 +62,6 @@ bool Preferences::getShowConsoles() const
 void Preferences::setShowConsoles(bool a_bShowConsoles)
 {
     m_bShowConsoles = a_bShowConsoles;
-    emit showConsolesChanged(a_bShowConsoles);
 }
 
 bool Preferences::getShowToolsBar() const
@@ -76,7 +72,6 @@ bool Preferences::getShowToolsBar() const
 void Preferences::setShowToolsBar(bool a_bShowToolsBar)
 {
     m_bShowToolsBar = a_bShowToolsBar;
-    emit showToolsBarChanged(a_bShowToolsBar);
 }
 
 bool Preferences::getShowStatusBar() const
@@ -87,7 +82,6 @@ bool Preferences::getShowStatusBar() const
 void Preferences::setShowStatusBar(bool a_bShowStatusBar)
 {
     m_bShowStatusBar = a_bShowStatusBar;
-    emit showStatusBarChanged(a_bShowStatusBar);
 }
 
 float Preferences::getCoverSizeFactor() const
@@ -98,7 +92,6 @@ float Preferences::getCoverSizeFactor() const
 void Preferences::setCoverSizeFactor(float a_fCoverSizeFactor)
 {
     m_fCoverSizeFactor = a_fCoverSizeFactor;
-    emit coverSizeFactorChanged(a_fCoverSizeFactor);
 }
 
 uint Preferences::getLayoutType() const
@@ -109,7 +102,6 @@ uint Preferences::getLayoutType() const
 void Preferences::setLayoutType(uint a_uiLayoutType)
 {
     m_iLayoutType = a_uiLayoutType;
-    emit layoutTypeChanged(a_uiLayoutType);
 }
 
 uint Preferences::getPlatformSortingCriteria() const
@@ -120,7 +112,6 @@ uint Preferences::getPlatformSortingCriteria() const
 void Preferences::setPlatformSortingCriteria(uint a_uiIndexCriteria)
 {
     m_iIndexCriteria = a_uiIndexCriteria;
-    emit platformSortingCriteriaChanged(a_uiIndexCriteria);
 }
 
 

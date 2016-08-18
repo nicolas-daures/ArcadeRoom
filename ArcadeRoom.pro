@@ -25,13 +25,14 @@ SOURCES +=\
     sources/gui/mainwindow.cpp \
     sources/gui/preferenceswindows.cpp \
     sources/main.cpp \
-    sources/commands/commandmanager.cpp \
     sources/gui/platformwidget.cpp \
-    sources/gui/preferences.cpp \
     sources/gui/style.cpp \
     sources/gui/platformlistwidget.cpp \
     sources/gui/collectionlistwidget.cpp \
-    sources/gui/gamelistwidget.cpp
+    sources/gui/gamelistwidget.cpp \
+    sources/commands/commandservice.cpp \
+    sources/gui/preferences.cpp \
+    sources/gui/preferenceservice.cpp
 
 HEADERS  += \
     sources/database/collection.h \
@@ -45,13 +46,14 @@ HEADERS  += \
     sources/utils/tick.h \
     sources/gui/mainwindow.h \
     sources/gui/preferenceswindows.h \
-    sources/commands/commandmanager.h \
     sources/gui/platformwidget.h \
-    sources/gui/preferences.h \
     sources/gui/style.h \
     sources/gui/platformlistwidget.h \
     sources/gui/collectionlistwidget.h \
-    sources/gui/gamelistwidget.h
+    sources/gui/gamelistwidget.h \
+    sources/commands/commandservice.h \
+    sources/gui/preferences.h \
+    sources/gui/preferenceservice.h
 
 FORMS    += mainwindow.ui \
     preferenceswindows.ui \

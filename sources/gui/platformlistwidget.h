@@ -4,7 +4,12 @@
 #include <QWidget>
 #include <QTreeWidget>
 #include <QComboBox>
+#include "sources/database/database.h"
 
+#define CRITERIA_CONSTRUCTOR      QT_TRANSLATE_NOOP("CRITERIA_PLATFORM","Constructor")
+#define CRITERIA_GENERATION       QT_TRANSLATE_NOOP("CRITERIA_PLATFORM","Generation")
+#define CRITERIA_NAME             QT_TRANSLATE_NOOP("CRITERIA_PLATFORM","Name")
+#define MAX_CHAR_PER_CRITERIA     12
 
 namespace Ui
 {
@@ -22,7 +27,7 @@ public:
     // Constructors
     //====================================================================================
 
-    explicit PlatformListWidget(QWidget *parent = 0);
+    explicit PlatformListWidget(Database* a_pDatabase, QWidget *parent = 0);
     ~PlatformListWidget();
 
 
@@ -30,9 +35,21 @@ public:
     // Accessors
     //====================================================================================
 
+    // TODO : remove it
     QTreeWidget*                getTreeWidget();
     QComboBox*                  getComboBoxPlatformSorting();
     QLineEdit*                  getTreeSearch();
+
+
+    //====================================================================================
+    // Operations
+    //====================================================================================
+
+    /***********************************************************
+     * @brief Fill the tree view with loaded platforms.
+     ***********************************************************/
+    void                        fillTreeView();
+    void                        refreshComboBoxPlatformSorting();
 
 
 private:
@@ -42,6 +59,8 @@ private:
     //====================================================================================
 
     Ui::PlatformListWidget*     m_pUI;
+
+    Database*                   m_pDatabase;
 };
 
 #endif // PLATFORMLISTWIDGET_H

@@ -19,7 +19,6 @@ Database::Database()
 
 }
 
-// TODO : add destructor to delete platforms, games and collections
 
 //====================================================================================
 // Accessors
@@ -225,6 +224,9 @@ void Database::loadCollections()
             }
         }
         m_CollectionMap[pCollection->getName()] = pCollection;
+
+        connect(pCollection, SIGNAL(gameAdded(Game*)), this, SLOT(on_gameAddedToCollection(Game*)));
+        connect(pCollection, SIGNAL(gameRemoved(Game*)), this, SLOT(on_gameRemovedFromCollection(Game*)));
     }
 }
 

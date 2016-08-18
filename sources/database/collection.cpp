@@ -36,7 +36,6 @@ void Collection::setName(const QString& a_sName)
 
 Game* Collection::getGame(const QString& a_sPlatformName, const QString& a_sGameName) const
 {
-    // TODO : check platform exist
     return m_Games[a_sPlatformName][a_sGameName];
 }
 
