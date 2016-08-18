@@ -233,18 +233,24 @@ void Database::saveCollection(const QString& a_sName)
     Collection* pCollection = m_CollectionMap[a_sName];
     if (pCollection != NULL)
     {
-        QDir directory = QDir(QString(QApplication::applicationDirPath() + "/collections"));
+        QString path = QString(QApplication::applicationDirPath() + "/collections");
+        QDir directory = QDir(path);
+
+        // Create directory if do not exist
         if (!directory.exists())
         {
-            directory.mkdir(".");
+            directory.mkpath(path);
         }
-        QFile saveFile(QString(QApplication::applicationDirPath() + "/collections/" + a_sName + ".json"));
+
+        // Create save collection file
+        QFile saveFile(QString(path + QString("/" + a_sName + ".json")));
         if (!saveFile.open(QIODevice::WriteOnly))
         {
             qWarning("Couldn't open collection file.");
             return;
         }
 
+        // Write save file
         QJsonObject collectionObject;
         pCollection->write(collectionObject);
         QJsonDocument saveDoc(collectionObject);
