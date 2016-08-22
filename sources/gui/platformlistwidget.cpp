@@ -7,10 +7,9 @@
 // Constructors
 //====================================================================================
 
-PlatformListWidget::PlatformListWidget(Database* a_pDatabase, QWidget *parent)
+PlatformListWidget::PlatformListWidget(QWidget *parent)
 : QWidget(parent),
-  m_pUI(new Ui::PlatformListWidget),
-  m_pDatabase(a_pDatabase)
+  m_pUI(new Ui::PlatformListWidget)
 {
     m_pUI->setupUi(this);
 }
@@ -54,7 +53,7 @@ void PlatformListWidget::fillTreeView()
     int criteriaMaxCharLength = 0;
 
     // Get all platforms
-    QList<Platform*> platforms = m_pDatabase->getPlatforms();
+    QList<Platform*> platforms = DatabaseService::getInstance()->getPlatforms();
 
     // Pointer to the method which give the criteria value for a platform
     const QString& (Platform::*ptr)()const;

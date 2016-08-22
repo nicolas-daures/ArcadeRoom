@@ -47,9 +47,8 @@ public:
 
     /***********************************************************
      * @brief Update window content.
-     * @param a_Database   : database
      ***********************************************************/
-    void updateContent(const Database& a_Database);
+    void updateContent();
 
 
 signals:
@@ -173,7 +172,7 @@ private:
      * @brief Update platform content.
      * @param a_Database   : database
      ***********************************************************/
-    void _updatePlatform(const Database& a_Database);
+    void _updatePlatform();
 
     //====================================================================================
     // Fields

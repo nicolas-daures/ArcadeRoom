@@ -32,7 +32,9 @@ SOURCES +=\
     sources/gui/gamelistwidget.cpp \
     sources/commands/commandservice.cpp \
     sources/gui/preferences.cpp \
-    sources/gui/preferenceservice.cpp
+    sources/gui/preferenceservice.cpp \
+    sources/database/databaseservice.cpp \
+    sources/services/selectionservice.cpp
 
 HEADERS  += \
     sources/database/collection.h \
@@ -53,7 +55,9 @@ HEADERS  += \
     sources/gui/gamelistwidget.h \
     sources/commands/commandservice.h \
     sources/gui/preferences.h \
-    sources/gui/preferenceservice.h
+    sources/gui/preferenceservice.h \
+    sources/database/databaseservice.h \
+    sources/services/selectionservice.h
 
 FORMS    += mainwindow.ui \
     preferenceswindows.ui \

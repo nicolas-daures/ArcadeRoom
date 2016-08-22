@@ -21,9 +21,11 @@
 #include "ui_mainwindow.h"
 #include "preferenceswindows.h"
 #include "style.h"
+#include "sources/database/databaseservice.h"
 #include "sources/database/platform.h"
 #include "sources/commands/addgametocollectioncommand.h"
 #include "sources/commands/removegamefromcollectioncommand.h"
+#include "sources/services/selectionservice.h"
 #ifdef WIN32
 #include <Windows.h>
 #include <qset.h>
@@ -41,16 +43,14 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pPlatformWidget(NULL),
     m_pCurrentStyle(NULL)
 {
-    m_pDatabase = new Database();
-
     // Create undo stack
-    CommandService::getInstance(m_pDatabase, this);
+    CommandService::getInstance(this);
 
     // Load platforms
-    m_pDatabase->loadPlatforms();
+    DatabaseService::getInstance()->loadPlatforms();
 
     // Load games
-    foreach (Platform* pPlatform, m_pDatabase->getPlatforms())
+    foreach (Platform* pPlatform, DatabaseService::getInstance()->getPlatforms())
     {
         _parseGamesFromDirectory(pPlatform);
     }
@@ -62,15 +62,15 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pUI->setupUi(this);
 
     // Create a platform list panel
-    m_pPlatformListWidget = new PlatformListWidget(m_pDatabase);
+    m_pPlatformListWidget = new PlatformListWidget();
     m_pUI->tabConsoles->layout()->addWidget(m_pPlatformListWidget);
 
     // Create a collection list panel
-    m_pCollectionListWidget = new CollectionListWidget(m_pDatabase);
+    m_pCollectionListWidget = new CollectionListWidget();
     m_pUI->tabCollections->layout()->addWidget(m_pCollectionListWidget);
 
     // Create a game list panel
-    m_pGameListWidget = new GameListWidget(m_pDatabase);
+    m_pGameListWidget = new GameListWidget();
     m_pUI->tabGridContainer->layout()->addWidget(m_pGameListWidget);
 
     // Load general preferences
@@ -82,8 +82,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Signal when general preferences updated
     connect(PreferenceService::getInstance(), SIGNAL(styleNameChanged(QString)), this, SLOT(on_styleNameChanged(QString)));
     connect(PreferenceService::getInstance(), SIGNAL(languageChanged(QString)),  this, SLOT(on_languageChanged(QString)));
-    connect(m_pPreferencesWindow, SIGNAL(emulatorPathChanged(QString, QString)), m_pDatabase, SLOT(on_emulatorPathChanged(QString, QString)));
-    connect(m_pPreferencesWindow, SIGNAL(romsPathChanged(QString, QString)), m_pDatabase, SLOT(on_romsPathChanged(QString, QString)));
+    connect(m_pPreferencesWindow, SIGNAL(emulatorPathChanged(QString, QString)), DatabaseService::getInstance(), SLOT(on_emulatorPathChanged(QString, QString)));
+    connect(m_pPreferencesWindow, SIGNAL(romsPathChanged(QString, QString)), DatabaseService::getInstance(), SLOT(on_romsPathChanged(QString, QString)));
     connect(m_pPreferencesWindow, SIGNAL(generalPreferencesChanged()), this, SLOT(on_generalPreferencesChanged()));
 
     // Hide header of platform tree view
@@ -98,8 +98,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pPlatformListWidget->fillTreeView();
 
     // Connections
-    connect(m_pDatabase, SIGNAL(collectionCreated(Collection*)), this, SLOT(on_collectionCreated(Collection*)));
-    connect(m_pDatabase, SIGNAL(collectionDeleted(Collection*)), this, SLOT(on_collectionDeleted(Collection*)));
+    connect(DatabaseService::getInstance(), SIGNAL(collectionCreated(Collection*)), this, SLOT(on_collectionCreated(Collection*)));
+    connect(DatabaseService::getInstance(), SIGNAL(collectionDeleted(Collection*)), this, SLOT(on_collectionDeleted(Collection*)));
 
     connect(m_pCollectionListWidget, SIGNAL(collectionSelected(Collection*)), this, SLOT(on_collectionSelected(Collection*)));
     connect(m_pCollectionListWidget, SIGNAL(commandCreated(QUndoCommand*)), this, SLOT(on_collectionCommandCreated(QUndoCommand*)));
@@ -111,12 +111,12 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pUI->tabConsole->setLayout(pPlatformLayout);
     m_pPlatformWidget = new PlatformWidget();
     pPlatformLayout->addWidget(m_pPlatformWidget);
-    m_sCurrentPlatform = "Nes";
+    SelectionService::getInstance()->setCurrentPlatform("Nes");
     _refreshPlatformPanel();
 
     // Create a simple grid layout to display roms
     m_pGameListWidget->_createGameListWidget(m_pUI->tabGridContainer);
-    _loadGamesFromDirectory(m_sCurrentPlatform);
+    _loadGamesFromDirectory(SelectionService::getInstance()->getCurrentPlatform());
 
     // Translate application if requiered
     _setLanguage(PreferenceService::getInstance()->getLanguage());
@@ -127,8 +127,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pTick->start();
 
     // Load collection on disk
-    m_pDatabase->loadCollections();
-    foreach (Collection* pCollection, m_pDatabase->getCollections())
+    DatabaseService::getInstance()->loadCollections();
+    foreach (Collection* pCollection, DatabaseService::getInstance()->getCollections())
     {
         m_pCollectionListWidget->getCollectionList()->addItem(pCollection->getName());
         connect(pCollection, SIGNAL(gameAdded(Game*)), this, SLOT(on_gameAddedToCollection(Game*)));
@@ -151,20 +151,20 @@ void MainWindow::on_treeWidget_clicked(QTreeWidgetItem* a_pNext, QTreeWidgetItem
     // Set the new platform and refresh the rom list
     QTreeWidgetItem* pItem = (a_pNext != NULL ? a_pNext : a_pPrevious);
     QString newPlatform = pItem->text(m_pPlatformListWidget->getTreeWidget()->currentColumn());
-    if (newPlatform != m_sCurrentPlatform)
+    if (newPlatform != SelectionService::getInstance()->getCurrentPlatform())
     {
-        QList<Platform*> platforms = m_pDatabase->getPlatforms();
+        QList<Platform*> platforms = DatabaseService::getInstance()->getPlatforms();
         foreach (Platform* pPlatform, platforms)
         {
             if (pPlatform->getName() == newPlatform)
             {
                 m_pCollectionListWidget->setCurrentCollection("");
-                m_sCurrentPlatform = pPlatform->getName();
+                SelectionService::getInstance()->setCurrentPlatform(pPlatform->getName());
                 break;
             }
         }
         _refreshPlatformPanel();
-        _loadGamesFromDirectory(m_sCurrentPlatform);
+        _loadGamesFromDirectory(SelectionService::getInstance()->getCurrentPlatform());
     }
 }
 
@@ -174,7 +174,7 @@ void MainWindow::on_treeSearch_returnPressed()
     if(pLineEdit != NULL)
     {
         QString searchText = pLineEdit->text();
-        QList<Platform*> platforms = m_pDatabase->getPlatforms();
+        QList<Platform*> platforms = DatabaseService::getInstance()->getPlatforms();
 
         // Search same name
         foreach (Platform* pPlatform, platforms)
@@ -208,7 +208,7 @@ void MainWindow::on_tabWidget_currentChanged(int a_iIndex)
             if (pItem != NULL)
             {
                 QString sPlatformName = pItem->text(0);
-                Platform* pPlatform = m_pDatabase->getPlatform(sPlatformName);
+                Platform* pPlatform = DatabaseService::getInstance()->getPlatform(sPlatformName);
                 if (pPlatform)
                 {
                     _refreshGridLayout(pPlatform);
@@ -222,7 +222,7 @@ void MainWindow::on_tabWidget_currentChanged(int a_iIndex)
             if (pItem != NULL)
             {
                 QString sCollectionName = pItem->text();
-                Collection* pCollection = m_pDatabase->getCollection(sCollectionName);
+                Collection* pCollection = DatabaseService::getInstance()->getCollection(sCollectionName);
                 if (pCollection)
                 {
                     _refreshGridLayout(pCollection);
@@ -246,7 +246,7 @@ void MainWindow::on_actionPreferences_triggered()
     if (m_pPreferencesWindow->isHidden() == true)
     {
         // Update preference window content
-        m_pPreferencesWindow->updateContent(*m_pDatabase);
+        m_pPreferencesWindow->updateContent();
 
         // Show preferences window (hidden when closed)
         m_pPreferencesWindow->show();
@@ -353,8 +353,9 @@ void MainWindow::on_collectionSelected(Collection* a_pCollection)
     }
     else
     {
-        m_sCurrentPlatform = m_pDatabase->getPlatforms()[0]->getName();
-        _refreshGridLayout(m_pDatabase->getPlatform(m_sCurrentPlatform));
+        QString sPlatform = DatabaseService::getInstance()->getPlatforms()[0]->getName();
+        SelectionService::getInstance()->setCurrentPlatform(sPlatform);
+        _refreshGridLayout(DatabaseService::getInstance()->getPlatform(sPlatform));
     }
 }
 
@@ -469,12 +470,12 @@ void MainWindow::_loadGamesFromDirectory(const QString& a_sPlatformName)
     // Stop the grid refresh
     m_pGameListWidget->stop();
     m_pCollectionListWidget->setCurrentCollection("");
-    m_sCurrentPlatform = a_sPlatformName;
+    SelectionService::getInstance()->setCurrentPlatform(a_sPlatformName);
 
     // Clear the grid
     m_pGameListWidget->_clearGridLayout();
 
-    Platform* pPlatform = m_pDatabase->getPlatform(a_sPlatformName);
+    Platform* pPlatform = DatabaseService::getInstance()->getPlatform(a_sPlatformName);
     if (pPlatform != NULL)
     {
         // Parse the roms directory
@@ -502,7 +503,7 @@ void MainWindow::_loadGamesFromDirectory(const QString& a_sPlatformName)
             if (romFiles.size() > 0)
             {
                 // Add the game to database
-                Game* pGame = m_pDatabase->getGame(sPlatformName, romFiles[0]);
+                Game* pGame = DatabaseService::getInstance()->getGame(sPlatformName, romFiles[0]);
                 if (pGame != NULL)
                 {
                     games.append(pGame);
@@ -549,7 +550,7 @@ void MainWindow::_parseGamesFromDirectory(Platform* a_pPlatform)
         if (romFiles.size() > 0)
         {
             // Add the game to database
-            m_pDatabase->createGame(romFiles[0], QString(directory.dirName()), a_pPlatform);
+            DatabaseService::getInstance()->createGame(romFiles[0], QString(directory.dirName()), a_pPlatform);
         }
     }
 }
@@ -673,25 +674,25 @@ void MainWindow::_setCurrentTreeViewItem(const QString& a_sPlatformName)
     {
         m_pPlatformListWidget->getTreeWidget()->setCurrentItem(pItemsFound[0]);
         m_pCollectionListWidget->setCurrentCollection("");
-        m_sCurrentPlatform = a_sPlatformName;
+        SelectionService::getInstance()->setCurrentPlatform(a_sPlatformName);
         _refreshPlatformPanel();
-        _loadGamesFromDirectory(m_sCurrentPlatform);
+        _loadGamesFromDirectory(a_sPlatformName);
     }
 }
 
 void MainWindow::_deleteGame(const QString& a_sPlatformName, const QString& a_sGameName)
 {
     // Remove game from database
-    Game* pGame = m_pDatabase->getGame(a_sPlatformName, a_sGameName);
+    Game* pGame = DatabaseService::getInstance()->getGame(a_sPlatformName, a_sGameName);
     if (pGame)
     {
-        m_pDatabase->deleteGame(pGame);
+        DatabaseService::getInstance()->deleteGame(pGame);
     }
 }
 
 void MainWindow::_refreshPlatformPanel()
 {
-    Platform* pPlatform = m_pDatabase->getPlatform(m_sCurrentPlatform);
+    Platform* pPlatform = DatabaseService::getInstance()->getPlatform(SelectionService::getInstance()->getCurrentPlatform());
     if (pPlatform != NULL)
     {
         // Load title
@@ -759,9 +760,9 @@ void MainWindow::_refreshPlatformPanel()
 
 void MainWindow::_refreshStatusBar()
 {
-    m_pUI->statusbar->showMessage(QString(tr("     Consoles: ")) + QString::number(m_pDatabase->getPlatforms().size()) +
+    m_pUI->statusbar->showMessage(QString(tr("     Consoles: ")) + QString::number(DatabaseService::getInstance()->getPlatforms().size()) +
                                   QString(tr("     Displayed Games: ")) + QString::number(m_pGameListWidget->getGames().size()) +
-                                  QString(tr("     Total Games: ")) + QString::number(m_pDatabase->getGamesCount()));
+                                  QString(tr("     Total Games: ")) + QString::number(DatabaseService::getInstance()->getGamesCount()));
 }
 
 void MainWindow::_loadMetadatas()
@@ -787,7 +788,7 @@ void MainWindow::_loadMetadatas()
         QString sPlatformName = json["platform_name"].toString();
         QString sGameName = json["game_name"].toString();
         quint16 uiGameRating = json["game_rating"].toInt();
-        Game* pGame = m_pDatabase->getGame(sPlatformName, sGameName);
+        Game* pGame = DatabaseService::getInstance()->getGame(sPlatformName, sGameName);
         if (pGame != NULL)
         {
             pGame->setRating(uiGameRating);
@@ -799,7 +800,7 @@ void MainWindow::_refreshGridLayout(Collection* a_pCollection)
 {
     m_pGameListWidget->stop();
     m_pCollectionListWidget->setCurrentCollection(a_pCollection->getName());
-    m_sCurrentPlatform = "";
+    SelectionService::getInstance()->setCurrentPlatform("");
 
     m_pGameListWidget->_clearGridLayout();
 
@@ -833,9 +834,10 @@ void MainWindow::_refreshGridLayout(Platform* a_pPlatform)
 
 void MainWindow::_refreshGridLayout()
 {
-    if (m_sCurrentPlatform != "")
+    QString sPlatform = SelectionService::getInstance()->getCurrentPlatform();
+    if (sPlatform != "")
     {
-        Platform* pPlatform = m_pDatabase->getPlatform(m_sCurrentPlatform);
+        Platform* pPlatform = DatabaseService::getInstance()->getPlatform(sPlatform);
         if (pPlatform != NULL)
         {
             _refreshGridLayout(pPlatform);
@@ -843,7 +845,7 @@ void MainWindow::_refreshGridLayout()
     }
     else
     {
-        Collection* pCollection = m_pDatabase->getCollection(m_pCollectionListWidget->getCurrentCollection());
+        Collection* pCollection = DatabaseService::getInstance()->getCollection(m_pCollectionListWidget->getCurrentCollection());
         if (pCollection != NULL)
         {
             _refreshGridLayout(pCollection);

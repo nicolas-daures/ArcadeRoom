@@ -17,10 +17,9 @@
 // Constructors
 //====================================================================================
 
-GameListWidget::GameListWidget(Database* a_pDatabase, QWidget* a_pParent)
+GameListWidget::GameListWidget(QWidget* a_pParent)
 : QWidget(a_pParent),
   m_pUI(new Ui::GameListWidget),
-  m_pDatabase(a_pDatabase),
   m_iCurrentGameCount(-1),
   m_iCurrentGamePosition(0),
   m_pCurrentGameWidget(NULL),
@@ -188,7 +187,7 @@ void GameListWidget::on_button_clicked()
         QString sGameName = button->property("game").toString();
 
         // Run emulator with rom
-        Game* pGame = m_pDatabase->getGame(sPlatformName, sGameName);
+        Game* pGame = DatabaseService::getInstance()->getGame(sPlatformName, sGameName);
         _runGame(pGame);
     }
 }
@@ -228,7 +227,7 @@ void GameListWidget::on_gameListItem_clicked(QTableWidgetItem* a_pTableItem)
     QTableWidget* pTableWidget = dynamic_cast<QTableWidget*>(m_pCurrentGameWidget);
     QString sGameName = pTableWidget->item(iRowIndex, 0)->statusTip();//pTableWidget->item(iRowIndex, 0)->text();
     QString sPlatformName = pTableWidget->item(iRowIndex, 1)->text();
-    Game* pGame = m_pDatabase->getGame(sPlatformName, sGameName);
+    Game* pGame = DatabaseService::getInstance()->getGame(sPlatformName, sGameName);
 
     if (iColumnIndex == 0)
     {
@@ -385,7 +384,7 @@ void GameListWidget::on_groupBox_customContextMenu(const QPoint &point)
             else
             {
                 // Run the game
-                Game* pGame = m_pDatabase->getGame(sPlatformName, sGameName);
+                Game* pGame = DatabaseService::getInstance()->getGame(sPlatformName, sGameName);
                 if (pGame != NULL)
                 {
                     _runGame(pGame);
@@ -668,7 +667,7 @@ void GameListWidget::_saveMetadatas()
 
     QJsonObject jsonObject;
     QJsonArray gameArray;
-    QList<QMap<QString, Game*> > gamesMap = m_pDatabase->getGames();
+    QList<QMap<QString, Game*> > gamesMap = DatabaseService::getInstance()->getGames();
     QList<QMap<QString, Game*> >::iterator it = gamesMap.begin();
     QList<QMap<QString, Game*> >::iterator end = gamesMap.end();
     for (; it != end; ++it)

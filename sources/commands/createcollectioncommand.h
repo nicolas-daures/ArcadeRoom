@@ -2,7 +2,7 @@
 #define CREATECOLLECTIONCOMMAND_H
 
 #include <QUndoCommand>
-#include "sources/database/database.h"
+#include "sources/database/databaseservice.h"
 #include "sources/database/collection.h"
 
 class CreateCollectionCommand : public QUndoCommand
@@ -13,7 +13,7 @@ public:
     // Constructors
     //====================================================================================
 
-    CreateCollectionCommand(Database* a_pDatabase, const QString& a_sCollectionName, QUndoCommand *parent = 0);
+    CreateCollectionCommand(const QString& a_sCollectionName, QUndoCommand *parent = 0);
 
 
     //====================================================================================
@@ -30,7 +30,6 @@ protected:
     // Fields
     //====================================================================================
 
-    Database*       m_pDatabase;
     Collection*     m_pCollection;
     QString         m_sCollectionName;
 };

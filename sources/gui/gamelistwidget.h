@@ -10,7 +10,7 @@
 #include <QTableWidgetItem>
 #include <QGroupBox>
 #include <QToolButton>
-#include "sources/database/database.h"
+#include "sources/database/databaseservice.h"
 #include "sources/database/platform.h"
 #include "sources/database/collection.h"
 #include "style.h"
@@ -50,7 +50,7 @@ public:
     // Constructors
     //====================================================================================
 
-    explicit GameListWidget(Database* a_pDatabase, QWidget* a_pParent = NULL);
+    explicit GameListWidget(QWidget* a_pParent = NULL);
     ~GameListWidget();
 
 
@@ -238,8 +238,6 @@ private:
     //====================================================================================
 
     Ui::GameListWidget*             m_pUI;
-
-    Database*                       m_pDatabase;
 
     QWidget*                        m_pParentWidget;
 

@@ -11,8 +11,7 @@ CommandService* CommandService::m_pInstance = NULL;
 // Constructors
 //====================================================================================
 
-CommandService::CommandService(Database* a_pDatabase, QMainWindow* a_pMainWindow)
-: m_pDatabase(a_pDatabase)
+CommandService::CommandService(QMainWindow* a_pMainWindow)
 {
     m_pUndoStack = new QUndoStack(a_pMainWindow);
 #ifdef _DEBUG
@@ -25,11 +24,11 @@ CommandService::CommandService(Database* a_pDatabase, QMainWindow* a_pMainWindow
 // Accessors
 //====================================================================================
 
-CommandService* CommandService::getInstance(Database* a_pDatabase, QMainWindow* a_pMainWindow)
+CommandService* CommandService::getInstance(QMainWindow* a_pMainWindow)
 {
     if (m_pInstance == NULL)
     {
-        m_pInstance = new CommandService(a_pDatabase, a_pMainWindow);
+        m_pInstance = new CommandService(a_pMainWindow);
     }
     return m_pInstance;
 }
@@ -51,22 +50,22 @@ QMap<QString, QUndoCommand*> CommandService::getGameCommands(const QString& a_sP
     QMap<QString, QUndoCommand*> commands;
 
     // Get the game
-    Game* pGame = m_pDatabase->getGame(a_sPlatformName, a_sGameName);
+    Game* pGame = DatabaseService::getInstance()->getGame(a_sPlatformName, a_sGameName);
 
     // Add commands
-    QList<Collection*> collections = m_pDatabase->getCollections();
+    QList<Collection*> collections = DatabaseService::getInstance()->getCollections();
     foreach (Collection* pCollection, collections)
     {
         if (pCollection->containsGame(pGame) == false)
         {
-            commands["Add to " + pCollection->getName()] = new AddGameToCollectionCommand(m_pDatabase, pCollection->getName(), a_sPlatformName, a_sGameName);
+            commands["Add to " + pCollection->getName()] = new AddGameToCollectionCommand(pCollection->getName(), a_sPlatformName, a_sGameName);
         }
     }
     foreach (Collection* pCollection, collections)
     {
         if (pCollection->containsGame(pGame))
         {
-            commands["Remove from " + pCollection->getName()] = new RemoveGameFromCollectionCommand(m_pDatabase, pCollection->getName(), a_sPlatformName, a_sGameName);
+            commands["Remove from " + pCollection->getName()] = new RemoveGameFromCollectionCommand(pCollection->getName(), a_sPlatformName, a_sGameName);
         }
     }
     //commands.push_front(new RemoveGameCommand(pGame));

@@ -352,14 +352,8 @@ private:
     // Application directory
     QString                     m_sAppDirectory;
 
-    // Database which contains platforms, games and collections
-    Database*                   m_pDatabase;
-
     // Tick each N ms to add games asynchronously
     Tick*                       m_pTick;
-
-    // Current selection (ex: Nes, Super Nes, Genesis, Favoris, ...)
-    QString                     m_sCurrentPlatform;
 
     // General base path to resources (emulators, games, ...)
     QString                     m_sResourcePath;

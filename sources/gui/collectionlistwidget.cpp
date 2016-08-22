@@ -1,9 +1,10 @@
 #include "collectionlistwidget.h"
 #include "ui_collectionlistwidget.h"
-#include "sources/database/database.h"
+#include "sources/database/databaseservice.h"
 #include "sources/database/collection.h"
 #include "sources/commands/createcollectioncommand.h"
 #include "sources/commands/deletecollectioncommand.h"
+#include "sources/services/selectionservice.h"
 
 #include <QInputDialog>
 #include <QMessageBox>
@@ -13,11 +14,9 @@
 // Constructors
 //====================================================================================
 
-CollectionListWidget::CollectionListWidget(Database* a_pDatabase, QWidget *parent)
+CollectionListWidget::CollectionListWidget(QWidget *parent)
 : QWidget(parent),
-  m_pUI(new Ui::CollectionListWidget),
-  m_pDatabase(a_pDatabase),
-  m_sCurrentCollection("")
+  m_pUI(new Ui::CollectionListWidget)
 {
     m_pUI->setupUi(this);
 }
@@ -49,12 +48,12 @@ QToolButton* CollectionListWidget::getCollectionDeleteButton()
 
 QString CollectionListWidget::getCurrentCollection() const
 {
-    return m_sCurrentCollection;
+    return SelectionService::getInstance()->getCurrentCollection();
 }
 
 void CollectionListWidget::setCurrentCollection(QString a_sCollection)
 {
-    m_sCurrentCollection = a_sCollection;
+    SelectionService::getInstance()->setCurrentCollection(a_sCollection);
 }
 
 
@@ -73,7 +72,7 @@ void CollectionListWidget::on_collectionAddButton_clicked()
     if (bOk && !sText.isEmpty())
     {
         // Check if collection already exists
-        Collection* pCollection = m_pDatabase->getCollection(sText);
+        Collection* pCollection = DatabaseService::getInstance()->getCollection(sText);
         if (pCollection == NULL)
         {
             _createCollection(sText);
@@ -88,13 +87,14 @@ void CollectionListWidget::on_collectionAddButton_clicked()
 
 void CollectionListWidget::on_collectionDeleteButton_clicked()
 {
-    if (m_sCurrentCollection != "")
+    QString sCollection = SelectionService::getInstance()->getCurrentCollection();
+    if (sCollection != "")
     {
         // Delete the collection
-        _deleteCollection(m_sCurrentCollection);
+        _deleteCollection(sCollection);
 
         // Select another collection
-        QList<Collection*> collections = m_pDatabase->getCollections();
+        QList<Collection*> collections = DatabaseService::getInstance()->getCollections();
         if (collections.size() > 0)
         {
             Collection* pNewCollection = collections[0];
@@ -108,7 +108,7 @@ void CollectionListWidget::on_collectionDeleteButton_clicked()
         }
         else
         {
-            m_sCurrentCollection = "";
+            SelectionService::getInstance()->setCurrentCollection("");
             emit collectionSelected(NULL);
         }
     }
@@ -118,7 +118,7 @@ void CollectionListWidget::on_collectionList_itemClicked(QListWidgetItem* a_pIte
 {
     // Get the selected collection
     QString sCollectionName = a_pItem->text();
-    Collection* pCollection = m_pDatabase->getCollection(sCollectionName);
+    Collection* pCollection = DatabaseService::getInstance()->getCollection(sCollectionName);
 
     if (pCollection != NULL)
     {
@@ -136,7 +136,7 @@ void CollectionListWidget::on_collectionSearch_returnPressed()
 
         // Search collection by name with lower case
         Collection* pCollection = NULL;
-        foreach (Collection* pColl, m_pDatabase->getCollections())
+        foreach (Collection* pColl, DatabaseService::getInstance()->getCollections())
         {
             if (pColl->getName().toLower() == searchText.toLower())
             {
@@ -148,7 +148,7 @@ void CollectionListWidget::on_collectionSearch_returnPressed()
         // Search collection which contains given text
         if (pCollection == NULL)
         {
-            foreach (Collection* pColl, m_pDatabase->getCollections())
+            foreach (Collection* pColl, DatabaseService::getInstance()->getCollections())
             {
                 if (pColl->getName().toLower().contains(searchText.toLower()))
                 {
@@ -181,13 +181,13 @@ void CollectionListWidget::on_collectionSearch_returnPressed()
 
 void CollectionListWidget::_createCollection(QString a_sName)
 {
-    QUndoCommand* pCreateCollectionCommand = new CreateCollectionCommand(m_pDatabase, a_sName);
+    QUndoCommand* pCreateCollectionCommand = new CreateCollectionCommand(a_sName);
     emit commandCreated(pCreateCollectionCommand);
 }
 
 void CollectionListWidget::_deleteCollection(QString a_sName)
 {
-    QUndoCommand* pDeleteCollectionCommand = new DeleteCollectionCommand(m_pDatabase, a_sName);
+    QUndoCommand* pDeleteCollectionCommand = new DeleteCollectionCommand(a_sName);
     emit commandCreated(pDeleteCollectionCommand);
 }
 

@@ -5,7 +5,7 @@
 #include <QListWidget>
 #include <QToolButton>
 #include <QUndoCommand>
-#include "sources/database/database.h"
+#include "sources/database/collection.h"
 
 namespace Ui
 {
@@ -23,7 +23,7 @@ public:
     // Constructors
     //====================================================================================
 
-    explicit CollectionListWidget(Database* a_pDatabase, QWidget *parent = 0);
+    explicit CollectionListWidget(QWidget *parent = 0);
     ~CollectionListWidget();
 
 
@@ -111,10 +111,6 @@ private:
     //====================================================================================
 
     Ui::CollectionListWidget*   m_pUI;
-
-    Database*                   m_pDatabase;
-
-    QString                     m_sCurrentCollection;
 };
 
 #endif // COLLECTIONLISTWIDGET_H

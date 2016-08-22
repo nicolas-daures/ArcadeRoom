@@ -38,13 +38,13 @@ void PreferencesWindows::retranslate()
     ui->retranslateUi(this);
 }
 
-void PreferencesWindows::updateContent(const Database& a_Database)
+void PreferencesWindows::updateContent()
 {
     // General preferences
     _updateGeneral();
 
     // Platforms
-    _updatePlatform(a_Database);
+    _updatePlatform();
 }
 
 void PreferencesWindows::on_pushButtonBrowseEmulatorPath_clicked()
@@ -243,7 +243,7 @@ void PreferencesWindows::_updateGeneral()
     }
 }
 
-void PreferencesWindows::_updatePlatform(const Database& a_Database)
+void PreferencesWindows::_updatePlatform()
 {
     QString          platformsNames;
     QStringList      platformsNamesList;
@@ -253,7 +253,7 @@ void PreferencesWindows::_updatePlatform(const Database& a_Database)
     platformsNames="";
     firstPlatformName="";
 
-    platformsList = a_Database.getPlatforms();
+    platformsList = DatabaseService::getInstance()->getPlatforms();
 
     // Get name of each platform and stock platform.
     for (int iPlatformIndex = 0; iPlatformIndex < platformsList.size(); ++iPlatformIndex)

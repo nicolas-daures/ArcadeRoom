@@ -2,7 +2,7 @@
 #define COMMANDSERVICE_H
 
 #include <QUndoCommand>
-#include "sources/database/database.h"
+#include "sources/database/databaseservice.h"
 #include <QMainWindow>
 #include <QUndoStack>
 #ifdef _DEBUG
@@ -18,7 +18,7 @@ private:
     // Constructors
     //====================================================================================
 
-    CommandService(Database* a_pDatabase, QMainWindow* a_pMainWindow);
+    CommandService(QMainWindow* a_pMainWindow);
 
 
 public:
@@ -31,7 +31,7 @@ public:
      * @brief Get unique instance of this class.
      * @return unique instance of this class
      ***********************************************************/
-    static CommandService*                  getInstance(Database* a_pDatabase = NULL, QMainWindow* a_pMainWindow = NULL);
+    static CommandService*                  getInstance(QMainWindow* a_pMainWindow = NULL);
 
     /***********************************************************
      * @brief Get all commands for given platform.
@@ -97,9 +97,6 @@ protected:
 
     // Unique instance of this class
     static CommandService*                  m_pInstance;
-
-    // Database which contains games, platforms, collections, ...
-    Database*                               m_pDatabase;
 
     // Undo stack
     QUndoStack*                             m_pUndoStack;
