@@ -17,6 +17,23 @@ public:
     // Constructors
     //====================================================================================
 
+    /***********************************************************
+     * @brief Create a platform (console).
+     * @param a_sName : name of the platform (ex: Nes, Genesis, ...)
+     * @param a_sConstructorName : name of the constructor (ex: Nintendo, Sega, ...)
+     * @param a_sGeneration : generation of the platform
+     * @param a_sEmulatorPath : path of the emulator
+     * @param a_EmulatorArguments : arguments of the emulator
+     * @param a_sRomPath : path of the roms
+     * @param m_RomExtensions : possible extensions of the roms
+     * @param a_sIconPath : path of the icon
+     * @param a_uiIconWidth : width of the icon
+     * @param a_uiIconHeight : height of the icon
+     * @param a_sDescription : description of the platform
+     * @param a_sImagePath : path of the image of the platform
+     * @param a_ScreenshotUrls : urls of screenshots of some games
+     * @param a_VideoUrls : urls of youtube video
+     ***********************************************************/
     Platform(const QString a_sName = "",
              const QString a_sConstructorName = "",
              const QString a_sGeneration = "",
@@ -31,7 +48,12 @@ public:
              const QString a_sImagePath = "",
              const QStringList a_ScreenshotUrls = QStringList(),
              const QStringList a_VideoUrls = QStringList());
-    Platform(const Platform& a_Copy);
+
+    /***********************************************************
+     * @brief Create a platform by copy.
+     * @param a_Platform : platform source
+     ***********************************************************/
+    Platform(const Platform& a_Platform);
 
 
     //====================================================================================

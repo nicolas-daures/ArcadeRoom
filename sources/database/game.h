@@ -17,11 +17,23 @@ public:
     // Constructors
     //====================================================================================
 
+    /***********************************************************
+     * @brief Create a game.
+     * @param a_sName : name of the game
+     * @param a_sRomRelativePath : relative path of the rom file
+     * @param a_pPlatform : platform (console)
+     * @param a_uiRating : rating (stars)
+     ***********************************************************/
     Game(const QString a_sName = "",
          const QString a_sRomRelativePath = "",
          Platform* a_pPlatform = NULL,
          quint16 a_uiRating = 3);
-    Game(const Game& a_Copy);
+
+    /***********************************************************
+     * @brief Create a game by copy.
+     * @param a_Game : game source
+     ***********************************************************/
+    Game(const Game& a_Game);
 
 
     //====================================================================================

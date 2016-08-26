@@ -17,13 +17,13 @@ Game::Game(const QString a_sName,
 
 }
 
-Game::Game(const Game& a_Copy)
+Game::Game(const Game& a_Game)
 : QObject()
 {
-    m_sName = a_Copy.m_sName;
-    m_sRomRelativePath = a_Copy.m_sRomRelativePath;
-    m_pPlatform = a_Copy.m_pPlatform;
-    m_uiRating = a_Copy.m_uiRating;
+    m_sName = a_Game.m_sName;
+    m_sRomRelativePath = a_Game.m_sRomRelativePath;
+    m_pPlatform = a_Game.m_pPlatform;
+    m_uiRating = a_Game.m_uiRating;
 }
 
 

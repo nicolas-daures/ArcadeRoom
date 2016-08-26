@@ -11,10 +11,9 @@
 // Constructors
 //====================================================================================
 
-PreferencesWindows::PreferencesWindows(QWidget *parent, Preferences* a_pGeneralPreferences) :
+PreferencesWindows::PreferencesWindows(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::PreferencesWindows),
-    m_pGeneralPreferences(a_pGeneralPreferences)
+    ui(new Ui::PreferencesWindows)
 {
     ui->setupUi(this);
 
@@ -39,13 +38,13 @@ void PreferencesWindows::retranslate()
     ui->retranslateUi(this);
 }
 
-void PreferencesWindows::updateContent(const Database& a_Database)
+void PreferencesWindows::updateContent()
 {
     // General preferences
     _updateGeneral();
 
     // Platforms
-    _updatePlatform(a_Database);
+    _updatePlatform();
 }
 
 void PreferencesWindows::on_pushButtonBrowseEmulatorPath_clicked()
@@ -114,28 +113,29 @@ void PreferencesWindows::on_buttonApply_clicked()
 
     // General preferences
     bool bPreferencesChanged = false;
+    PreferenceService* pPreferenceService = PreferenceService::getInstance();
 
-    QString oldStyleName = m_pGeneralPreferences->getStyleName();
+    QString oldStyleName = pPreferenceService->getStyleName();
     QString newStyleName = m_CurrentPreferences.getStyleName();
     if (oldStyleName != newStyleName)
     {
-        m_pGeneralPreferences->setStyleName(newStyleName);
+        pPreferenceService->setStyleName(newStyleName);
         bPreferencesChanged = true;
     }
 
-    bool oldShowNoCovers = m_pGeneralPreferences->getShowNoCovers();
+    bool oldShowNoCovers = pPreferenceService->getShowNoCovers();
     bool newShowNoCovers = m_CurrentPreferences.getShowNoCovers();
     if (oldShowNoCovers != newShowNoCovers)
     {
-        m_pGeneralPreferences->setShowNoCovers(newShowNoCovers);
+        pPreferenceService->setShowNoCovers(newShowNoCovers);
         bPreferencesChanged = true;
     }
 
-    QString oldLanguage = m_pGeneralPreferences->getLanguage();
+    QString oldLanguage = pPreferenceService->getLanguage();
     QString newLanguage = m_CurrentPreferences.getLanguage();
     if (oldLanguage != newLanguage)
     {
-        m_pGeneralPreferences->setLanguage(newLanguage);
+        pPreferenceService->setLanguage(newLanguage);
         bPreferencesChanged = true;
     }
 
@@ -173,11 +173,6 @@ void PreferencesWindows::on_pushButtonBrowseRomsPath_clicked()
     m_PlatformPreferencesMap[ui->comboBoxPlatformsList->currentText()].romsPathToSave = true;
 }
 
-void PreferencesWindows::on_showNoCoversCheckBox_stateChanged(int a_iNewState)
-{
-    m_CurrentPreferences.setShowNoCovers(a_iNewState != 0);
-}
-
 void PreferencesWindows::on_styleComboBox_currentIndexChanged(const QString& a_sStyleName)
 {
     m_CurrentPreferences.setStyleName(a_sStyleName);
@@ -205,7 +200,7 @@ void PreferencesWindows::_loadStyles()
         QString styleName = styleFilePath.replace(".json", "");
         ui->styleComboBox->addItem(styleName);
     }
-    ui->styleComboBox->setCurrentText(m_pGeneralPreferences->getStyleName());
+    ui->styleComboBox->setCurrentText(PreferenceService::getInstance()->getStyleName());
 }
 
 void PreferencesWindows::_updateGeneral()
@@ -232,7 +227,7 @@ void PreferencesWindows::_updateGeneral()
 
     // Set language combobox to favorite language (if available).
     languageFiles << DEFAULT_LANGUAGE;
-    QString preferredLanguage = m_pGeneralPreferences->getLanguage();
+    QString preferredLanguage = PreferenceService::getInstance()->getLanguage();
     if (languageFiles.contains(preferredLanguage))
     {
         ui->languageComboBox->setCurrentText(preferredLanguage);
@@ -244,7 +239,7 @@ void PreferencesWindows::_updateGeneral()
     }
 }
 
-void PreferencesWindows::_updatePlatform(const Database& a_Database)
+void PreferencesWindows::_updatePlatform()
 {
     QString          platformsNames;
     QStringList      platformsNamesList;
@@ -254,7 +249,7 @@ void PreferencesWindows::_updatePlatform(const Database& a_Database)
     platformsNames="";
     firstPlatformName="";
 
-    platformsList = a_Database.getPlatforms();
+    platformsList = DatabaseService::getInstance()->getPlatforms();
 
     // Get name of each platform and stock platform.
     for (int iPlatformIndex = 0; iPlatformIndex < platformsList.size(); ++iPlatformIndex)

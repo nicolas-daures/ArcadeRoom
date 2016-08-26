@@ -6,8 +6,8 @@
 // Constructors
 //====================================================================================
 
-PlatformWidget::PlatformWidget(QWidget *parent)
-: QWidget(parent),
+PlatformWidget::PlatformWidget(QWidget* a_pParent)
+: QWidget(a_pParent),
   m_pUI(new Ui::PlatformWidget)
 {
     m_pUI->setupUi(this);

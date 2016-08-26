@@ -40,23 +40,23 @@ Platform::Platform( const QString a_sName,
 
 }
 
-Platform::Platform(const Platform& a_Copy)
+Platform::Platform(const Platform& a_Platform)
 : QObject()
 {
-    m_sName = a_Copy.m_sName;
-    m_sConstructorName = a_Copy.m_sConstructorName;
-    m_sGeneration = a_Copy.m_sGeneration;
-    m_sEmulatorPath = a_Copy.m_sEmulatorPath;
-    m_EmulatorArguments = a_Copy.m_EmulatorArguments;
-    m_sRomPath = a_Copy.m_sRomPath;
-    m_RomExtensions = a_Copy.m_RomExtensions;
-    m_sIconPath = a_Copy.m_sIconPath;
-    m_uiIconWidth = a_Copy.m_uiIconWidth;
-    m_uiIconHeight = a_Copy.m_uiIconHeight;
-    m_sDescription = a_Copy.m_sDescription;
-    m_sImagePath = a_Copy.m_sImagePath;
-    m_ScreenshotUrls = a_Copy.m_ScreenshotUrls;
-    m_VideoUrls = a_Copy.m_VideoUrls;
+    m_sName = a_Platform.m_sName;
+    m_sConstructorName = a_Platform.m_sConstructorName;
+    m_sGeneration = a_Platform.m_sGeneration;
+    m_sEmulatorPath = a_Platform.m_sEmulatorPath;
+    m_EmulatorArguments = a_Platform.m_EmulatorArguments;
+    m_sRomPath = a_Platform.m_sRomPath;
+    m_RomExtensions = a_Platform.m_RomExtensions;
+    m_sIconPath = a_Platform.m_sIconPath;
+    m_uiIconWidth = a_Platform.m_uiIconWidth;
+    m_uiIconHeight = a_Platform.m_uiIconHeight;
+    m_sDescription = a_Platform.m_sDescription;
+    m_sImagePath = a_Platform.m_sImagePath;
+    m_ScreenshotUrls = a_Platform.m_ScreenshotUrls;
+    m_VideoUrls = a_Platform.m_VideoUrls;
 }
 
 

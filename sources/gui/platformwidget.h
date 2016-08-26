@@ -19,7 +19,12 @@ public:
     // Constructors
     //====================================================================================
 
-    explicit PlatformWidget(QWidget *parent = 0);
+    /***********************************************************
+     * @brief Create a widget to show platform overview
+     *        (name, image, description, screenshots, ...).
+     * @para a_pParent : parent widget
+     ***********************************************************/
+    explicit PlatformWidget(QWidget* a_pParent = 0);
     ~PlatformWidget();
 
 

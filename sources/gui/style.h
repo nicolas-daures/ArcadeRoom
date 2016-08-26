@@ -17,6 +17,16 @@ public:
     // Constructors
     //====================================================================================
 
+    /***********************************************************
+     * @brief Create a style which can be applied to application.
+     * @param a_sName : name of the style
+     * @param a_BaseColor : base color (used in background)
+     * @param a_TextColor : color of texts
+     * @param a_WindowColor : color of window
+     * @param a_HighlightColor : color of highlight
+     * @param a_sIconStyle : style of icons (black or white)
+     * @param a_sBackground : path of the background image
+     ***********************************************************/
     Style(const QString& a_sName = "dark",
           const QColor& a_BaseColor = QColor(53,53,53),
           const QColor& a_TextColor = QColor(255,255,255),

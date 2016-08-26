@@ -1,33 +1,35 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#ifndef DATABASESERVICE_H
+#define DATABASESERVICE_H
 
 #include <QObject>
-#include <QMap>
 #include <QString>
-#include "platform.h"
-#include "game.h"
-#include "collection.h"
+#include <QJsonObject>
+#include "database.h"
 
-class Database : public QObject
+class DatabaseService : public QObject
 {
     Q_OBJECT
 
 
-public:
+private:
 
     //====================================================================================
     // Constructors
     //====================================================================================
 
     /***********************************************************
-     * @brief Create a database which contains platforms, games, collections, ...
+     * @brief Create a service to access to database.
      ***********************************************************/
-    Database();
+    DatabaseService();
 
+
+public:
 
     //====================================================================================
     // Accessors
     //====================================================================================
+
+    static DatabaseService*             getInstance();
 
     Platform*                           getPlatform(const QString& a_sName) const;
     Game*                               getGame(const QString& a_sPlatformName, const QString& a_sGameName) const;
@@ -44,38 +46,6 @@ public:
     //====================================================================================
     // Operations
     //====================================================================================
-
-    /***********************************************************
-     * @brief Create a new platform.
-     * @param a_sName : platform's name
-     * @param a_sConstructorName : constructor's name
-     * @param a_sEmulatorPath : path of the emulator
-     * @param a_EmulatorArguments : arguments to run emulator
-     * @param a_sRomPath : path of the roms
-     * @param m_RomExtensions : extensions of the roms
-     * @param a_sIconPath : path of the icon
-     * @param m_uiIconWidth : icon width
-     * @param m_uiIconHeight : icon height
-     * @param a_sDescriptionFilePath : Platform description file path
-     * @return created platform
-     ***********************************************************/
-    Platform*                           createPlatform(const QString a_sName = "",
-                                                       const QString a_sConstructorName = "",
-                                                       const QString a_sGeneration = "",
-                                                       const QString a_sEmulatorPath = "",
-                                                       const QStringList a_EmulatorArguments = QStringList(),
-                                                       const QString a_sRomPath = "",
-                                                       const QStringList m_RomExtensions = QStringList(),
-                                                       const QString a_sIconPath = "",
-                                                       const quint16 m_uiIconWidth = 150,
-                                                       const quint16 m_uiIconHeight = 150,
-                                                       const QString a_sDescriptionFilePath = "");
-
-    /***********************************************************
-     * @brief Delete the given platform.
-     * @param a_pPlatform : platform to delete
-     ***********************************************************/
-    void                                deletePlatform(Platform* a_pPlatform);
 
     /***********************************************************
      * @brief Create a new game.
@@ -124,63 +94,34 @@ public:
     void                                saveCollection(const QString& a_sName);
 
 
-private slots:
+signals:
 
     //====================================================================================
-    // Slots
+    // Signals
     //====================================================================================
 
     /***********************************************************
-     * @brief Called when a game is added to collection.
-     *        Save the collection.
-     * @param a_pGame : added game
+     * @brief Called when a collection is created.
+     * @param a_pCollection : created collection
      ***********************************************************/
-    void                                on_gameAddedToCollection(Game* a_pGame);
+    void                                collectionCreated(Collection* a_pCollection);
 
     /***********************************************************
-     * @brief Called when a game is removed from collection.
-     *        Save the collection.
-     * @param a_pGame : removed game
+     * @brief Called when a collection is deleted.
+     * @param a_pCollection : deleted collection
      ***********************************************************/
-    void                                on_gameRemovedFromCollection(Game* a_pGame);
-
-    /***********************************************************
-     * @brief Called when an emulator path is changed in
-     *        preferences window.
-     *        Save this emulator path in matching platform
-     *        description file.
-     * @param emulatorPath : emulator path
-     * @param PlatformName : platform name on which emulator
-     *                       path has changed
-     ***********************************************************/
-    void                               on_emulatorPathChanged(QString emulatorPath,
-                                                              QString platformName);
-
-    /***********************************************************
-     * @brief Called when a roms path is changed in preferences
-     *        window.
-     *        Save this roms path in matching platform
-     *        description file.
-     * @param romsPath     : roms path
-     * @param PlatformName : platform name on which roms
-     *                       path has changed
-     ***********************************************************/
-    void                               on_romsPathChanged(QString romsPath,
-                                                          QString platformName);
+    void                                collectionDeleted(Collection* a_pCollection);
 
 
-protected:
+private:
 
     //====================================================================================
     // Fields
     //====================================================================================
 
-    QMap<QString, Platform*>             m_PlatformMap;
-    QMap<QString, QMap<QString, Game*> > m_GameMap;
-    QMap<QString, Collection*>           m_CollectionMap;
-    QMap<QString, QString>               m_PlatformFileMap;
+    static DatabaseService*             m_pInstance;
 
-    uint                                 m_uiGameCount;
+    Database                            m_Database;
 };
 
-#endif // DATABASE_H
+#endif // DATABASESERVICE_H

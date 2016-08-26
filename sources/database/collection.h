@@ -18,8 +18,17 @@ public:
     // Constructors
     //====================================================================================
 
+    /***********************************************************
+     * @brief Create a collection which contains games.
+     * @param a_sName : name of the collection
+     ***********************************************************/
     Collection(const QString a_sName = "");
-    Collection(const Collection& a_Copy);
+
+    /***********************************************************
+     * @brief Create a collection by copy.
+     * @param a_Collection : collection source
+     ***********************************************************/
+    Collection(const Collection& a_Collection);
 
 
     //====================================================================================
