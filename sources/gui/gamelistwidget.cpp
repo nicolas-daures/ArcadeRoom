@@ -25,8 +25,8 @@ GameListWidget::GameListWidget(QWidget* a_pParent)
   m_iCurrentGamePosition(0),
   m_pCurrentGameWidget(NULL),
   m_pCurrentGameLayout(NULL),
-  m_eGameLayoutType(GridWith3Columns),
-  m_fSizeFactor(1.0f)
+  m_fSizeFactor(1.0f),
+  m_eGameLayoutType(GridWith3Columns)
 {
     m_pUI->setupUi(this);
 }
