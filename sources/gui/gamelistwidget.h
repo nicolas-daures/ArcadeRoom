@@ -36,6 +36,9 @@ public:
     // Enumerations
     //====================================================================================
 
+    /***********************************************************
+     * @brief Game layout types (ex: grid, list, ...).
+     ***********************************************************/
     enum EGameLayoutType
     {
         GridWith3Columns = 0,
@@ -50,6 +53,10 @@ public:
     // Constructors
     //====================================================================================
 
+    /***********************************************************
+     * @brief Create a widget to show game list.
+     * @param a_pParent : parent widget
+     ***********************************************************/
     explicit GameListWidget(QWidget* a_pParent = NULL);
     ~GameListWidget();
 
@@ -58,13 +65,13 @@ public:
     // Accessors
     //====================================================================================
 
-    // TODO : remove it
-    QWidget*                        getGamesToolBar();
-    QPushButton*                    getButtonNoCover();
-    QVBoxLayout*                    getGameListContainerLayout();
-    QSlider*                        getHorizontalSlider();
-    QComboBox*                      getLayoutTypeComboBox();
-    QLabel*                         getCoverSizeIcon();
+    void                            setToolBarVisibility(bool a_bVisibility);
+    void                            setButtonNoCoverToolTip(QString a_sTooltip);
+    void                            setButtonNoCoverChecked(bool a_bChecked);
+    void                            setHorizontalSliderValue(int a_iSliderValue);
+
+    int                             getCurrentLayoutType();
+    void                            setCurrentLayoutType(int a_iLayoutType);
 
     QList<Game*>                    getGames();
     void                            setGames(QList<Game*> a_Games);
@@ -124,7 +131,7 @@ public slots:
      * @brief Called when a rom is clicked.
      *        Run the clicked rom.
      ***********************************************************/
-    void                            on_button_clicked();
+    void                            on_buttonClicked();
 
     /***********************************************************
      * @brief Called when the search button in grid is pressed.
@@ -137,7 +144,7 @@ public slots:
      *        Run the game.
      * @param a_pTableItem : clicked item
      ***********************************************************/
-    void                            on_gameListItem_clicked(QTableWidgetItem* a_pTableItem);
+    void                            on_gameListItemClicked(QTableWidgetItem* a_pTableItem);
 
     /***********************************************************
      * @brief Called when tick.
@@ -150,7 +157,7 @@ public slots:
      *        Open the context menu.
      * @param point : click position
      ***********************************************************/
-    void                            on_groupBox_customContextMenu(const QPoint& point);
+    void                            on_groupBoxCustomContextMenu(const QPoint& point);
 
 
 
@@ -160,8 +167,43 @@ public:
     // Operations
     //====================================================================================
 
+    /***********************************************************
+     * @brief Start the game refreshing.
+     ***********************************************************/
     void                            start();
+
+    /***********************************************************
+     * @brief Stop the game refreshing.
+     ***********************************************************/
     void                            stop();
+
+    /***********************************************************
+     * @brief Update the style of the icons.
+     * @param a_sIconPath : path of the icons
+     ***********************************************************/
+    void                            updateIconsStyle(QString a_sIconPath);
+
+    /***********************************************************
+     * @brief Clear the grid layout.
+     ***********************************************************/
+    void                            clearGridLayout();
+
+    /***********************************************************
+     * @brief Create the widget to display roms.
+     ***********************************************************/
+    void                            createGameListWidget(QWidget* a_pParent);
+
+    /***********************************************************
+     * @brief Update the style of the widgets.
+     ***********************************************************/
+    void                            updateWidgetsStyle();
+
+
+private:
+
+    //====================================================================================
+    // Private Operations
+    //====================================================================================
 
     /***********************************************************
      * @brief Create a group box for a game.
@@ -174,34 +216,10 @@ public:
     QGroupBox*                      _createGameGroupBox(Game* a_pGame, bool a_bIsCoverExists, QString a_sCurrentPath,
                                                      QStringList a_sCoverFiles, QString a_sRomFile);
 
-
-// TODO : private
-
-    //====================================================================================
-    // Private Operations
-    //====================================================================================
-
-    /***********************************************************
-     * @brief Clear the grid layout.
-     ***********************************************************/
-    void                            _clearGridLayout();
-
-
-    /***********************************************************
-     * @brief Create the widget to display roms.
-     ***********************************************************/
-    void                            _createGameListWidget(QWidget* a_pParent);
-
     /***********************************************************
      * @brief Delete the widget to display roms.
      ***********************************************************/
     void                            _deleteGameListWidget();
-
-    /***********************************************************
-     * @brief Update the style of the widgets.
-     * @param a_pStyle : style to apply
-     ***********************************************************/
-    void                            _updateWidgetsStyle(Style* a_pStyle);
 
     /***********************************************************
      * @brief Apply a style to given button.
@@ -230,8 +248,12 @@ public:
      ***********************************************************/
     void                            _saveMetadatas();
 
+    /***********************************************************
+     * @brief Get rom filter for given platform.
+     * @param pPlatform : platform
+     ***********************************************************/
+    QStringList                     _getRomFilter(Platform* pPlatform);
 
-private:
 
     //====================================================================================
     // Fields

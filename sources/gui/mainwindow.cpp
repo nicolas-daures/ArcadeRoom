@@ -25,7 +25,7 @@
 #include "sources/database/platform.h"
 #include "sources/commands/addgametocollectioncommand.h"
 #include "sources/commands/removegamefromcollectioncommand.h"
-#include "sources/services/selectionservice.h"
+#include "styleservice.h"
 #ifdef WIN32
 #include <Windows.h>
 #include <qset.h>
@@ -36,21 +36,21 @@
 // Constructors
 //====================================================================================
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+MainWindow::MainWindow(QWidget* a_pParent) :
+    QMainWindow(a_pParent),
     m_pUI(new Ui::MainWindow),
     m_sAppDirectory(QApplication::applicationDirPath()),
-    m_pPlatformWidget(NULL),
-    m_pCurrentStyle(NULL)
+    m_pPlatformWidget(NULL)
 {
     // Create undo stack
     CommandService::getInstance(this);
 
     // Load platforms
-    DatabaseService::getInstance()->loadPlatforms();
+    DatabaseService* pDatabaseService = DatabaseService::getInstance();
+    pDatabaseService->loadPlatforms();
 
     // Load games
-    foreach (Platform* pPlatform, DatabaseService::getInstance()->getPlatforms())
+    foreach (Platform* pPlatform, pDatabaseService->getPlatforms())
     {
         _parseGamesFromDirectory(pPlatform);
     }
@@ -73,6 +73,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pGameListWidget = new GameListWidget();
     m_pUI->tabGridContainer->layout()->addWidget(m_pGameListWidget);
 
+    // Load styles
+    StyleService::getInstance()->loadStyles();
+
     // Load general preferences
     _loadGeneralPreferences();
 
@@ -80,30 +83,20 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pPreferencesWindow = new PreferencesWindows(this);
 
     // Signal when general preferences updated
-    connect(PreferenceService::getInstance(), SIGNAL(styleNameChanged(QString)), this, SLOT(on_styleNameChanged(QString)));
-    connect(PreferenceService::getInstance(), SIGNAL(languageChanged(QString)),  this, SLOT(on_languageChanged(QString)));
-    connect(m_pPreferencesWindow, SIGNAL(emulatorPathChanged(QString, QString)), DatabaseService::getInstance(), SLOT(on_emulatorPathChanged(QString, QString)));
-    connect(m_pPreferencesWindow, SIGNAL(romsPathChanged(QString, QString)), DatabaseService::getInstance(), SLOT(on_romsPathChanged(QString, QString)));
-    connect(m_pPreferencesWindow, SIGNAL(generalPreferencesChanged()), this, SLOT(on_generalPreferencesChanged()));
-
-    // Hide header of platform tree view
-    m_pPlatformListWidget->getTreeWidget()->header()->close();
+    PreferenceService* pPreferenceService = PreferenceService::getInstance();
+    connect(pPreferenceService, SIGNAL(styleNameChanged(QString)), this, SLOT(on_styleNameChanged(QString)));
+    connect(pPreferenceService, SIGNAL(languageChanged(QString)),  this, SLOT(on_languageChanged(QString)));
 
     // Signal when tree widget manipulated
-    connect(m_pPlatformListWidget->getTreeWidget(), SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)), this, SLOT(on_treeWidget_clicked(QTreeWidgetItem*, QTreeWidgetItem*)));
-    connect(m_pPlatformListWidget->getComboBoxPlatformSorting(), SIGNAL(currentIndexChanged(int)),  this, SLOT(on_comboBoxPlatformSorting_activated(int)));
-    connect(m_pPlatformListWidget->getTreeSearch(), SIGNAL(returnPressed()), this, SLOT(on_treeSearch_returnPressed()));
+    SelectionService* pSelectionService = SelectionService::getInstance();
+    connect(pSelectionService, SIGNAL(platformSelected(QString)), this, SLOT(on_platformSelected(QString)));
+    connect(pSelectionService, SIGNAL(collectionSelected(QString)), this, SLOT(on_collectionSelected(QString)));
+    connect(pDatabaseService, SIGNAL(collectionCreated(Collection*)), this, SLOT(on_collectionCreated(Collection*)));
 
     // Fill treeview
     m_pPlatformListWidget->fillTreeView();
 
     // Connections
-    connect(DatabaseService::getInstance(), SIGNAL(collectionCreated(Collection*)), this, SLOT(on_collectionCreated(Collection*)));
-    connect(DatabaseService::getInstance(), SIGNAL(collectionDeleted(Collection*)), this, SLOT(on_collectionDeleted(Collection*)));
-
-    connect(m_pCollectionListWidget, SIGNAL(collectionSelected(Collection*)), this, SLOT(on_collectionSelected(Collection*)));
-    connect(m_pCollectionListWidget, SIGNAL(commandCreated(QUndoCommand*)), this, SLOT(on_collectionCommandCreated(QUndoCommand*)));
-
     connect(m_pGameListWidget, SIGNAL(gameParameterChanged()), this, SLOT(on_gameParameterChanged()));
 
     // Create a platform panel
@@ -111,15 +104,15 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pUI->tabConsole->setLayout(pPlatformLayout);
     m_pPlatformWidget = new PlatformWidget();
     pPlatformLayout->addWidget(m_pPlatformWidget);
-    SelectionService::getInstance()->setCurrentPlatform("Nes");
+    pSelectionService->setCurrentPlatform("Nes");
     _refreshPlatformPanel();
 
     // Create a simple grid layout to display roms
-    m_pGameListWidget->_createGameListWidget(m_pUI->tabGridContainer);
-    _loadGamesFromDirectory(SelectionService::getInstance()->getCurrentPlatform());
+    m_pGameListWidget->createGameListWidget(m_pUI->tabGridContainer);
+    _loadGamesFromDirectory(pSelectionService->getCurrentPlatform());
 
     // Translate application if requiered
-    _setLanguage(PreferenceService::getInstance()->getLanguage());
+    _setLanguage(pPreferenceService->getLanguage());
 
     // Create a tick object to load rom covers asynchronously
     m_pTick = new Tick();
@@ -127,12 +120,10 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pTick->start();
 
     // Load collection on disk
-    DatabaseService::getInstance()->loadCollections();
-    foreach (Collection* pCollection, DatabaseService::getInstance()->getCollections())
+    pDatabaseService->loadCollections();
+    foreach (Collection* pCollection, pDatabaseService->getCollections())
     {
-        m_pCollectionListWidget->getCollectionList()->addItem(pCollection->getName());
-        connect(pCollection, SIGNAL(gameAdded(Game*)), this, SLOT(on_gameAddedToCollection(Game*)));
-        connect(pCollection, SIGNAL(gameRemoved(Game*)), this, SLOT(on_gameRemovedFromCollection(Game*)));
+        m_pCollectionListWidget->addItem(pCollection->getName());
     }
 }
 
@@ -143,59 +134,18 @@ MainWindow::~MainWindow()
 
 
 //====================================================================================
-// Slots TreeView
+// Slots
 //====================================================================================
 
-void MainWindow::on_treeWidget_clicked(QTreeWidgetItem* a_pNext, QTreeWidgetItem* a_pPrevious)
+void MainWindow::on_platformSelected(QString a_sPlatform)
 {
-    // Set the new platform and refresh the rom list
-    QTreeWidgetItem* pItem = (a_pNext != NULL ? a_pNext : a_pPrevious);
-    QString newPlatform = pItem->text(m_pPlatformListWidget->getTreeWidget()->currentColumn());
-    if (newPlatform != SelectionService::getInstance()->getCurrentPlatform())
-    {
-        QList<Platform*> platforms = DatabaseService::getInstance()->getPlatforms();
-        foreach (Platform* pPlatform, platforms)
-        {
-            if (pPlatform->getName() == newPlatform)
-            {
-                m_pCollectionListWidget->setCurrentCollection("");
-                SelectionService::getInstance()->setCurrentPlatform(pPlatform->getName());
-                break;
-            }
-        }
-        _refreshPlatformPanel();
-        _loadGamesFromDirectory(SelectionService::getInstance()->getCurrentPlatform());
-    }
+    _refreshPlatformPanel();
+    _refreshGridLayout();
 }
 
-void MainWindow::on_treeSearch_returnPressed()
+void MainWindow::on_collectionSelected(QString a_sCollection)
 {
-    QLineEdit* pLineEdit = dynamic_cast<QLineEdit*>(sender());
-    if(pLineEdit != NULL)
-    {
-        QString searchText = pLineEdit->text();
-        QList<Platform*> platforms = DatabaseService::getInstance()->getPlatforms();
-
-        // Search same name
-        foreach (Platform* pPlatform, platforms)
-        {
-            if (pPlatform->getName().toLower() == searchText.toLower())
-            {
-                _setCurrentTreeViewItem(pPlatform->getName());
-                return;
-            }
-        }
-
-        // Search if contains
-        foreach (Platform* pPlatform, platforms)
-        {
-            if (pPlatform->getName().toLower().contains(searchText.toLower()))
-            {
-                _setCurrentTreeViewItem(pPlatform->getName());
-                return;
-            }
-        }
-    }
+    _refreshGridLayout();
 }
 
 void MainWindow::on_tabWidget_currentChanged(int a_iIndex)
@@ -204,7 +154,7 @@ void MainWindow::on_tabWidget_currentChanged(int a_iIndex)
     {
         case 0: // TreeView
         {
-            QTreeWidgetItem* pItem = m_pPlatformListWidget->getTreeWidget()->currentItem();
+            QTreeWidgetItem* pItem = m_pPlatformListWidget->getCurrentItem();
             if (pItem != NULL)
             {
                 QString sPlatformName = pItem->text(0);
@@ -218,7 +168,7 @@ void MainWindow::on_tabWidget_currentChanged(int a_iIndex)
         break;
         case 1: // ListView
         {
-            QListWidgetItem* pItem = m_pCollectionListWidget->getCollectionList()->currentItem();
+            QListWidgetItem* pItem = m_pCollectionListWidget->getCurrentItem();
             if (pItem != NULL)
             {
                 QString sCollectionName = pItem->text();
@@ -233,6 +183,16 @@ void MainWindow::on_tabWidget_currentChanged(int a_iIndex)
     default:
         break;
     }
+}
+
+void MainWindow::on_collectionCreated(Collection* a_pCollection)
+{
+    connect(a_pCollection, SIGNAL(gameRemoved(Game*)), this, SLOT(on_gameRemovedFromCollection(Game*)));
+}
+
+void MainWindow::on_gameRemovedFromCollection(Game*)
+{
+    _refreshGridLayout();
 }
 
 
@@ -295,104 +255,31 @@ void MainWindow::on_languageChanged(QString a_sLanguage)
 
 void MainWindow::on_styleNameChanged(QString a_sStyleName)
 {
-    _setStyle(a_sStyleName);
-}
-
-void MainWindow::on_generalPreferencesChanged()
-{
-    PreferenceService::getInstance()->save();
+    StyleService::getInstance()->setCurrentStyle(a_sStyleName);
 }
 
 void MainWindow::on_actionConsoles_toggled(bool a_bIsChecked)
 {
     m_pUI->tabWidget->setVisible(a_bIsChecked);
     PreferenceService::getInstance()->setShowConsoles(a_bIsChecked);
-    on_generalPreferencesChanged();
 }
 
 void MainWindow::on_actionTools_Bar_toggled(bool a_bIsChecked)
 {
-    m_pGameListWidget->getGamesToolBar()->setVisible(a_bIsChecked);
+    m_pGameListWidget->setToolBarVisibility(a_bIsChecked);
     PreferenceService::getInstance()->setShowToolsBar(a_bIsChecked);
-    on_generalPreferencesChanged();
 }
 
 void MainWindow::on_actionStatus_Bar_toggled(bool a_bIsChecked)
 {
     m_pUI->statusbar->setVisible(a_bIsChecked);
     PreferenceService::getInstance()->setShowStatusBar(a_bIsChecked);
-    on_generalPreferencesChanged();
 }
 
 
 //====================================================================================
 // Slots Database
 //====================================================================================
-
-void MainWindow::on_collectionCreated(Collection* a_pCollection)
-{
-    m_pCollectionListWidget->getCollectionList()->addItem(a_pCollection->getName());
-    connect(a_pCollection, SIGNAL(gameAdded(Game*)), this, SLOT(on_gameAddedToCollection(Game*)));
-    connect(a_pCollection, SIGNAL(gameRemoved(Game*)), this, SLOT(on_gameRemovedFromCollection(Game*)));
-}
-
-void MainWindow::on_collectionDeleted(Collection* a_pCollection)
-{
-    QList<QListWidgetItem*> pItemsFound = m_pCollectionListWidget->getCollectionList()->findItems(a_pCollection->getName(), Qt::MatchRecursive);
-    if (pItemsFound.size() > 0)
-    {
-        delete pItemsFound[0];
-    }
-}
-
-void MainWindow::on_collectionSelected(Collection* a_pCollection)
-{
-    if (a_pCollection != NULL)
-    {
-        _refreshGridLayout(a_pCollection);
-    }
-    else
-    {
-        QString sPlatform = DatabaseService::getInstance()->getPlatforms()[0]->getName();
-        SelectionService::getInstance()->setCurrentPlatform(sPlatform);
-        _refreshGridLayout(DatabaseService::getInstance()->getPlatform(sPlatform));
-    }
-}
-
-void MainWindow::on_collectionCommandCreated(QUndoCommand* a_pCommand)
-{    
-    CommandService::getInstance()->push(a_pCommand);
-}
-
-void MainWindow::on_gameAddedToCollection(Game*)
-{
-    Collection* pCollection = dynamic_cast<Collection*>(sender());
-    if(pCollection != NULL && pCollection->getName() == m_pCollectionListWidget->getCurrentCollection())
-    {
-        _refreshGridLayout(pCollection);
-    }
-}
-
-void MainWindow::on_gameRemovedFromCollection(Game*)
-{
-    Collection* pCollection = dynamic_cast<Collection*>(sender());
-    if(pCollection != NULL && pCollection->getName() == m_pCollectionListWidget->getCurrentCollection())
-    {
-        _refreshGridLayout(pCollection);
-    }
-}
-
-void MainWindow::on_comboBoxPlatformSorting_activated(int a_iIndex)
-{
-    // Modify tree view when a new platform sorting criteria is selected
-    m_pPlatformListWidget->fillTreeView();
-
-    // Update general preferences
-    // Get the selected criteria to sort platforms in tree view
-    uint indexCriteria = a_iIndex;
-    PreferenceService::getInstance()->setPlatformSortingCriteria(indexCriteria);
-    on_generalPreferencesChanged();
-}
 
 void MainWindow::on_gameParameterChanged()
 {
@@ -417,7 +304,7 @@ void MainWindow::_loadGeneralPreferences()
         m_pUI->tabWidget->setVisible(true);
 
         m_pUI->actionTools_Bar->setChecked(true);
-        m_pGameListWidget->getGamesToolBar()->setVisible(true);
+        m_pGameListWidget->setToolBarVisibility(true);
 
         m_pUI->actionStatus_Bar->setChecked(true);
         m_pUI->statusbar->setVisible(true);
@@ -436,8 +323,8 @@ void MainWindow::_loadGeneralPreferences()
     PreferenceService::getInstance()->read(jsonObject);
 
     bool bShowNoCovers = PreferenceService::getInstance()->getShowNoCovers();
-    m_pGameListWidget->getButtonNoCover()->setToolTip(bShowNoCovers ? TOOLTIP_GAME_TAB_TOOLS_BAR_COVER : TOOLTIP_GAME_TAB_TOOLS_BAR_NO_COVER);
-    m_pGameListWidget->getButtonNoCover()->setChecked(!bShowNoCovers);
+    m_pGameListWidget->setButtonNoCoverToolTip(bShowNoCovers ? TOOLTIP_GAME_TAB_TOOLS_BAR_COVER : TOOLTIP_GAME_TAB_TOOLS_BAR_NO_COVER);
+    m_pGameListWidget->setButtonNoCoverChecked(!bShowNoCovers);
 
     bool bShowConsoles = PreferenceService::getInstance()->getShowConsoles();
     m_pUI->actionConsoles->setChecked(bShowConsoles);
@@ -445,14 +332,14 @@ void MainWindow::_loadGeneralPreferences()
 
     bool bShowToolsBar = PreferenceService::getInstance()->getShowToolsBar();
     m_pUI->actionTools_Bar->setChecked(bShowToolsBar);
-    m_pGameListWidget->getGamesToolBar()->setVisible(bShowToolsBar);
+    m_pGameListWidget->setToolBarVisibility(bShowToolsBar);
 
     bool bShowStatusBar = PreferenceService::getInstance()->getShowStatusBar();
     m_pUI->actionStatus_Bar->setChecked(bShowStatusBar);
     m_pUI->statusbar->setVisible(bShowStatusBar);
 
     float fCoverSizeFactor = PreferenceService::getInstance()->getCoverSizeFactor();
-    m_pGameListWidget->getHorizontalSlider()->setValue((int)(fCoverSizeFactor * 100));
+    m_pGameListWidget->setHorizontalSliderValue((int)(fCoverSizeFactor * 100));
 
     // Apply preferences
     _setStyle(PreferenceService::getInstance()->getStyleName());
@@ -469,11 +356,11 @@ void MainWindow::_loadGamesFromDirectory(const QString& a_sPlatformName)
 {
     // Stop the grid refresh
     m_pGameListWidget->stop();
-    m_pCollectionListWidget->setCurrentCollection("");
+    SelectionService::getInstance()->setCurrentCollection("");
     SelectionService::getInstance()->setCurrentPlatform(a_sPlatformName);
 
     // Clear the grid
-    m_pGameListWidget->_clearGridLayout();
+    m_pGameListWidget->clearGridLayout();
 
     Platform* pPlatform = DatabaseService::getInstance()->getPlatform(a_sPlatformName);
     if (pPlatform != NULL)
@@ -518,9 +405,9 @@ void MainWindow::_loadGamesFromDirectory(const QString& a_sPlatformName)
 
         // Update layout type combo box here because combo box is not ready when load general preferences
         int iLayoutType = PreferenceService::getInstance()->getLayoutType();
-        if (m_pGameListWidget->getLayoutTypeComboBox()->currentIndex() != iLayoutType)
+        if (m_pGameListWidget->getCurrentLayoutType() != iLayoutType)
         {
-            m_pGameListWidget->getLayoutTypeComboBox()->setCurrentIndex(iLayoutType);
+            m_pGameListWidget->setCurrentLayoutType(iLayoutType);
         }
 
         m_pGameListWidget->start();
@@ -592,45 +479,7 @@ void MainWindow::_setLanguage(QString a_sLanguage)
 
 void MainWindow::_setStyle(QString a_sStyleName)
 {
-    // Load style file from disk if exists
-    qWarning(m_sAppDirectory.toStdString().c_str());
-    QFile loadFile(m_sAppDirectory + "/styles/" + a_sStyleName + ".json");
-    if (!loadFile.open(QIODevice::ReadOnly))
-    {
-        qWarning("Couldn't open style file.");
-        return;
-    }
-
-    // Deserialize style
-    QByteArray datas = loadFile.readAll();
-    QJsonDocument loadDoc(QJsonDocument::fromJson(datas));
-    QJsonObject jsonObject = loadDoc.object();
-
-    if (m_pCurrentStyle == NULL)
-    {
-        m_pCurrentStyle = new Style(a_sStyleName);
-    }
-    m_pCurrentStyle->read(jsonObject);
-
-    // Initialize palette
-    QApplication::setStyle(QStyleFactory::create("Fusion"));
-    QColor baseColor = m_pCurrentStyle->getBaseColor();
-    QColor textColor = m_pCurrentStyle->getTextColor();
-    QColor windowColor = m_pCurrentStyle->getWindowColor();
-    QColor highlightColor = m_pCurrentStyle->getHighlightColor();
-
-    // Set palette
-    QPalette p;
-    p = qApp->palette();
-    p.setColor(QPalette::Base, baseColor);
-    p.setColor(QPalette::Text, textColor);
-    p.setColor(QPalette::Window, windowColor);
-    p.setColor(QPalette::WindowText, textColor);
-    p.setColor(QPalette::Highlight, highlightColor);
-    p.setColor(QPalette::HighlightedText, textColor);
-    p.setColor(QPalette::Button, baseColor);
-    p.setColor(QPalette::ButtonText, textColor);
-    qApp->setPalette(p);
+    StyleService::getInstance()->setCurrentStyle(a_sStyleName);
 
     // Update style of icons
     _updateIconsStyle();
@@ -647,37 +496,18 @@ void MainWindow::_setStyle(QString a_sStyleName)
 
 void MainWindow::_updateIconsStyle()
 {
-    QString sIconPath = ":/icons/resources/icons/" + (m_pCurrentStyle != NULL ? m_pCurrentStyle->getIconStyle() : "white");
+    Style* pCurrentStyle = StyleService::getInstance()->getCurrentStyle();
 
-    m_pCollectionListWidget->getCollectionAddButton()->setIcon(QIcon(sIconPath + "/add.png"));
-    m_pCollectionListWidget->getCollectionDeleteButton()->setIcon(QIcon(sIconPath + "/delete.png"));
+    QString sIconPath = ":/icons/resources/icons/" + (pCurrentStyle != NULL ? pCurrentStyle->getIconStyle() : "white");
 
-    m_pGameListWidget->getButtonNoCover()->setIcon(!m_pGameListWidget->getButtonNoCover()->isChecked() ? QIcon(sIconPath + "/cover.png") : QIcon(sIconPath + "/no_cover.png"));
-    m_pGameListWidget->getCoverSizeIcon()->setPixmap(QPixmap(sIconPath + "/covers_size.png"));
+    m_pCollectionListWidget->setIcons(QIcon(sIconPath + "/add.png"), QIcon(sIconPath + "/delete.png"));
 
-    m_pGameListWidget->getLayoutTypeComboBox()->setItemIcon(0, QIcon(sIconPath + "/layout_grid3xn.png"));
-    m_pGameListWidget->getLayoutTypeComboBox()->setItemIcon(1, QIcon(sIconPath + "/layout_grid4xn.png"));
-    m_pGameListWidget->getLayoutTypeComboBox()->setItemIcon(2, QIcon(sIconPath + "/layout_grid5xn.png"));
-    m_pGameListWidget->getLayoutTypeComboBox()->setItemIcon(3, QIcon(sIconPath + "/layout_horizontal.png"));
-    m_pGameListWidget->getLayoutTypeComboBox()->setItemIcon(4, QIcon(sIconPath + "/layout_list.png"));
+    m_pGameListWidget->updateIconsStyle(sIconPath);
 }
 
 void MainWindow::_updateWidgetsStyle()
 {
-    m_pGameListWidget->_updateWidgetsStyle(m_pCurrentStyle);
-}
-
-void MainWindow::_setCurrentTreeViewItem(const QString& a_sPlatformName)
-{
-    QList<QTreeWidgetItem*> pItemsFound = m_pPlatformListWidget->getTreeWidget()->findItems(a_sPlatformName, Qt::MatchRecursive);
-    if (pItemsFound.size() > 0)
-    {
-        m_pPlatformListWidget->getTreeWidget()->setCurrentItem(pItemsFound[0]);
-        m_pCollectionListWidget->setCurrentCollection("");
-        SelectionService::getInstance()->setCurrentPlatform(a_sPlatformName);
-        _refreshPlatformPanel();
-        _loadGamesFromDirectory(a_sPlatformName);
-    }
+    m_pGameListWidget->updateWidgetsStyle();
 }
 
 void MainWindow::_deleteGame(const QString& a_sPlatformName, const QString& a_sGameName)
@@ -799,10 +629,10 @@ void MainWindow::_loadMetadatas()
 void MainWindow::_refreshGridLayout(Collection* a_pCollection)
 {
     m_pGameListWidget->stop();
-    m_pCollectionListWidget->setCurrentCollection(a_pCollection->getName());
+    SelectionService::getInstance()->setCurrentCollection(a_pCollection->getName());
     SelectionService::getInstance()->setCurrentPlatform("");
 
-    m_pGameListWidget->_clearGridLayout();
+    m_pGameListWidget->clearGridLayout();
 
     // Get the games and display them
     //m_Games.clear();
@@ -811,14 +641,6 @@ void MainWindow::_refreshGridLayout(Collection* a_pCollection)
 
     // Update status bar
     _refreshStatusBar();
-
-    // Update layout type combo box here because combo box is not ready when load general preferences
-    int iLayoutType = PreferenceService::getInstance()->getLayoutType();
-    // TODO
-    /*if (m_pUI->layoutTypeComboBox->currentIndex() != iLayoutType)
-    {
-        m_pUI->layoutTypeComboBox->setCurrentIndex(iLayoutType);
-    }*/
 
     // When current game count >= 0, the tick works
     m_pGameListWidget->start();
@@ -845,7 +667,8 @@ void MainWindow::_refreshGridLayout()
     }
     else
     {
-        Collection* pCollection = DatabaseService::getInstance()->getCollection(m_pCollectionListWidget->getCurrentCollection());
+        QString sCollection = SelectionService::getInstance()->getCurrentCollection();
+        Collection* pCollection = DatabaseService::getInstance()->getCollection(sCollection);
         if (pCollection != NULL)
         {
             _refreshGridLayout(pCollection);

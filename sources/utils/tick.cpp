@@ -5,7 +5,8 @@
 // Constructors
 //====================================================================================
 
-Tick::Tick()
+Tick::Tick(int a_iMilliseconds)
+: m_iMilliseconds(a_iMilliseconds)
 {
     setParent(0);
     moveToThread(this);
@@ -20,7 +21,7 @@ void Tick::run()
 {
     while(true)
     {
-        msleep(50);
+        msleep(m_iMilliseconds);
         emit ticked();
     }
 }

@@ -17,6 +17,9 @@ private:
     // Constructors
     //====================================================================================
 
+    /***********************************************************
+     * @brief Create a service to access to database.
+     ***********************************************************/
     DatabaseService();
 
 
@@ -97,6 +100,17 @@ signals:
     // Signals
     //====================================================================================
 
+    /***********************************************************
+     * @brief Called when a collection is created.
+     * @param a_pCollection : created collection
+     ***********************************************************/
+    void                                collectionCreated(Collection* a_pCollection);
+
+    /***********************************************************
+     * @brief Called when a collection is deleted.
+     * @param a_pCollection : deleted collection
+     ***********************************************************/
+    void                                collectionDeleted(Collection* a_pCollection);
 
 
 private:

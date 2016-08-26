@@ -15,7 +15,12 @@ public:
     // Constructors
     //====================================================================================
 
-    DeleteCollectionCommand(const QString& a_sCollectionName, QUndoCommand *parent = 0);
+    /***********************************************************
+     * @brief Create a command to delete a collection.
+     * @param a_sCollectionName : name of the collection to delete
+     * @param a_pParent : parent command
+     ***********************************************************/
+    DeleteCollectionCommand(const QString& a_sCollectionName, QUndoCommand* a_pParent = 0);
 
 
     //====================================================================================

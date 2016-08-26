@@ -12,10 +12,10 @@ Collection::Collection(const QString a_sName)
 
 }
 
-Collection::Collection(const Collection& a_Copy)
+Collection::Collection(const Collection& a_Collection)
 : QObject()
 {
-    m_sName = a_Copy.m_sName;
+    m_sName = a_Collection.m_sName;
 }
 
 

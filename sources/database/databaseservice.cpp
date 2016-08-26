@@ -92,11 +92,15 @@ void DatabaseService::deleteGame(Game* a_pGame)
 
 Collection* DatabaseService::createCollection(const QString a_sName)
 {
-    return m_Database.createCollection(a_sName);
+    Collection* pCollection = m_Database.createCollection(a_sName);
+    emit collectionCreated(pCollection);
+
+    return pCollection;
 }
 
 void DatabaseService::deleteCollection(Collection* a_pCollection)
 {
+    emit collectionDeleted(a_pCollection);
     m_Database.deleteCollection(a_pCollection);
 }
 

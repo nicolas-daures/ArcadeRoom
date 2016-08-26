@@ -1,6 +1,7 @@
 #include "gamelistwidget.h"
 #include "ui_gamelistwidget.h"
 #include "sources/commands/commandservice.h"
+#include "styleservice.h"
 #include <QGroupBox>
 #include <QUndoStack>
 #include <QDir>
@@ -40,34 +41,34 @@ GameListWidget::~GameListWidget()
 // Accessors
 //====================================================================================
 
-QWidget* GameListWidget::getGamesToolBar()
+void GameListWidget::setToolBarVisibility(bool a_bVisibility)
 {
-    return m_pUI->GamesToolsBar;
+    m_pUI->GamesToolsBar->setVisible(a_bVisibility);
 }
 
-QPushButton* GameListWidget::getButtonNoCover()
+void GameListWidget::setButtonNoCoverToolTip(QString a_sTooltip)
 {
-    return m_pUI->buttonNoCover;
+    m_pUI->buttonNoCover->setToolTip(a_sTooltip);
 }
 
-QVBoxLayout* GameListWidget::getGameListContainerLayout()
+void GameListWidget::setButtonNoCoverChecked(bool a_bChecked)
 {
-    return m_pUI->gameListContainerLayout;
+    m_pUI->buttonNoCover->setChecked(a_bChecked);
 }
 
-QSlider* GameListWidget::getHorizontalSlider()
+void GameListWidget::setHorizontalSliderValue(int a_iSliderValue)
 {
-    return m_pUI->horizontalSlider;
+    m_pUI->horizontalSlider->setValue(a_iSliderValue);
 }
 
-QComboBox* GameListWidget::getLayoutTypeComboBox()
+int GameListWidget::getCurrentLayoutType()
 {
-    return m_pUI->layoutTypeComboBox;
+    return m_pUI->layoutTypeComboBox->currentIndex();
 }
 
-QLabel* GameListWidget::getCoverSizeIcon()
+void GameListWidget::setCurrentLayoutType(int a_iLayoutType)
 {
-    return m_pUI->coverSizeIcon;
+    m_pUI->layoutTypeComboBox->setCurrentIndex(a_iLayoutType);
 }
 
 QList<Game*> GameListWidget::getGames()
@@ -92,8 +93,9 @@ void GameListWidget::setFilteredGames(QList<Game*> a_Games)
 
 void GameListWidget::on_buttonNoCover_clicked(bool checked)
 {
-    // TODO QString sIconPath = ":/icons/resources/icons/" + (m_pCurrentStyle != NULL ? m_pCurrentStyle->getIconStyle() : "white");
-    QString sIconPath = ":/icons/resources/icons/white";
+    Style* pStyle = StyleService::getInstance()->getCurrentStyle();
+
+    QString sIconPath = ":/icons/resources/icons/" + (pStyle != NULL ? pStyle->getIconStyle() : "white");
     QPushButton* pButtonNoCover = m_pUI->buttonNoCover;
     pButtonNoCover->setChecked(checked);
     if (checked == true)
@@ -113,11 +115,12 @@ void GameListWidget::on_buttonNoCover_clicked(bool checked)
     m_iCurrentGameCount = -1;
 
     // Remove all games of the grid
-    _clearGridLayout();
+    clearGridLayout();
 
     // Write preferences
-    PreferenceService::getInstance()->setShowNoCovers(!checked);
-    PreferenceService::getInstance()->save();
+    PreferenceService* pPreferenceService = PreferenceService::getInstance();
+    pPreferenceService->setShowNoCovers(!checked);
+    pPreferenceService->save();
 
     // Restart the grid refresh
     m_iCurrentGameCount = 0;
@@ -142,8 +145,9 @@ void GameListWidget::on_horizontalSlider_sliderReleased()
     //_refreshGridLayout();
 
     // Update general preferences
-    PreferenceService::getInstance()->setCoverSizeFactor(m_fSizeFactor);
-    PreferenceService::getInstance()->save();
+    PreferenceService* pPreferenceService = PreferenceService::getInstance();
+    pPreferenceService->setCoverSizeFactor(m_fSizeFactor);
+    pPreferenceService->save();
 }
 
 void GameListWidget::on_layoutTypeComboBox_currentIndexChanged(int a_iIndex)
@@ -152,7 +156,7 @@ void GameListWidget::on_layoutTypeComboBox_currentIndexChanged(int a_iIndex)
     m_iCurrentGameCount = -1;
 
     // Delete old layout if needed
-    _clearGridLayout();
+    clearGridLayout();
     bool bChangeLayout = a_iIndex >= 3 || m_eGameLayoutType >= 3;
     if (bChangeLayout)
     {
@@ -163,21 +167,20 @@ void GameListWidget::on_layoutTypeComboBox_currentIndexChanged(int a_iIndex)
     m_eGameLayoutType = (GameListWidget::EGameLayoutType)a_iIndex;
     if (bChangeLayout)
     {
-        _createGameListWidget(NULL);
+        createGameListWidget(NULL);
     }
 
     // Update general preferences
-    PreferenceService::getInstance()->setLayoutType((uint)m_eGameLayoutType);
-    PreferenceService::getInstance()->save();
+    PreferenceService* pPreferenceService = PreferenceService::getInstance();
+    pPreferenceService->setLayoutType((uint)m_eGameLayoutType);
+    pPreferenceService->save();
 
     // Refresh game layout
     emit gameParameterChanged();
-
-    //_refreshGridLayout();
 }
 
 
-void GameListWidget::on_button_clicked()
+void GameListWidget::on_buttonClicked()
 {
     // Get the clicked rom
     QToolButton* button = dynamic_cast<QToolButton*>(sender());
@@ -211,7 +214,7 @@ void GameListWidget::on_gridSearch_returnPressed()
         }
 
         // Clear games
-        _clearGridLayout();
+        clearGridLayout();
 
         // When current game count >= 0, the tick works
         m_iCurrentGameCount = 0;
@@ -219,13 +222,13 @@ void GameListWidget::on_gridSearch_returnPressed()
     }
 }
 
-void GameListWidget::on_gameListItem_clicked(QTableWidgetItem* a_pTableItem)
+void GameListWidget::on_gameListItemClicked(QTableWidgetItem* a_pTableItem)
 {
     // Get the clicked game
     int iRowIndex = a_pTableItem->row();
     int iColumnIndex = a_pTableItem->column();
     QTableWidget* pTableWidget = dynamic_cast<QTableWidget*>(m_pCurrentGameWidget);
-    QString sGameName = pTableWidget->item(iRowIndex, 0)->statusTip();//pTableWidget->item(iRowIndex, 0)->text();
+    QString sGameName = pTableWidget->item(iRowIndex, 0)->statusTip();
     QString sPlatformName = pTableWidget->item(iRowIndex, 1)->text();
     Game* pGame = DatabaseService::getInstance()->getGame(sPlatformName, sGameName);
 
@@ -272,17 +275,8 @@ void GameListWidget::on_tickTriggered()
             romCoverExists = true;
         }
 
-        // TODO use method
-        QStringList romFilter;
-        QStringList romExtensions = pGame->getPlatform()->getRomExtensions();
-        for (int iExtensionIndex = 0; iExtensionIndex < romExtensions.size(); ++iExtensionIndex)
-        {
-            QString extension = romExtensions[iExtensionIndex];
-            romFilter << "*." + extension;
-        }
-
         // Get rom files
-        //QStringList romFilter = _getRomFilter(pGame->getPlatform());
+        QStringList romFilter = _getRomFilter(pGame->getPlatform());
         QStringList romFiles = directory.entryList(romFilter);
 
         // Add rom if rom file exists and there is a cover (or no cover roms have to be displayed)
@@ -350,7 +344,7 @@ void GameListWidget::on_tickTriggered()
     }
 }
 
-void GameListWidget::on_groupBox_customContextMenu(const QPoint &point)
+void GameListWidget::on_groupBoxCustomContextMenu(const QPoint &point)
 {
     QGroupBox* groupBox = dynamic_cast<QGroupBox*>(sender());
     if (groupBox != NULL)
@@ -411,12 +405,19 @@ void GameListWidget::stop()
     m_iCurrentGameCount = -1;
 }
 
+void GameListWidget::updateIconsStyle(QString a_sIconPath)
+{
+    m_pUI->buttonNoCover->setIcon(!m_pUI->buttonNoCover->isChecked() ? QIcon(a_sIconPath + "/cover.png") : QIcon(a_sIconPath + "/no_cover.png"));
+    m_pUI->coverSizeIcon->setPixmap(QPixmap(a_sIconPath + "/covers_size.png"));
 
-//====================================================================================
-// Private Operations
-//====================================================================================
+    m_pUI->layoutTypeComboBox->setItemIcon(0, QIcon(a_sIconPath + "/layout_grid3xn.png"));
+    m_pUI->layoutTypeComboBox->setItemIcon(1, QIcon(a_sIconPath + "/layout_grid4xn.png"));
+    m_pUI->layoutTypeComboBox->setItemIcon(2, QIcon(a_sIconPath + "/layout_grid5xn.png"));
+    m_pUI->layoutTypeComboBox->setItemIcon(3, QIcon(a_sIconPath + "/layout_horizontal.png"));
+    m_pUI->layoutTypeComboBox->setItemIcon(4, QIcon(a_sIconPath + "/layout_list.png"));
+}
 
-void GameListWidget::_clearGridLayout()
+void GameListWidget::clearGridLayout()
 {
     if (m_pCurrentGameLayout != NULL)
     {
@@ -433,7 +434,7 @@ void GameListWidget::_clearGridLayout()
     }
 }
 
-void GameListWidget::_createGameListWidget(QWidget* a_pParent)
+void GameListWidget::createGameListWidget(QWidget* a_pParent)
 {
     if (a_pParent != NULL) m_pParentWidget = a_pParent;
 
@@ -476,7 +477,7 @@ void GameListWidget::_createGameListWidget(QWidget* a_pParent)
             QTableWidget* pTableWidget = new QTableWidget(1, 3);
             pTableWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
             pTableWidget->setIconSize(QSize(150, 25));
-            connect(pTableWidget, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(on_gameListItem_clicked(QTableWidgetItem*)));
+            connect(pTableWidget, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(on_gameListItemClicked(QTableWidgetItem*)));
 
             QStringList headers;
             headers << tr("Name") << tr("Platform") << tr("Note");
@@ -499,8 +500,25 @@ void GameListWidget::_createGameListWidget(QWidget* a_pParent)
     m_pUI->gameListContainerLayout->addWidget(m_pCurrentGameWidget);
 
     // Update style if needed
-    // TODO _updateWidgetsStyle();
+    updateWidgetsStyle();
 }
+
+void GameListWidget::updateWidgetsStyle()
+{
+    Style* pStyle = StyleService::getInstance()->getCurrentStyle();
+
+    // Set background
+    if (m_pCurrentGameWidget != NULL && pStyle != NULL)
+    {
+        m_pCurrentGameWidget->setStyleSheet("background-image: url(" + pStyle->getBackground() + ");" +
+                                            "background-attachment: fixed;");
+    }
+}
+
+
+//====================================================================================
+// Private Operations
+//====================================================================================
 
 void GameListWidget::_deleteGameListWidget()
 {
@@ -509,16 +527,6 @@ void GameListWidget::_deleteGameListWidget()
 
     m_pCurrentGameLayout = NULL;
     m_pCurrentGameWidget = NULL;
-}
-
-void GameListWidget::_updateWidgetsStyle(Style* a_pStyle)
-{
-    // Set background
-    if (m_pCurrentGameWidget != NULL && a_pStyle != NULL)
-    {
-        m_pCurrentGameWidget->setStyleSheet("background-image: url(" + a_pStyle->getBackground() + ");" +
-                                            "background-attachment: fixed;");
-    }
 }
 
 QGroupBox* GameListWidget::_createGameGroupBox(Game* a_pGame, bool a_bIsCoverExists, QString a_sCurrentPath, QStringList a_sCoverFiles, QString a_sRomFile)
@@ -545,7 +553,7 @@ QGroupBox* GameListWidget::_createGameGroupBox(Game* a_pGame, bool a_bIsCoverExi
     QToolButton *button = new QToolButton();
     button->setToolButtonStyle(Qt::ToolButtonIconOnly);
     button->setIcon(QIcon(coverFilePath));//QIcon(*pixmap)
-    connect(button, SIGNAL(clicked()), this, SLOT(on_button_clicked()));
+    connect(button, SIGNAL(clicked()), this, SLOT(on_buttonClicked()));
     button->setProperty("platform", QVariant(a_pGame->getPlatform()->getName()));
     button->setProperty("game", QVariant(a_pGame->getName()));
 
@@ -567,7 +575,7 @@ QGroupBox* GameListWidget::_createGameGroupBox(Game* a_pGame, bool a_bIsCoverExi
 
     // Add context menu
     pGroupBox->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(pGroupBox, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(on_groupBox_customContextMenu(const QPoint &)));
+    connect(pGroupBox, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(on_groupBoxCustomContextMenu(const QPoint &)));
 
     return pGroupBox;
 }
@@ -695,3 +703,14 @@ void GameListWidget::_saveMetadatas()
     saveFile.write(saveDoc.toJson());
 }
 
+QStringList GameListWidget::_getRomFilter(Platform* pPlatform)
+{
+    QStringList romFilter;
+    QStringList romExtensions = pPlatform->getRomExtensions();
+    for (int iExtensionIndex = 0; iExtensionIndex < romExtensions.size(); ++iExtensionIndex)
+    {
+        QString extension = romExtensions[iExtensionIndex];
+        romFilter << "*." + extension;
+    }
+    return romFilter;
+}

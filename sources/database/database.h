@@ -19,6 +19,9 @@ public:
     // Constructors
     //====================================================================================
 
+    /***********************************************************
+     * @brief Create a database which contains platforms, games, collections, ...
+     ***********************************************************/
     Database();
 
 
@@ -119,25 +122,6 @@ public:
      * @param a_sName : collection's name
      ***********************************************************/
     void                                saveCollection(const QString& a_sName);
-
-
-signals:
-
-    //====================================================================================
-    // Signals
-    //====================================================================================
-
-    /***********************************************************
-     * @brief Called when a collection is created.
-     * @param a_pCollection : created collection
-     ***********************************************************/
-    void                                collectionCreated(Collection* a_pCollection);
-
-    /***********************************************************
-     * @brief Called when a collection is deleted.
-     * @param a_pCollection : deleted collection
-     ***********************************************************/
-    void                                collectionDeleted(Collection* a_pCollection);
 
 
 private slots:

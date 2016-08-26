@@ -4,6 +4,7 @@
 #include "sources/database/collection.h"
 #include "sources/commands/createcollectioncommand.h"
 #include "sources/commands/deletecollectioncommand.h"
+#include "sources/commands/commandservice.h"
 #include "sources/services/selectionservice.h"
 
 #include <QInputDialog>
@@ -19,6 +20,10 @@ CollectionListWidget::CollectionListWidget(QWidget *parent)
   m_pUI(new Ui::CollectionListWidget)
 {
     m_pUI->setupUi(this);
+
+    DatabaseService* pDatabaseService = DatabaseService::getInstance();
+    connect(pDatabaseService, SIGNAL(collectionCreated(Collection*)), this, SLOT(on_collectionCreated(Collection*)));
+    connect(pDatabaseService, SIGNAL(collectionDeleted(Collection*)), this, SLOT(on_collectionDeleted(Collection*)));
 }
 
 CollectionListWidget::~CollectionListWidget()
@@ -31,34 +36,30 @@ CollectionListWidget::~CollectionListWidget()
 // Accessors
 //====================================================================================
 
-QListWidget* CollectionListWidget::getCollectionList()
+QListWidgetItem* CollectionListWidget::getCurrentItem()
 {
-    return m_pUI->collectionList;
+    return m_pUI->collectionList->currentItem();
 }
 
-QToolButton* CollectionListWidget::getCollectionAddButton()
+void CollectionListWidget::setIcons(const QIcon& a_addIcon, const QIcon& a_deleteIcon)
 {
-    return m_pUI->collectionAddButton;
-}
-
-QToolButton* CollectionListWidget::getCollectionDeleteButton()
-{
-    return m_pUI->collectionDeleteButton;
-}
-
-QString CollectionListWidget::getCurrentCollection() const
-{
-    return SelectionService::getInstance()->getCurrentCollection();
-}
-
-void CollectionListWidget::setCurrentCollection(QString a_sCollection)
-{
-    SelectionService::getInstance()->setCurrentCollection(a_sCollection);
+    m_pUI->collectionAddButton->setIcon(a_addIcon);
+    m_pUI->collectionDeleteButton->setIcon(a_deleteIcon);
 }
 
 
 //====================================================================================
 // Operations
+//====================================================================================
+
+void CollectionListWidget::addItem(QString a_sCollectionName)
+{
+    m_pUI->collectionList->addItem(a_sCollectionName);
+}
+
+
+//====================================================================================
+// Slots
 //====================================================================================
 
 void CollectionListWidget::on_collectionAddButton_clicked()
@@ -75,7 +76,7 @@ void CollectionListWidget::on_collectionAddButton_clicked()
         Collection* pCollection = DatabaseService::getInstance()->getCollection(sText);
         if (pCollection == NULL)
         {
-            _createCollection(sText);
+            CommandService::getInstance()->push(new CreateCollectionCommand(sText));
         }
         else
         {
@@ -87,11 +88,12 @@ void CollectionListWidget::on_collectionAddButton_clicked()
 
 void CollectionListWidget::on_collectionDeleteButton_clicked()
 {
-    QString sCollection = SelectionService::getInstance()->getCurrentCollection();
+    SelectionService* pSelectionService = SelectionService::getInstance();
+    QString sCollection = pSelectionService->getCurrentCollection();
     if (sCollection != "")
     {
         // Delete the collection
-        _deleteCollection(sCollection);
+        CommandService::getInstance()->push(new DeleteCollectionCommand(sCollection));
 
         // Select another collection
         QList<Collection*> collections = DatabaseService::getInstance()->getCollections();
@@ -104,12 +106,11 @@ void CollectionListWidget::on_collectionDeleteButton_clicked()
             {
                 m_pUI->collectionList->setCurrentItem(pItemsFound[0]);
             }
-            emit collectionSelected(pNewCollection);
+            pSelectionService->setCurrentCollection(pNewCollection->getName());
         }
         else
         {
-            SelectionService::getInstance()->setCurrentCollection("");
-            emit collectionSelected(NULL);
+            pSelectionService->setCurrentCollection("");
         }
     }
 }
@@ -122,7 +123,7 @@ void CollectionListWidget::on_collectionList_itemClicked(QListWidgetItem* a_pIte
 
     if (pCollection != NULL)
     {
-        emit collectionSelected(pCollection);
+        SelectionService::getInstance()->setCurrentCollection(sCollectionName);
     }
 }
 
@@ -169,26 +170,21 @@ void CollectionListWidget::on_collectionSearch_returnPressed()
             }
 
             // Refresh games list
-            emit collectionSelected(pCollection);
+            SelectionService::getInstance()->setCurrentCollection(pCollection->getName());
         }
     }
 }
 
-
-//====================================================================================
-// Private Operations
-//====================================================================================
-
-void CollectionListWidget::_createCollection(QString a_sName)
+void CollectionListWidget::on_collectionCreated(Collection* a_pCollection)
 {
-    QUndoCommand* pCreateCollectionCommand = new CreateCollectionCommand(a_sName);
-    emit commandCreated(pCreateCollectionCommand);
+    m_pUI->collectionList->addItem(a_pCollection->getName());
 }
 
-void CollectionListWidget::_deleteCollection(QString a_sName)
+void CollectionListWidget::on_collectionDeleted(Collection* a_pCollection)
 {
-    QUndoCommand* pDeleteCollectionCommand = new DeleteCollectionCommand(a_sName);
-    emit commandCreated(pDeleteCollectionCommand);
+    QList<QListWidgetItem*> pItemsFound = m_pUI->collectionList->findItems(a_pCollection->getName(), Qt::MatchRecursive);
+    if (pItemsFound.size() > 0)
+    {
+        delete pItemsFound[0];
+    }
 }
-
-

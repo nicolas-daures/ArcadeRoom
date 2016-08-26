@@ -27,14 +27,20 @@ class PreferencesWindows : public QDialog
         bool    romsPathToSave;
     };
 
+
 public:
 
     //====================================================================================
     // Constructors
     //====================================================================================
 
-    explicit PreferencesWindows(QWidget *parent = 0);
+    /***********************************************************
+     * @brief Create a widget to manage preferences.
+     * @param a_pParent : parent widget
+     ***********************************************************/
+    explicit PreferencesWindows(QWidget* a_pParent = 0);
     ~PreferencesWindows();
+
 
     //====================================================================================
     // Operations
@@ -43,12 +49,12 @@ public:
     /***********************************************************
      * @brief Translate window content.
      ***********************************************************/
-    void retranslate();
+    void                                retranslate();
 
     /***********************************************************
      * @brief Update window content.
      ***********************************************************/
-    void updateContent();
+    void                                updateContent();
 
 
 signals:
@@ -64,7 +70,7 @@ signals:
      * @param PlatformName : platform name on which emulator
      *                       path has changed
      ***********************************************************/
-    void emulatorPathChanged(QString emulatorPath, QString plaformName);
+    void                                emulatorPathChanged(QString emulatorPath, QString plaformName);
 
     /***********************************************************
      * @brief Sent when a roms path is changed in preferences
@@ -73,26 +79,26 @@ signals:
      * @param PlatformName : platform name on which roms
      *                       path has changed
      ***********************************************************/
-    void romsPathChanged(QString romsPath, QString plaformName);
+    void                                romsPathChanged(QString romsPath, QString plaformName);
 
     /***********************************************************
      * @brief Sent when "show no covers" checkbox state is changed
      *        in preferences window.
      * @param a_bShowNoCovers : true if show no covers
      ***********************************************************/
-    void showNoCoversChanged(bool a_bShowNoCovers);
+    void                                showNoCoversChanged(bool a_bShowNoCovers);
 
     /***********************************************************
      * @brief Sent when style is changed in preferences window.
      * @param a_sStyleName : new style name
      ***********************************************************/
-    void styleNameChanged(QString a_sStyleName);
+    void                                styleNameChanged(QString a_sStyleName);
 
     /***********************************************************
      * @brief Sent when general preferences is changed in
      *        preferences window.
      ***********************************************************/
-    void generalPreferencesChanged();
+    void                                generalPreferencesChanged();
 
 
 private slots:
@@ -105,50 +111,44 @@ private slots:
      * @brief Called when browse emulator path.
      *        Open a dialog box to choose emulator executable.
      ***********************************************************/
-    void on_pushButtonBrowseEmulatorPath_clicked();
+    void                                on_pushButtonBrowseEmulatorPath_clicked();
 
     /***********************************************************
      * @brief Called when browse roms path.
      *        Open a dialog box to choose roms directory.
      ***********************************************************/
-    void on_pushButtonBrowseRomsPath_clicked();
+    void                                on_pushButtonBrowseRomsPath_clicked();
 
     /***********************************************************
      * @brief Called when select a new platform in platform list.
      *        Display last saved emulator path in matching text
      *        area.
      ***********************************************************/
-    void on_comboBoxPlatformsList_activated(const QString &arg1);
+    void                                on_comboBoxPlatformsList_activated(const QString &arg1);
 
     /***********************************************************
      * @brief Called when clicked on apply button of the window.
      *        Apply changes by sending signals.
      ***********************************************************/
-    void on_buttonApply_clicked();
+    void                                on_buttonApply_clicked();
 
     /***********************************************************
      * @brief Called when clicked on close button of the window.
      *        Close the preferences windows.
      ***********************************************************/
-    void on_buttonClose_clicked();
-
-    /***********************************************************
-     * @brief Called when clicked on the checkbox to show no covers.
-     * @param a_iNewState : new state of the checkbox
-     ***********************************************************/
-    void on_showNoCoversCheckBox_stateChanged(int a_iNewState);
+    void                                on_buttonClose_clicked();
 
     /***********************************************************
      * @brief Called when style changed.
      * @param a_sStyleName : new style
      ***********************************************************/
-    void on_styleComboBox_currentIndexChanged(const QString& a_sStyleName);
+    void                                on_styleComboBox_currentIndexChanged(const QString& a_sStyleName);
 
     /***********************************************************
      * @brief Called when language changed.
      * @param a_sStyleName : new language
      ***********************************************************/
-    void on_languageComboBox_currentIndexChanged(const QString& a_sLanguage);
+    void                                on_languageComboBox_currentIndexChanged(const QString& a_sLanguage);
 
 
 private:
@@ -160,19 +160,20 @@ private:
     /***********************************************************
      * @brief Load styles from disk.
      ***********************************************************/
-    void _loadStyles();
+    void                                _loadStyles();
 
     /***********************************************************
      * @brief Update general preferences content.
      * @param a_Database   : database
      ***********************************************************/
-    void _updateGeneral();
+    void                                _updateGeneral();
 
     /***********************************************************
      * @brief Update platform content.
      * @param a_Database   : database
      ***********************************************************/
-    void _updatePlatform();
+    void                                _updatePlatform();
+
 
     //====================================================================================
     // Fields

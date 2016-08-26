@@ -50,10 +50,11 @@ QMap<QString, QUndoCommand*> CommandService::getGameCommands(const QString& a_sP
     QMap<QString, QUndoCommand*> commands;
 
     // Get the game
-    Game* pGame = DatabaseService::getInstance()->getGame(a_sPlatformName, a_sGameName);
+    DatabaseService* pDatabaseService = DatabaseService::getInstance();
+    Game* pGame = pDatabaseService->getGame(a_sPlatformName, a_sGameName);
 
     // Add commands
-    QList<Collection*> collections = DatabaseService::getInstance()->getCollections();
+    QList<Collection*> collections = pDatabaseService->getCollections();
     foreach (Collection* pCollection, collections)
     {
         if (pCollection->containsGame(pGame) == false)
@@ -68,7 +69,6 @@ QMap<QString, QUndoCommand*> CommandService::getGameCommands(const QString& a_sP
             commands["Remove from " + pCollection->getName()] = new RemoveGameFromCollectionCommand(pCollection->getName(), a_sPlatformName, a_sGameName);
         }
     }
-    //commands.push_front(new RemoveGameCommand(pGame));
 
     return commands;
 }

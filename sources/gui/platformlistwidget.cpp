@@ -1,17 +1,24 @@
 #include "platformlistwidget.h"
 #include "ui_platformlistwidget.h"
 #include "preferenceservice.h"
+#include "sources/services/selectionservice.h"
 
 
 //====================================================================================
 // Constructors
 //====================================================================================
 
-PlatformListWidget::PlatformListWidget(QWidget *parent)
-: QWidget(parent),
+PlatformListWidget::PlatformListWidget(QWidget* a_pParent)
+: QWidget(a_pParent),
   m_pUI(new Ui::PlatformListWidget)
 {
     m_pUI->setupUi(this);
+
+    // Hide header of platform tree view
+    m_pUI->treeWidget->header()->close();
+
+    connect(m_pUI->comboBoxPlatformSorting, SIGNAL(currentIndexChanged(int)),  this, SLOT(on_comboBoxPlatformSorting_activated(int)));
+    connect(m_pUI->treeSearch, SIGNAL(returnPressed()), this, SLOT(on_treeSearch_returnPressed()));
 }
 
 PlatformListWidget::~PlatformListWidget()
@@ -24,19 +31,9 @@ PlatformListWidget::~PlatformListWidget()
 // Accessors
 //====================================================================================
 
-QTreeWidget* PlatformListWidget::getTreeWidget()
+QTreeWidgetItem* PlatformListWidget::getCurrentItem()
 {
-    return m_pUI->treeWidget;
-}
-
-QComboBox* PlatformListWidget::getComboBoxPlatformSorting()
-{
-    return m_pUI->comboBoxPlatformSorting;
-}
-
-QLineEdit* PlatformListWidget::getTreeSearch()
-{
-    return m_pUI->treeSearch;
+    return m_pUI->treeWidget->currentItem();
 }
 
 
@@ -165,3 +162,88 @@ void PlatformListWidget::refreshComboBoxPlatformSorting()
     pComboBox->blockSignals(false);
 }
 
+
+//====================================================================================
+// Private Slots
+//====================================================================================
+
+void PlatformListWidget::on_treeWidget_currentItemChanged(QTreeWidgetItem* a_pCurrent, QTreeWidgetItem* a_pPrevious)
+{
+    SelectionService* pSelectionService = SelectionService::getInstance();
+
+    // Set the new platform and refresh the rom list
+    QTreeWidgetItem* pItem = a_pCurrent != NULL ? a_pCurrent : a_pPrevious;
+    QString newPlatform = pItem->text(m_pUI->treeWidget->currentColumn());
+    if (newPlatform != pSelectionService->getCurrentPlatform())
+    {
+        QList<Platform*> platforms = DatabaseService::getInstance()->getPlatforms();
+        foreach (Platform* pPlatform, platforms)
+        {
+            if (pPlatform->getName() == newPlatform)
+            {
+                pSelectionService->setCurrentCollection("");
+                pSelectionService->setCurrentPlatform(pPlatform->getName());
+                break;
+            }
+        }
+    }
+}
+
+void PlatformListWidget::on_treeSearch_returnPressed()
+{
+    QLineEdit* pLineEdit = dynamic_cast<QLineEdit*>(sender());
+    if(pLineEdit != NULL)
+    {
+        QString searchText = pLineEdit->text();
+        QList<Platform*> platforms = DatabaseService::getInstance()->getPlatforms();
+
+        // Search same name
+        foreach (Platform* pPlatform, platforms)
+        {
+            if (pPlatform->getName().toLower() == searchText.toLower())
+            {
+                _setCurrentTreeViewItem(pPlatform->getName());
+                return;
+            }
+        }
+
+        // Search if contains
+        foreach (Platform* pPlatform, platforms)
+        {
+            if (pPlatform->getName().toLower().contains(searchText.toLower()))
+            {
+                _setCurrentTreeViewItem(pPlatform->getName());
+                return;
+            }
+        }
+    }
+}
+
+void PlatformListWidget::on_comboBoxPlatformSorting_activated(int a_iIndex)
+{
+    // Modify tree view when a new platform sorting criteria is selected
+    fillTreeView();
+
+    // Update general preferences
+    // Get the selected criteria to sort platforms in tree view
+    uint indexCriteria = a_iIndex;
+    PreferenceService::getInstance()->setPlatformSortingCriteria(indexCriteria);
+}
+
+
+//====================================================================================
+// Private Operations
+//====================================================================================
+
+void PlatformListWidget::_setCurrentTreeViewItem(const QString& a_sPlatformName)
+{
+    QList<QTreeWidgetItem*> pItemsFound = m_pUI->treeWidget->findItems(a_sPlatformName, Qt::MatchRecursive);
+    if (pItemsFound.size() > 0)
+    {
+        m_pUI->treeWidget->setCurrentItem(pItemsFound[0]);
+
+        SelectionService* pSelectionService = SelectionService::getInstance();
+        pSelectionService->setCurrentCollection("");
+        pSelectionService->setCurrentPlatform(a_sPlatformName);
+    }
+}

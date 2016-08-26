@@ -18,6 +18,10 @@ private:
     // Constructors
     //====================================================================================
 
+    /***********************************************************
+     * @brief Create the command service which manage all undo commands.
+     * @param a_pMainWindow : main window
+     ***********************************************************/
     CommandService(QMainWindow* a_pMainWindow);
 
 

@@ -113,28 +113,29 @@ void PreferencesWindows::on_buttonApply_clicked()
 
     // General preferences
     bool bPreferencesChanged = false;
+    PreferenceService* pPreferenceService = PreferenceService::getInstance();
 
-    QString oldStyleName = PreferenceService::getInstance()->getStyleName();
+    QString oldStyleName = pPreferenceService->getStyleName();
     QString newStyleName = m_CurrentPreferences.getStyleName();
     if (oldStyleName != newStyleName)
     {
-        PreferenceService::getInstance()->setStyleName(newStyleName);
+        pPreferenceService->setStyleName(newStyleName);
         bPreferencesChanged = true;
     }
 
-    bool oldShowNoCovers = PreferenceService::getInstance()->getShowNoCovers();
+    bool oldShowNoCovers = pPreferenceService->getShowNoCovers();
     bool newShowNoCovers = m_CurrentPreferences.getShowNoCovers();
     if (oldShowNoCovers != newShowNoCovers)
     {
-        PreferenceService::getInstance()->setShowNoCovers(newShowNoCovers);
+        pPreferenceService->setShowNoCovers(newShowNoCovers);
         bPreferencesChanged = true;
     }
 
-    QString oldLanguage = PreferenceService::getInstance()->getLanguage();
+    QString oldLanguage = pPreferenceService->getLanguage();
     QString newLanguage = m_CurrentPreferences.getLanguage();
     if (oldLanguage != newLanguage)
     {
-        PreferenceService::getInstance()->setLanguage(newLanguage);
+        pPreferenceService->setLanguage(newLanguage);
         bPreferencesChanged = true;
     }
 
@@ -170,11 +171,6 @@ void PreferencesWindows::on_pushButtonBrowseRomsPath_clicked()
 
     // Set flag to save roms path in description file of current selected platform
     m_PlatformPreferencesMap[ui->comboBoxPlatformsList->currentText()].romsPathToSave = true;
-}
-
-void PreferencesWindows::on_showNoCoversCheckBox_stateChanged(int a_iNewState)
-{
-    m_CurrentPreferences.setShowNoCovers(a_iNewState != 0);
 }
 
 void PreferencesWindows::on_styleComboBox_currentIndexChanged(const QString& a_sStyleName)

@@ -15,6 +15,7 @@
 #include "sources/database/collection.h"
 #include "sources/database/database.h"
 #include "sources/commands/commandservice.h"
+#include "sources/services/selectionservice.h"
 #include "platformlistwidget.h"
 #include "collectionlistwidget.h"
 #include "gamelistwidget.h"
@@ -46,29 +47,44 @@ public:
     // Constructors
     //====================================================================================
 
-    explicit MainWindow(QWidget *parent = 0);
+    /***********************************************************
+     * @brief Create the main window of the application.
+     * @param a_pParent : parent widget
+     ***********************************************************/
+    explicit MainWindow(QWidget* a_pParent = 0);
     ~MainWindow();
 
 
 private slots:
 
     //====================================================================================
-    // Slots TreeView
+    // Slots
     //====================================================================================
 
     /***********************************************************
-     * @brief Called when a tree's item is clicked.
-     *        Change the current platform.
-     * @param a_pNext : current tree item
-     * @param a_pPrevious : previous tree item
+     * @brief Called when the current platform changed.
+     *        Refresh the grid layout and console overview.
+     * @param a_sPlatform : selected platform
      ***********************************************************/
-    void                        on_treeWidget_clicked(QTreeWidgetItem* a_pNext, QTreeWidgetItem* a_pPrevious);
+    void                        on_platformSelected(QString a_sPlatform);
 
     /***********************************************************
-     * @brief Called when the search button in treeview is pressed.
-     *        Search a platform.
+     * @brief Called when the current collection changed.
+     *        Refresh the grid layout.
+     * @param a_sCollection : selected collection
      ***********************************************************/
-    void                        on_treeSearch_returnPressed();
+    void                        on_collectionSelected(QString a_sCollection);
+
+    /***********************************************************
+     * @brief Called when a collection is created.
+     ***********************************************************/
+    void                        on_collectionCreated(Collection* a_pCollection);
+
+    /***********************************************************
+     * @brief Called when a game is remove from collection.
+     *        Refresh the grid layout.
+     ***********************************************************/
+    void                        on_gameRemovedFromCollection(Game* a_pGame);
 
     /***********************************************************
      * @brief Called when the current tab changed.
@@ -139,12 +155,6 @@ private slots:
     void                        on_styleNameChanged(QString a_sStyleName);
 
     /***********************************************************
-     * @brief Called when general preferences changed in preferences window.
-     *        Save general preferences.
-     ***********************************************************/
-    void                        on_generalPreferencesChanged();
-
-    /***********************************************************
      * @brief Called when action to change console visibility changed.
      *        Change console/collection visibility.
      * @param a_bIsChecked : true if checkbox is checked
@@ -169,48 +179,6 @@ private slots:
     //====================================================================================
     // Slots Database
     //====================================================================================
-
-    /***********************************************************
-     * @brief Called when a collection is created.
-     *        Add the collection to collection list widget.
-     ***********************************************************/
-    void                        on_collectionCreated(Collection* a_pCollection);
-
-    /***********************************************************
-     * @brief Called when a collection is deleted.
-     *        Remove the collection from collection list widget.
-     ***********************************************************/
-    void                        on_collectionDeleted(Collection* a_pCollection);
-
-    /***********************************************************
-     * @brief Called when a collection is selected.
-     *        Refresh game list.
-     ***********************************************************/
-    void                        on_collectionSelected(Collection* a_pCollection);
-
-    /***********************************************************
-     * @brief Called when a command is created by collection list widget.
-     *        Add created command to stack.
-     ***********************************************************/
-    void                        on_collectionCommandCreated(QUndoCommand* a_pCommand);
-
-    /***********************************************************
-     * @brief Called when a game is added to collection.
-     * @param a_pGame : added game
-     ***********************************************************/
-    void                        on_gameAddedToCollection(Game* a_pGame);
-
-    /***********************************************************
-     * @brief Called when a game is removed from collection.
-     * @param a_pGame : removed game
-     ***********************************************************/
-    void                        on_gameRemovedFromCollection(Game* a_pGame);
-
-    /***********************************************************
-     * @brief Called when select a platform sorting criteria
-     * @param a_iIndex : new current index
-     ***********************************************************/
-    void                        on_comboBoxPlatformSorting_activated(int a_iIndex);
 
     /***********************************************************
      * @brief Called when game parameter changed.
@@ -295,12 +263,6 @@ private:
     void                        _updateWidgetsStyle();
 
     /***********************************************************
-     * @brief Set the selected item in treeview.
-     * @param a_sPlatformName : selected platform name.
-     ***********************************************************/
-    void                        _setCurrentTreeViewItem(const QString& a_sPlatformName);
-
-    /***********************************************************
      * @brief Delete the game with given platform and name.
      * @param a_sPlatformName : platform's name.
      * @param a_sGameName : game's name.
@@ -378,7 +340,6 @@ private:
 
     // Style
     Style*                      m_pCurrentStyle;
-
 };
 
 #endif // MAINWINDOW_H

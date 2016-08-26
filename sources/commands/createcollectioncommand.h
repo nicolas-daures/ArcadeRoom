@@ -13,7 +13,12 @@ public:
     // Constructors
     //====================================================================================
 
-    CreateCollectionCommand(const QString& a_sCollectionName, QUndoCommand *parent = 0);
+    /***********************************************************
+     * @brief Create a command to create a collection.
+     * @param a_sCollectionName : name of the collection to create
+     * @param a_pParent : parent command
+     ***********************************************************/
+    CreateCollectionCommand(const QString& a_sCollectionName, QUndoCommand* a_pParent = 0);
 
 
     //====================================================================================

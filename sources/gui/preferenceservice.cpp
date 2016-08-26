@@ -38,6 +38,7 @@ const QString& PreferenceService::getLanguage() const
 void PreferenceService::setLanguage(const QString& a_sLanguage)
 {
     m_Preferences.setLanguage(a_sLanguage);
+    save();
     emit languageChanged(a_sLanguage);
 }
 
@@ -49,6 +50,7 @@ const QString& PreferenceService::getStyleName() const
 void PreferenceService::setStyleName(const QString& a_sStyleName)
 {
     m_Preferences.setStyleName(a_sStyleName);
+    save();
     emit styleNameChanged(a_sStyleName);
 }
 
@@ -60,6 +62,7 @@ bool PreferenceService::getShowNoCovers() const
 void PreferenceService::setShowNoCovers(bool a_bShowNoCovers)
 {
     m_Preferences.setShowNoCovers(a_bShowNoCovers);
+    save();
     emit showNoCoversChanged(a_bShowNoCovers);
 }
 
@@ -71,6 +74,7 @@ bool PreferenceService::getShowConsoles() const
 void PreferenceService::setShowConsoles(bool a_bShowConsoles)
 {
     m_Preferences.setShowConsoles(a_bShowConsoles);
+    save();
     emit showConsolesChanged(a_bShowConsoles);
 }
 
@@ -82,6 +86,7 @@ bool PreferenceService::getShowToolsBar() const
 void PreferenceService::setShowToolsBar(bool a_bShowToolsBar)
 {
     m_Preferences.setShowToolsBar(a_bShowToolsBar);
+    save();
     emit showToolsBarChanged(a_bShowToolsBar);
 }
 
@@ -93,6 +98,7 @@ bool PreferenceService::getShowStatusBar() const
 void PreferenceService::setShowStatusBar(bool a_bShowStatusBar)
 {
     m_Preferences.setShowStatusBar(a_bShowStatusBar);
+    save();
     emit showStatusBarChanged(a_bShowStatusBar);
 }
 
@@ -104,6 +110,7 @@ float PreferenceService::getCoverSizeFactor() const
 void PreferenceService::setCoverSizeFactor(float a_fCoverSizeFactor)
 {
     m_Preferences.setCoverSizeFactor(a_fCoverSizeFactor);
+    save();
     emit coverSizeFactorChanged(a_fCoverSizeFactor);
 }
 
@@ -115,6 +122,7 @@ uint PreferenceService::getLayoutType() const
 void PreferenceService::setLayoutType(uint a_uiLayoutType)
 {
     m_Preferences.setLayoutType(a_uiLayoutType);
+    save();
     emit layoutTypeChanged(a_uiLayoutType);
 }
 
@@ -126,6 +134,7 @@ uint PreferenceService::getPlatformSortingCriteria() const
 void PreferenceService::setPlatformSortingCriteria(uint a_uiIndexCriteria)
 {
     m_Preferences.setPlatformSortingCriteria(a_uiIndexCriteria);
+    save();
     emit platformSortingCriteriaChanged(a_uiIndexCriteria);
 }
 

@@ -5,8 +5,8 @@
 // Constructors
 //====================================================================================
 
-DeleteCollectionCommand::DeleteCollectionCommand(const QString& a_sCollectionName, QUndoCommand *parent)
-: QUndoCommand(parent),
+DeleteCollectionCommand::DeleteCollectionCommand(const QString& a_sCollectionName, QUndoCommand* a_pParent)
+: QUndoCommand(a_pParent),
   m_sCollectionName(a_sCollectionName)
 {
     setText("Delete collection (" + a_sCollectionName + ")");
@@ -19,22 +19,26 @@ DeleteCollectionCommand::DeleteCollectionCommand(const QString& a_sCollectionNam
 
 void DeleteCollectionCommand::undo()
 {
+    DatabaseService* pDatabaseService = DatabaseService::getInstance();
+
     // Create the collection
-    Collection* pCollection = DatabaseService::getInstance()->createCollection(m_sCollectionName);
+    Collection* pCollection = pDatabaseService->createCollection(m_sCollectionName);
 
     // Add games
     for (int iPairIndex = 0; iPairIndex < m_Games.size(); ++iPairIndex)
     {
         QPair<QString, QString> pair = m_Games[iPairIndex];
-        Game* pGame = DatabaseService::getInstance()->getGame(pair.first, pair.second);
+        Game* pGame = pDatabaseService->getGame(pair.first, pair.second);
         pCollection->addGame(pGame);
     }
 }
 
 void DeleteCollectionCommand::redo()
 {
+    DatabaseService* pDatabaseService = DatabaseService::getInstance();
+
     // Get the collection
-    Collection* pCollection = DatabaseService::getInstance()->getCollection(m_sCollectionName);
+    Collection* pCollection = pDatabaseService->getCollection(m_sCollectionName);
 
     // Keep games
     m_Games.clear();
@@ -44,5 +48,5 @@ void DeleteCollectionCommand::redo()
     }
 
     // Delete the collection
-    DatabaseService::getInstance()->deleteCollection(pCollection);
+    pDatabaseService->deleteCollection(pCollection);
 }

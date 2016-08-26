@@ -130,8 +130,6 @@ Collection* Database::createCollection(const QString a_sName)
     connect(pCollection, SIGNAL(gameAdded(Game*)), this, SLOT(on_gameAddedToCollection(Game*)));
     connect(pCollection, SIGNAL(gameRemoved(Game*)), this, SLOT(on_gameRemovedFromCollection(Game*)));
 
-    emit collectionCreated(pCollection);
-
     return pCollection;
 }
 
@@ -141,8 +139,6 @@ void Database::deleteCollection(Collection* a_pCollection)
     file.remove();
 
     m_CollectionMap.remove(a_pCollection->getName());
-
-    emit collectionDeleted(a_pCollection);
 
     delete a_pCollection;
 }

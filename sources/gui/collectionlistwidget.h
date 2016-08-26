@@ -23,7 +23,11 @@ public:
     // Constructors
     //====================================================================================
 
-    explicit CollectionListWidget(QWidget *parent = 0);
+    /***********************************************************
+     * @brief Create a widget to show user collections.
+     * @param a_pParent : parent widget
+     ***********************************************************/
+    explicit CollectionListWidget(QWidget* a_pParent = 0);
     ~CollectionListWidget();
 
 
@@ -31,35 +35,36 @@ public:
     // Accessors
     //====================================================================================
 
-    // TODO : remove it
-    QListWidget*                getCollectionList();
-    QToolButton*                getCollectionAddButton();
-    QToolButton*                getCollectionDeleteButton();
+    /***********************************************************
+     * @brief Get the current list item.
+     * @return current item if the list
+     ***********************************************************/
+    QListWidgetItem*            getCurrentItem();
 
-    QString                     getCurrentCollection() const;
-    void                        setCurrentCollection(QString a_sCollection);
+    /***********************************************************
+     * @brief Set the icons used by add and delete buttons.
+     * @param a_addIcon : icon for add button
+     * @param a_deleteIcon : icon for delete button
+     ***********************************************************/
+    void                        setIcons(const QIcon& a_addIcon, const QIcon& a_deleteIcon);
 
-
-signals:
 
     //====================================================================================
-    // Signals
+    // Operations
     //====================================================================================
 
     /***********************************************************
-     * @brief Called when a collection is selected.
-     * @param a_pCollection : selected collection
+     * @brief Add the given collection to collection list.
+     * @param a_sCollectionName : name of the collection to add
      ***********************************************************/
-    void                        collectionSelected(Collection* a_pCollection);
-
-    /***********************************************************
-     * @brief Called when a command is created.
-     * @param a_pCommand : command created
-     ***********************************************************/
-    void                        commandCreated(QUndoCommand* a_pCommand);
+    void                        addItem(QString a_sCollectionName);
 
 
 private slots:
+
+    //====================================================================================
+    // Private Slots
+    //====================================================================================
 
     /***********************************************************
      * @brief Called when add collection button is clicked.
@@ -86,25 +91,20 @@ private slots:
      ***********************************************************/
     void                        on_collectionSearch_returnPressed();
 
+    /***********************************************************
+     * @brief Called when a collection is created.
+     *        Add the collection to collection list widget.
+     ***********************************************************/
+    void                        on_collectionCreated(Collection* a_pCollection);
+
+    /***********************************************************
+     * @brief Called when a collection is deleted.
+     *        Remove the collection from collection list widget.
+     ***********************************************************/
+    void                        on_collectionDeleted(Collection* a_pCollection);
+
 
 private:
-
-    //====================================================================================
-    // Private Operations
-    //====================================================================================
-
-    /***********************************************************
-     * @brief Create a new collection.
-     * @param a_sName : collection name
-     ***********************************************************/
-    void                        _createCollection(QString a_sName);
-
-    /***********************************************************
-     * @brief Delete the given collection.
-     * @param a_sName : collection name
-     ***********************************************************/
-    void                        _deleteCollection(QString a_sName);
-
 
     //====================================================================================
     // Fields
