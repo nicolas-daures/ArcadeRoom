@@ -181,7 +181,6 @@ void PlatformListWidget::on_treeWidget_currentItemChanged(QTreeWidgetItem* a_pCu
         {
             if (pPlatform->getName() == newPlatform)
             {
-                pSelectionService->setCurrentCollection("");
                 pSelectionService->setCurrentPlatform(pPlatform->getName());
                 break;
             }
@@ -243,7 +242,6 @@ void PlatformListWidget::_setCurrentTreeViewItem(const QString& a_sPlatformName)
         m_pUI->treeWidget->setCurrentItem(pItemsFound[0]);
 
         SelectionService* pSelectionService = SelectionService::getInstance();
-        pSelectionService->setCurrentCollection("");
         pSelectionService->setCurrentPlatform(a_sPlatformName);
     }
 }

@@ -124,6 +124,7 @@ MainWindow::MainWindow(QWidget* a_pParent) :
     foreach (Collection* pCollection, pDatabaseService->getCollections())
     {
         m_pCollectionListWidget->addItem(pCollection->getName());
+        connect(pCollection, SIGNAL(gameRemoved(Game*)), this, SLOT(on_gameRemovedFromCollection(Game*)));
     }
 }
 
@@ -255,7 +256,7 @@ void MainWindow::on_languageChanged(QString a_sLanguage)
 
 void MainWindow::on_styleNameChanged(QString a_sStyleName)
 {
-    StyleService::getInstance()->setCurrentStyle(a_sStyleName);
+    _setStyle(a_sStyleName);
 }
 
 void MainWindow::on_actionConsoles_toggled(bool a_bIsChecked)
@@ -356,7 +357,6 @@ void MainWindow::_loadGamesFromDirectory(const QString& a_sPlatformName)
 {
     // Stop the grid refresh
     m_pGameListWidget->stop();
-    SelectionService::getInstance()->setCurrentCollection("");
     SelectionService::getInstance()->setCurrentPlatform(a_sPlatformName);
 
     // Clear the grid
@@ -463,7 +463,7 @@ void MainWindow::_setLanguage(QString a_sLanguage)
     // Translation only if no default language is choosen.
     if (a_sLanguage != DEFAULT_LANGUAGE)
     {
-        m_Translator.load("locales/"+a_sLanguage);
+        m_Translator.load(m_sAppDirectory + "/locales/" + a_sLanguage);
         qApp->installTranslator(&m_Translator);
     }
 
@@ -630,7 +630,6 @@ void MainWindow::_refreshGridLayout(Collection* a_pCollection)
 {
     m_pGameListWidget->stop();
     SelectionService::getInstance()->setCurrentCollection(a_pCollection->getName());
-    SelectionService::getInstance()->setCurrentPlatform("");
 
     m_pGameListWidget->clearGridLayout();
 

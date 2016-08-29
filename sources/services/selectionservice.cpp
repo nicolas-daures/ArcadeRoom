@@ -40,19 +40,20 @@ QString SelectionService::getCurrentCollection()
 
 void SelectionService::setCurrentPlatform(const QString& a_sPlatform)
 {
-    // TODO : Use only once setter for platform AND collection
-    if (m_sCurrentPlatform != a_sPlatform)
+    if (a_sPlatform != "" && m_sCurrentPlatform != a_sPlatform)
     {
         m_sCurrentPlatform = a_sPlatform;
+        m_sCurrentCollection = "";
         emit platformSelected(a_sPlatform);
     }
 }
 
 void SelectionService::setCurrentCollection(const QString& a_sCollection)
 {
-    if (m_sCurrentCollection != a_sCollection)
+    if (a_sCollection != "" && m_sCurrentCollection != a_sCollection)
     {
         m_sCurrentCollection = a_sCollection;
+        m_sCurrentPlatform = "";
         emit collectionSelected(a_sCollection);
     }
 }

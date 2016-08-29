@@ -108,9 +108,10 @@ void CollectionListWidget::on_collectionDeleteButton_clicked()
             }
             pSelectionService->setCurrentCollection(pNewCollection->getName());
         }
-        else
+        else if (DatabaseService::getInstance()->getPlatforms().size() > 0)
         {
-            pSelectionService->setCurrentCollection("");
+            QString sPlatformName = DatabaseService::getInstance()->getPlatforms()[0]->getName();
+            pSelectionService->setCurrentPlatform(sPlatformName);
         }
     }
 }
