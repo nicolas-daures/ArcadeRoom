@@ -124,7 +124,7 @@ public:
     void                                saveCollection(const QString& a_sName);
 
 
-private slots:
+public slots:
 
     //====================================================================================
     // Slots

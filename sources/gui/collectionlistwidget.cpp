@@ -92,26 +92,31 @@ void CollectionListWidget::on_collectionDeleteButton_clicked()
     QString sCollection = pSelectionService->getCurrentCollection();
     if (sCollection != "")
     {
-        // Delete the collection
-        CommandService::getInstance()->push(new DeleteCollectionCommand(sCollection));
+        int confirmDestroy = QMessageBox::question(this, tr("Delete collection"), tr("Do you really want to destroy this collection ?"), QMessageBox::Yes | QMessageBox::No);
 
-        // Select another collection
-        QList<Collection*> collections = DatabaseService::getInstance()->getCollections();
-        if (collections.size() > 0)
+        if (confirmDestroy == QMessageBox::Yes)
         {
-            Collection* pNewCollection = collections[0];
-            QString sNewCollectionName = pNewCollection->getName();
-            QList<QListWidgetItem*> pItemsFound = m_pUI->collectionList->findItems(sNewCollectionName, Qt::MatchRecursive);
-            if (pItemsFound.size() > 0)
+            // Delete the collection
+            CommandService::getInstance()->push(new DeleteCollectionCommand(sCollection));
+
+            // Select another collection
+            QList<Collection*> collections = DatabaseService::getInstance()->getCollections();
+            if (collections.size() > 0)
             {
-                m_pUI->collectionList->setCurrentItem(pItemsFound[0]);
+                Collection* pNewCollection = collections[0];
+                QString sNewCollectionName = pNewCollection->getName();
+                QList<QListWidgetItem*> pItemsFound = m_pUI->collectionList->findItems(sNewCollectionName, Qt::MatchRecursive);
+                if (pItemsFound.size() > 0)
+                {
+                    m_pUI->collectionList->setCurrentItem(pItemsFound[0]);
+                }
+                pSelectionService->setCurrentCollection(pNewCollection->getName());
             }
-            pSelectionService->setCurrentCollection(pNewCollection->getName());
-        }
-        else if (DatabaseService::getInstance()->getPlatforms().size() > 0)
-        {
-            QString sPlatformName = DatabaseService::getInstance()->getPlatforms()[0]->getName();
-            pSelectionService->setCurrentPlatform(sPlatformName);
+            else if (DatabaseService::getInstance()->getPlatforms().size() > 0)
+            {
+                QString sPlatformName = DatabaseService::getInstance()->getPlatforms()[0]->getName();
+                pSelectionService->setCurrentPlatform(sPlatformName);
+            }
         }
     }
 }
@@ -189,3 +194,4 @@ void CollectionListWidget::on_collectionDeleted(Collection* a_pCollection)
         delete pItemsFound[0];
     }
 }
+

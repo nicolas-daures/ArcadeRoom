@@ -113,6 +113,37 @@ signals:
     void                                collectionDeleted(Collection* a_pCollection);
 
 
+public slots:
+
+    //====================================================================================
+    // Slots
+    //====================================================================================
+
+    /***********************************************************
+     * @brief Called when an emulator path is changed in
+     *        preferences window.
+     *        Save this emulator path in matching platform
+     *        description file.
+     * @param emulatorPath : emulator path
+     * @param PlatformName : platform name on which emulator
+     *                       path has changed
+     ***********************************************************/
+    void                                on_emulatorPathChanged(QString emulatorPath,
+                                                               QString platformName);
+
+    /***********************************************************
+     * @brief Called when a roms path is changed in preferences
+     *        window.
+     *        Save this roms path in matching platform
+     *        description file.
+     * @param romsPath     : roms path
+     * @param PlatformName : platform name on which roms
+     *                       path has changed
+     ***********************************************************/
+    void                                on_romsPathChanged(QString romsPath,
+                                                           QString platformName);
+
+
 private:
 
     //====================================================================================

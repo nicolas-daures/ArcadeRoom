@@ -20,6 +20,10 @@ PreferencesWindows::PreferencesWindows(QWidget *parent) :
     // Make preferences window modal
     this->setWindowModality(Qt::WindowModal);
 
+    DatabaseService* pDatabaseService = DatabaseService::getInstance();
+    connect(this, SIGNAL(emulatorPathChanged(QString, QString)), pDatabaseService, SLOT(on_emulatorPathChanged(QString, QString)));
+    connect(this, SIGNAL(romsPathChanged(QString, QString)), pDatabaseService, SLOT(on_romsPathChanged(QString, QString)));
+
     // TODO mettre m_PlatformPreferencesMap et m_CurrentPreferences vides ?
 }
 
@@ -78,7 +82,7 @@ void PreferencesWindows::on_comboBoxPlatformsList_activated(const QString &arg1)
 }
 
 void PreferencesWindows::on_buttonApply_clicked()
-{
+{    
     // For each platform
     QMap<QString,preferencesPlatform>::Iterator it  = m_PlatformPreferencesMap.begin();
     QMap<QString,preferencesPlatform>::Iterator end = m_PlatformPreferencesMap.end();
@@ -87,8 +91,8 @@ void PreferencesWindows::on_buttonApply_clicked()
         // Save current emulator path if needed
         if (it.value().emulatorPathToSave == true)
         {
-        // Reset flag
-        it.value().emulatorPathToSave = false;
+            // Reset flag
+            it.value().emulatorPathToSave = false;
 
             // Get emulator path
             QString emulatorPath = m_PlatformPreferencesMap[it.key()].emulatorPath;

@@ -118,3 +118,18 @@ void DatabaseService::saveCollection(const QString& a_sName)
 {
     m_Database.saveCollection(a_sName);
 }
+
+
+//====================================================================================
+// Slots
+//====================================================================================
+
+void DatabaseService::on_emulatorPathChanged(QString emulatorPath, QString platformName)
+{
+    m_Database.on_emulatorPathChanged(emulatorPath, platformName);
+}
+
+void DatabaseService::on_romsPathChanged(QString romsPath, QString platformName)
+{
+    m_Database.on_romsPathChanged(romsPath, platformName);
+}
