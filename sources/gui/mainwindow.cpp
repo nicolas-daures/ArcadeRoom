@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget* a_pParent) :
 
     // Load general preferences
     _loadGeneralPreferences();
+    m_pGameListWidget->createGameListWidget(m_pUI->tabGridContainer);
 
     // Create preferences window
     m_pPreferencesWindow = new PreferencesWindows(this);
@@ -108,7 +109,6 @@ MainWindow::MainWindow(QWidget* a_pParent) :
     _refreshPlatformPanel();
 
     // Create a simple grid layout to display roms
-    m_pGameListWidget->createGameListWidget(m_pUI->tabGridContainer);
     _loadGamesFromDirectory(pSelectionService->getCurrentPlatform());
 
     // Translate application if requiered
