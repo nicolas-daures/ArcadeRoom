@@ -25,6 +25,7 @@
 #include "sources/database/platform.h"
 #include "sources/commands/addgametocollectioncommand.h"
 #include "sources/commands/removegamefromcollectioncommand.h"
+#include "sources/services/gamesfilterservice.h"
 #include "styleservice.h"
 #ifdef WIN32
 #include <Windows.h>
@@ -398,7 +399,13 @@ void MainWindow::_loadGamesFromDirectory(const QString& a_sPlatformName)
             }
         }
         m_pGameListWidget->setGames(games);
-        m_pGameListWidget->setFilteredGames(games);
+
+        // Apply filter (if exists)
+        GamesFilterService::getInstance()->applyFilter(games);
+
+        // Set filtered games
+        m_pGameListWidget->setFilteredGames(GamesFilterService::getInstance()->getFilteredGames());
+
 
         // Update status bar
         _refreshStatusBar();
@@ -633,15 +640,19 @@ void MainWindow::_refreshGridLayout(Collection* a_pCollection)
 
     m_pGameListWidget->clearGridLayout();
 
-    // Get the games and display them
-    //m_Games.clear();
+    // Get the games
     m_pGameListWidget->setGames(a_pCollection->getGames());
-    m_pGameListWidget->setFilteredGames(a_pCollection->getGames());
+
+    // Apply filter (if exists)
+    GamesFilterService::getInstance()->applyFilter(a_pCollection->getGames());
+
+    // Set filtered games
+    m_pGameListWidget->setFilteredGames(GamesFilterService::getInstance()->getFilteredGames());
 
     // Update status bar
     _refreshStatusBar();
 
-    // When current game count >= 0, the tick works
+    // When current game count >= 0, the tick works to display games
     m_pGameListWidget->start();
 
     // Display games instead of overview

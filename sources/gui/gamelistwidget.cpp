@@ -1,6 +1,7 @@
 #include "gamelistwidget.h"
 #include "ui_gamelistwidget.h"
 #include "sources/commands/commandservice.h"
+#include "sources/services/gamesfilterservice.h"
 #include "styleservice.h"
 #include <QGroupBox>
 #include <QUndoStack>
@@ -200,18 +201,15 @@ void GameListWidget::on_gridSearch_returnPressed()
     QLineEdit* pLineEdit = dynamic_cast<QLineEdit*>(sender());
     if(pLineEdit != NULL)
     {
-        // Search games
+        // Stop tick
         m_iCurrentGameCount = -1;
-        m_FilteredGames.clear();
-        QString searchText = pLineEdit->text();
-        for (int iDirIndex = 0; iDirIndex < m_Games.size(); ++iDirIndex)
-        {
-            QString dir = m_Games[iDirIndex]->getName();
-            if (dir.toLower().contains(searchText.toLower()))
-            {
-                m_FilteredGames.push_back(m_Games[iDirIndex]);
-            }
-        }
+
+        // Search games
+        GamesFilterService::getInstance()->setSearchedString(pLineEdit->text());
+        GamesFilterService::getInstance()->applyFilter(m_Games);
+
+        // Set filtered games
+        m_FilteredGames = GamesFilterService::getInstance()->getFilteredGames();
 
         // Clear games
         clearGridLayout();

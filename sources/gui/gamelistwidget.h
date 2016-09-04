@@ -275,7 +275,7 @@ private:
     float                           m_fSizeFactor;
     GameListWidget::EGameLayoutType m_eGameLayoutType;
 
-    QList<Game*>                    m_FilteredGames;
+    QList<Game*>                    m_FilteredGames; // TODO à virer maintenant qu'il y a un service de filtrage
 };
 
 #endif // GAMELISTWIDGET_H
