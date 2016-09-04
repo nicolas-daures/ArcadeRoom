@@ -62,12 +62,6 @@ signals:
     // Signals
     //====================================================================================
 
-    /***********************************************************
-     * @brief Called when filter changed.
-     ***********************************************************/
-    // TODO voir si utile
-    void                                gameParameterChanged();
-
 
 private:
 
@@ -80,7 +74,7 @@ private:
     // List of filtered games
     QList<Game*>                        m_FilteredGames;
 
-    // List of filtered games
+    // String to search in title of games
     QString                             m_SearchedString;
 };
 
