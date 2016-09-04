@@ -35,7 +35,8 @@ SOURCES +=\
     sources/gui/preferenceservice.cpp \
     sources/database/databaseservice.cpp \
     sources/services/selectionservice.cpp \
-    sources/gui/styleservice.cpp
+    sources/gui/styleservice.cpp \
+    sources/services/gamesfilterservice.cpp
 
 HEADERS  += \
     sources/database/collection.h \
@@ -59,7 +60,8 @@ HEADERS  += \
     sources/gui/preferenceservice.h \
     sources/database/databaseservice.h \
     sources/services/selectionservice.h \
-    sources/gui/styleservice.h
+    sources/gui/styleservice.h \
+    sources/services/gamesfilterservice.h
 
 FORMS    += mainwindow.ui \
     preferenceswindows.ui \
