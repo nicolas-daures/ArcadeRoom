@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 #include "sources/database/game.h"
 
 class GamesFilterService : public QObject
@@ -29,9 +30,11 @@ public:
     //====================================================================================
 
     static GamesFilterService*          getInstance();
+    QList<Game*>                        getGames();
     QList<Game*>                        getFilteredGames();
     QString                             getSearchedString();
 
+    void                                setGames(QList<Game*> a_Games);
     void                                setFilteredGames(QList<Game*> a_Games);
     void                                setSearchedString(const QString& a_string);
 
@@ -44,6 +47,19 @@ public:
      * @param a_Games : list of games to filter
      ***********************************************************/
     void                                applyFilter(QList<Game*> a_Games);
+
+    /***********************************************************
+     * @brief Create the rom extension filter.
+     * @param a_pPlatform : platform
+     * @return rom filter
+     ***********************************************************/
+    QStringList                         createRomFilter(Platform* a_pPlatform);
+
+    /***********************************************************
+     * @brief Load games from a platform name.
+     * @param a_sPlatformName : name of the platform.
+     ***********************************************************/
+    void                                loadGames(QString a_sPlatformName);
 
 
     //====================================================================================
@@ -70,6 +86,9 @@ private:
     //====================================================================================
 
     static GamesFilterService*          m_pInstance;
+
+    // List of games
+    QList<Game*>                        m_Games;
 
     // List of filtered games
     QList<Game*>                        m_FilteredGames;

@@ -195,15 +195,15 @@ private:
 
     /***********************************************************
      * @brief Refresh the grid layout with given collection.
-     * @param a_pCollection : collection to display
+     * @param a_sCollectionName : name of collection to display
      ***********************************************************/
-    void                        _refreshGridLayout(Collection* a_pCollection);
+    void                        _refreshCollectionGridLayout(const QString& a_sCollectionName);
 
     /***********************************************************
      * @brief Refresh the grid layout with given platform.
-     * @param a_pPlatform : platform to display
+     * @param a_sPlatformName : name of platform to display
      ***********************************************************/
-    void                        _refreshGridLayout(Platform* a_pPlatform);
+    void                        _refreshPlatformGridLayout(const QString& a_sPlatformName);
 
     /***********************************************************
      * @brief Refresh the grid layout.
@@ -214,12 +214,6 @@ private:
      * @brief Load the general preferences (style, language, ...).
      ***********************************************************/
     void                        _loadGeneralPreferences();
-
-    /***********************************************************
-     * @brief Refresh the rom list for the current platform.
-     * @param a_sPlatformName : platform's name
-     ***********************************************************/
-    void                        _loadGamesFromDirectory(const QString& a_sPlatformName);
 
     /***********************************************************
      * @brief Parse the rom list from given platform directory.

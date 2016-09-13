@@ -110,7 +110,8 @@ MainWindow::MainWindow(QWidget* a_pParent) :
     _refreshPlatformPanel();
 
     // Create a simple grid layout to display roms
-    _loadGamesFromDirectory(pSelectionService->getCurrentPlatform());
+    GamesFilterService::getInstance()->loadGames(pSelectionService->getCurrentPlatform());
+    _refreshPlatformGridLayout(pSelectionService->getCurrentPlatform());
 
     // Translate application if requiered
     _setLanguage(pPreferenceService->getLanguage());
@@ -141,12 +142,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_platformSelected(QString a_sPlatform)
 {
+     GamesFilterService::getInstance()->loadGames(a_sPlatform);
+
     _refreshPlatformPanel();
     _refreshGridLayout();
 }
 
 void MainWindow::on_collectionSelected(QString a_sCollection)
 {
+    Collection* pCollection = DatabaseService::getInstance()->getCollection(a_sCollection);
+    GamesFilterService::getInstance()->setGames(pCollection->getGames());
+
     _refreshGridLayout();
 }
 
@@ -163,7 +169,7 @@ void MainWindow::on_tabWidget_currentChanged(int a_iIndex)
                 Platform* pPlatform = DatabaseService::getInstance()->getPlatform(sPlatformName);
                 if (pPlatform)
                 {
-                    _refreshGridLayout(pPlatform);
+                    _refreshPlatformGridLayout(pPlatform->getName());
                 }
             }
         }
@@ -177,7 +183,7 @@ void MainWindow::on_tabWidget_currentChanged(int a_iIndex)
                 Collection* pCollection = DatabaseService::getInstance()->getCollection(sCollectionName);
                 if (pCollection)
                 {
-                    _refreshGridLayout(pCollection);
+                    _refreshCollectionGridLayout(pCollection->getName());
                 }
             }
         }
@@ -354,73 +360,6 @@ void MainWindow::_loadGeneralPreferences()
     //m_pGameListWidget->getLayoutTypeComboBox()->setCurrentIndex(iLayoutType);
 }
 
-void MainWindow::_loadGamesFromDirectory(const QString& a_sPlatformName)
-{
-    // Stop the grid refresh
-    m_pGameListWidget->stop();
-    SelectionService::getInstance()->setCurrentPlatform(a_sPlatformName);
-
-    // Clear the grid
-    m_pGameListWidget->clearGridLayout();
-
-    Platform* pPlatform = DatabaseService::getInstance()->getPlatform(a_sPlatformName);
-    if (pPlatform != NULL)
-    {
-        // Parse the roms directory
-        QStringList filesAndDirectories;
-        QDirIterator directories(pPlatform->getRomPath(),
-                                 QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
-        while(directories.hasNext())
-        {
-            directories.next();
-            filesAndDirectories << directories.filePath();
-        }
-
-        // Get the platform
-        QString sPlatformName = pPlatform->getName();
-
-        // Fill game list
-        QList<Game*> games = QList<Game*>();
-        foreach (QString sGameDir, filesAndDirectories)
-        {
-            // Get rom files
-            QStringList romFilter = _getRomFilter(pPlatform);
-            QDir directory(sGameDir);
-            QStringList romFiles = directory.entryList(romFilter);
-
-            if (romFiles.size() > 0)
-            {
-                // Add the game to database
-                Game* pGame = DatabaseService::getInstance()->getGame(sPlatformName, romFiles[0]);
-                if (pGame != NULL)
-                {
-                    games.append(pGame);
-                }
-            }
-        }
-        m_pGameListWidget->setGames(games);
-
-        // Apply filter (if exists)
-        GamesFilterService::getInstance()->applyFilter(games);
-
-        // Set filtered games
-        m_pGameListWidget->setFilteredGames(GamesFilterService::getInstance()->getFilteredGames());
-
-
-        // Update status bar
-        _refreshStatusBar();
-
-        // Update layout type combo box here because combo box is not ready when load general preferences
-        int iLayoutType = PreferenceService::getInstance()->getLayoutType();
-        if (m_pGameListWidget->getCurrentLayoutType() != iLayoutType)
-        {
-            m_pGameListWidget->setCurrentLayoutType(iLayoutType);
-        }
-
-        m_pGameListWidget->start();
-    }
-}
-
 void MainWindow::_parseGamesFromDirectory(Platform* a_pPlatform)
 {
     // Parse the roms directory
@@ -437,7 +376,7 @@ void MainWindow::_parseGamesFromDirectory(Platform* a_pPlatform)
     foreach (QString sGameDir, filesAndDirectories)
     {
         // Get rom files
-        QStringList romFilter = _getRomFilter(a_pPlatform);
+        QStringList romFilter =  GamesFilterService::getInstance()->createRomFilter(a_pPlatform);
         QDir directory(sGameDir);
         QStringList romFiles = directory.entryList(romFilter);
 
@@ -447,19 +386,6 @@ void MainWindow::_parseGamesFromDirectory(Platform* a_pPlatform)
             DatabaseService::getInstance()->createGame(romFiles[0], QString(directory.dirName()), a_pPlatform);
         }
     }
-}
-
-QStringList MainWindow::_getRomFilter(Platform* a_pPlatform)
-{
-    QStringList romFilter;
-    QStringList romExtensions = a_pPlatform->getRomExtensions();
-    for (int iExtensionIndex = 0; iExtensionIndex < romExtensions.size(); ++iExtensionIndex)
-    {
-        QString extension = romExtensions[iExtensionIndex];
-        romFilter << "*." + extension;
-    }
-
-    return romFilter;
 }
 
 void MainWindow::_setLanguage(QString a_sLanguage)
@@ -633,20 +559,25 @@ void MainWindow::_loadMetadatas()
     }
 }
 
-void MainWindow::_refreshGridLayout(Collection* a_pCollection)
+// TODO à regrouper avec _refreshPlatformGridLayout
+void MainWindow::_refreshCollectionGridLayout(const QString& a_sCollection)
 {
+    // Stop the grid refresh
     m_pGameListWidget->stop();
-    SelectionService::getInstance()->setCurrentCollection(a_pCollection->getName());
 
+    // Set collection
+    SelectionService::getInstance()->setCurrentCollection(a_sCollection);
+
+    // Remove all games in the game list widget
     m_pGameListWidget->clearGridLayout();
 
-    // Get the games
-    m_pGameListWidget->setGames(a_pCollection->getGames());
+    // Set games in game list widget
+    m_pGameListWidget->setGames(GamesFilterService::getInstance()->getGames());
 
     // Apply filter (if exists)
-    GamesFilterService::getInstance()->applyFilter(a_pCollection->getGames());
+    GamesFilterService::getInstance()->applyFilter(GamesFilterService::getInstance()->getGames());
 
-    // Set filtered games
+    // Set filtered games in game list widget
     m_pGameListWidget->setFilteredGames(GamesFilterService::getInstance()->getFilteredGames());
 
     // Update status bar
@@ -659,9 +590,38 @@ void MainWindow::_refreshGridLayout(Collection* a_pCollection)
     m_pUI->gridContainer->setCurrentIndex(1);
 }
 
-void MainWindow::_refreshGridLayout(Platform* a_pPlatform)
-{
-    _loadGamesFromDirectory(a_pPlatform->getName());
+void MainWindow::_refreshPlatformGridLayout(const QString& a_sPlatformName)
+{  
+    // Stop the grid refresh
+    m_pGameListWidget->stop();
+
+    // Set Platform
+    SelectionService::getInstance()->setCurrentPlatform(a_sPlatformName);
+
+    // Remove all games in the grid
+    m_pGameListWidget->clearGridLayout();
+
+    // Set games in game list widget
+    m_pGameListWidget->setGames(GamesFilterService::getInstance()->getGames());
+
+    // Apply filter (if exists)
+    GamesFilterService::getInstance()->applyFilter(GamesFilterService::getInstance()->getGames());
+
+    // Set filtered games in game list widget
+    m_pGameListWidget->setFilteredGames(GamesFilterService::getInstance()->getFilteredGames());
+
+    // Update status bar
+    _refreshStatusBar();
+
+    // Update layout type combo box here because combo box is not ready when load general preferences
+    int iLayoutType = PreferenceService::getInstance()->getLayoutType();
+    if (m_pGameListWidget->getCurrentLayoutType() != iLayoutType)
+    {
+        m_pGameListWidget->setCurrentLayoutType(iLayoutType);
+    }
+
+    // When current game count >= 0, the tick works to display games
+    m_pGameListWidget->start();
 }
 
 void MainWindow::_refreshGridLayout()
@@ -672,7 +632,7 @@ void MainWindow::_refreshGridLayout()
         Platform* pPlatform = DatabaseService::getInstance()->getPlatform(sPlatform);
         if (pPlatform != NULL)
         {
-            _refreshGridLayout(pPlatform);
+            _refreshPlatformGridLayout(pPlatform->getName());
         }
     }
     else
@@ -681,7 +641,7 @@ void MainWindow::_refreshGridLayout()
         Collection* pCollection = DatabaseService::getInstance()->getCollection(sCollection);
         if (pCollection != NULL)
         {
-            _refreshGridLayout(pCollection);
+            _refreshCollectionGridLayout(pCollection->getName());
         }
     }
 }
