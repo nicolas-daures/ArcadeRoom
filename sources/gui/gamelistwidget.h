@@ -73,10 +73,6 @@ public:
     int                             getCurrentLayoutType();
     void                            setCurrentLayoutType(int a_iLayoutType);
 
-    QList<Game*>                    getGames();
-    void                            setGames(QList<Game*> a_Games);
-    void                            setFilteredGames(QList<Game*> a_Games);
-
 
 signals:
 
@@ -263,9 +259,6 @@ private:
 
     QWidget*                        m_pParentWidget;
 
-    // Current game directories used to display games
-    QList<Game*>                    m_Games;
-
     int                             m_iCurrentGameCount;
     int                             m_iCurrentGamePosition;
 
@@ -274,8 +267,6 @@ private:
     QLayout*                        m_pCurrentGameLayout;
     float                           m_fSizeFactor;
     GameListWidget::EGameLayoutType m_eGameLayoutType;
-
-    QList<Game*>                    m_FilteredGames; // TODO à virer maintenant qu'il y a un service de filtrage
 };
 
 #endif // GAMELISTWIDGET_H

@@ -34,9 +34,9 @@ GamesFilterService* GamesFilterService::getInstance()
     return m_pInstance;
 }
 
-QList<Game*> GamesFilterService::getGames()
+QList<Game*> GamesFilterService::getDisplayedGames()
 {
-    return m_Games;
+    return m_DisplayedGames;
 }
 
 QList<Game*> GamesFilterService::getFilteredGames()
@@ -44,19 +44,29 @@ QList<Game*> GamesFilterService::getFilteredGames()
     return m_FilteredGames;
 }
 
+QList<Game*> GamesFilterService::getGames()
+{
+    return m_Games;
+}
+
 QString GamesFilterService::getSearchedString()
 {
     return m_SearchedString;
 }
 
-void GamesFilterService::setGames(QList<Game*> a_Games)
+void GamesFilterService::setDisplayedGames(QList<Game*> a_Games)
 {
-    m_Games = a_Games;
+    m_DisplayedGames = a_Games;
 }
 
 void GamesFilterService::setFilteredGames(QList<Game*> a_Games)
 {
     m_FilteredGames = a_Games;
+}
+
+void GamesFilterService::setGames(QList<Game*> a_Games)
+{
+    m_Games = a_Games;
 }
 
 void GamesFilterService::setSearchedString(const QString& a_String)
@@ -69,7 +79,12 @@ void GamesFilterService::setSearchedString(const QString& a_String)
 // Operations
 //====================================================================================
 
-void GamesFilterService::applyFilter(QList<Game*> a_Games)
+void GamesFilterService::addDisplayedGame(Game* a_pGame)
+{
+    m_DisplayedGames.push_back(a_pGame);
+}
+
+void GamesFilterService::applyFilter()
 {
     // Apply filter only if a filter has been set
     if (existsFilter())
@@ -82,20 +97,25 @@ void GamesFilterService::applyFilter(QList<Game*> a_Games)
 
         // Process each game of the list to keep only those with a name which contains
         // matching string
-        for (int iDirIndex = 0; iDirIndex < a_Games.size(); ++iDirIndex)
+        for (int iDirIndex = 0; iDirIndex < m_Games.size(); ++iDirIndex)
         {
-            QString dir = a_Games[iDirIndex]->getName();
+            QString dir = m_Games[iDirIndex]->getName();
             if (dir.toLower().contains(searchText.toLower()))
             {
-                m_FilteredGames.push_back(a_Games[iDirIndex]);
+                m_FilteredGames.push_back(m_Games[iDirIndex]);
             }
         }
     }
     else
     {
         // No filter, keep all games
-        m_FilteredGames = a_Games;
+        m_FilteredGames = m_Games;
     }
+}
+
+void GamesFilterService::clearDisplayedGames()
+{
+    m_DisplayedGames.clear();
 }
 
 QStringList GamesFilterService::createRomFilter(Platform* a_pPlatform)

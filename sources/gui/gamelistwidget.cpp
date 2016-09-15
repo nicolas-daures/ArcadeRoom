@@ -72,21 +72,6 @@ void GameListWidget::setCurrentLayoutType(int a_iLayoutType)
     m_pUI->layoutTypeComboBox->setCurrentIndex(a_iLayoutType);
 }
 
-QList<Game*> GameListWidget::getGames()
-{
-    return m_FilteredGames;
-}
-
-void GameListWidget::setGames(QList<Game*> a_Games)
-{
-    m_Games = a_Games;
-}
-
-void GameListWidget::setFilteredGames(QList<Game*> a_Games)
-{
-    m_FilteredGames = a_Games;
-}
-
 
 //====================================================================================
 // Slots
@@ -206,10 +191,7 @@ void GameListWidget::on_gridSearch_returnPressed()
 
         // Search games
         GamesFilterService::getInstance()->setSearchedString(pLineEdit->text());
-        GamesFilterService::getInstance()->applyFilter(m_Games);
-
-        // Set filtered games
-        m_FilteredGames = GamesFilterService::getInstance()->getFilteredGames();
+        GamesFilterService::getInstance()->applyFilter();
 
         // Clear games
         clearGridLayout();
@@ -248,10 +230,14 @@ void GameListWidget::on_gameListItemClicked(QTableWidgetItem* a_pTableItem)
 
 void GameListWidget::on_tickTriggered()
 {
+    // Get list of filtered games to display
+    QList<Game*> gamesFiltered = GamesFilterService::getInstance()->getFilteredGames();
+    int uiNbGames = gamesFiltered.size();
+
     // Add the next game to grid layout
-    if (m_iCurrentGameCount != -1 && m_iCurrentGameCount < m_FilteredGames.size())
+    if (m_iCurrentGameCount != -1 && m_iCurrentGameCount < uiNbGames)
     {
-        Game* pGame = m_FilteredGames[m_iCurrentGameCount];
+        Game* pGame = gamesFiltered[m_iCurrentGameCount];
 
         QString current = pGame->getPlatform()->getRomPath() + "/" + pGame->getRomRelativePath();
 
@@ -281,6 +267,9 @@ void GameListWidget::on_tickTriggered()
         if ((romFiles.size() > 0) &&
             (romCoverExists == true || displayNoCoverRom == true || m_eGameLayoutType == List ))
         {
+            // Add game to displayed game list
+            GamesFilterService::getInstance()->addDisplayedGame(pGame);
+
             // Add button and title to grid layout
             switch (m_eGameLayoutType)
             {
@@ -304,9 +293,9 @@ void GameListWidget::on_tickTriggered()
                 case List:
                 {
                     QTableWidget* pTableWidget = dynamic_cast<QTableWidget*>(m_pCurrentGameWidget);
-                    if (pTableWidget->rowCount() != m_FilteredGames.size())
+                    if (pTableWidget->rowCount() != uiNbGames)
                     {
-                        pTableWidget->setRowCount(m_FilteredGames.size());
+                        pTableWidget->setRowCount(uiNbGames);
                     }
 
                     QFileInfo fileInfo(romFiles[0]);
@@ -393,6 +382,9 @@ void GameListWidget::on_groupBoxCustomContextMenu(const QPoint &point)
 
 void GameListWidget::start()
 {
+    // Clear the list of previous displayed games.
+    GamesFilterService::getInstance()->clearDisplayedGames();
+
     // When current game count >= 0, the tick works
     m_iCurrentGameCount = 0;
     m_iCurrentGamePosition = 0;

@@ -524,7 +524,7 @@ void MainWindow::_refreshPlatformPanel()
 void MainWindow::_refreshStatusBar()
 {
     m_pUI->statusbar->showMessage(QString(tr("     Consoles: ")) + QString::number(DatabaseService::getInstance()->getPlatforms().size()) +
-                                  QString(tr("     Displayed Games: ")) + QString::number(m_pGameListWidget->getGames().size()) +
+                                  QString(tr("     Displayed Games: ")) + QString::number(GamesFilterService::getInstance()->getDisplayedGames().size()) +
                                   QString(tr("     Total Games: ")) + QString::number(DatabaseService::getInstance()->getGamesCount()));
 }
 
@@ -571,14 +571,8 @@ void MainWindow::_refreshCollectionGridLayout(const QString& a_sCollection)
     // Remove all games in the game list widget
     m_pGameListWidget->clearGridLayout();
 
-    // Set games in game list widget
-    m_pGameListWidget->setGames(GamesFilterService::getInstance()->getGames());
-
     // Apply filter (if exists)
-    GamesFilterService::getInstance()->applyFilter(GamesFilterService::getInstance()->getGames());
-
-    // Set filtered games in game list widget
-    m_pGameListWidget->setFilteredGames(GamesFilterService::getInstance()->getFilteredGames());
+    GamesFilterService::getInstance()->applyFilter();
 
     // Update status bar
     _refreshStatusBar();
@@ -601,14 +595,8 @@ void MainWindow::_refreshPlatformGridLayout(const QString& a_sPlatformName)
     // Remove all games in the grid
     m_pGameListWidget->clearGridLayout();
 
-    // Set games in game list widget
-    m_pGameListWidget->setGames(GamesFilterService::getInstance()->getGames());
-
     // Apply filter (if exists)
-    GamesFilterService::getInstance()->applyFilter(GamesFilterService::getInstance()->getGames());
-
-    // Set filtered games in game list widget
-    m_pGameListWidget->setFilteredGames(GamesFilterService::getInstance()->getFilteredGames());
+    GamesFilterService::getInstance()->applyFilter();
 
     // Update status bar
     _refreshStatusBar();

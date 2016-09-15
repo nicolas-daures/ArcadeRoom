@@ -30,23 +30,35 @@ public:
     //====================================================================================
 
     static GamesFilterService*          getInstance();
-    QList<Game*>                        getGames();
+    QList<Game*>                        getDisplayedGames();
     QList<Game*>                        getFilteredGames();
+    QList<Game*>                        getGames();
     QString                             getSearchedString();
 
-    void                                setGames(QList<Game*> a_Games);
     void                                setFilteredGames(QList<Game*> a_Games);
+    void                                setDisplayedGames(QList<Game*> a_Games);
+    void                                setGames(QList<Game*> a_Games);
     void                                setSearchedString(const QString& a_string);
 
     //====================================================================================
-    // Accessors
+    // Operations
     //====================================================================================
 
     /***********************************************************
-     * @brief Apply filter to keep only games with matching name.
-     * @param a_Games : list of games to filter
+     * @brief Add a game to the displayed game list.
+     * @param a_pGame : game to add
      ***********************************************************/
-    void                                applyFilter(QList<Game*> a_Games);
+    void                                addDisplayedGame(Game* a_pGame);
+
+    /***********************************************************
+     * @brief Apply filter to keep only games with matching name.
+     ***********************************************************/
+    void                                applyFilter();
+
+    /***********************************************************
+     * @brief Clear the displayed game list.
+     ***********************************************************/
+    void                                clearDisplayedGames();
 
     /***********************************************************
      * @brief Create the rom extension filter.
@@ -92,6 +104,9 @@ private:
 
     // List of filtered games
     QList<Game*>                        m_FilteredGames;
+
+    // List of displayed games
+    QList<Game*>                        m_DisplayedGames;
 
     // String to search in title of games
     QString                             m_SearchedString;
