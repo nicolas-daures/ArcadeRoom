@@ -98,8 +98,9 @@ MainWindow::MainWindow(QWidget* a_pParent) :
     // Fill treeview
     m_pPlatformListWidget->fillTreeView();
 
-    // Connections
+    // Signal when game tab changed
     connect(m_pGameListWidget, SIGNAL(gameParameterChanged()), this, SLOT(on_gameParameterChanged()));
+    connect(m_pGameListWidget, SIGNAL(gameDisplayed()), this, SLOT(on_gameDisplayed()));
 
     // Create a platform panel
     QVBoxLayout* pPlatformLayout = new QVBoxLayout(m_pUI->tabConsole);
@@ -291,7 +292,14 @@ void MainWindow::on_actionStatus_Bar_toggled(bool a_bIsChecked)
 
 void MainWindow::on_gameParameterChanged()
 {
+    // Update Grid layout
     _refreshGridLayout();
+}
+
+void MainWindow::on_gameDisplayed()
+{
+    // Update status bar
+    _refreshStatusBar();
 }
 
 
@@ -376,7 +384,7 @@ void MainWindow::_parseGamesFromDirectory(Platform* a_pPlatform)
     foreach (QString sGameDir, filesAndDirectories)
     {
         // Get rom files
-        QStringList romFilter =  GamesFilterService::getInstance()->createRomFilter(a_pPlatform);
+        QStringList romFilter = GamesFilterService::getInstance()->createRomFilter(a_pPlatform);
         QDir directory(sGameDir);
         QStringList romFiles = directory.entryList(romFilter);
 
@@ -574,11 +582,11 @@ void MainWindow::_refreshCollectionGridLayout(const QString& a_sCollection)
     // Apply filter (if exists)
     GamesFilterService::getInstance()->applyFilter();
 
-    // Update status bar
-    _refreshStatusBar();
-
     // When current game count >= 0, the tick works to display games
     m_pGameListWidget->start();
+
+    // Update status bar
+    _refreshStatusBar();
 
     // Display games instead of overview
     m_pUI->gridContainer->setCurrentIndex(1);
@@ -598,9 +606,6 @@ void MainWindow::_refreshPlatformGridLayout(const QString& a_sPlatformName)
     // Apply filter (if exists)
     GamesFilterService::getInstance()->applyFilter();
 
-    // Update status bar
-    _refreshStatusBar();
-
     // Update layout type combo box here because combo box is not ready when load general preferences
     int iLayoutType = PreferenceService::getInstance()->getLayoutType();
     if (m_pGameListWidget->getCurrentLayoutType() != iLayoutType)
@@ -610,6 +615,9 @@ void MainWindow::_refreshPlatformGridLayout(const QString& a_sPlatformName)
 
     // When current game count >= 0, the tick works to display games
     m_pGameListWidget->start();
+
+    // Update status bar
+    _refreshStatusBar();
 }
 
 void MainWindow::_refreshGridLayout()

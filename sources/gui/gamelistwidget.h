@@ -85,6 +85,11 @@ signals:
      ***********************************************************/
     void                            gameParameterChanged();
 
+    /***********************************************************
+     * @brief Called when a game is displayed.
+     ***********************************************************/
+    void                            gameDisplayed();
+
 
 public slots:
 
@@ -243,12 +248,6 @@ private:
      * @brief Save game metadatas (rating).
      ***********************************************************/
     void                            _saveMetadatas();
-
-    /***********************************************************
-     * @brief Get rom filter for given platform.
-     * @param pPlatform : platform
-     ***********************************************************/
-    QStringList                     _getRomFilter(Platform* pPlatform);
 
 
     //====================================================================================

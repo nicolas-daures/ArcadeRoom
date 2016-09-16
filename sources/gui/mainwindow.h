@@ -186,6 +186,12 @@ private slots:
      ***********************************************************/
     void                        on_gameParameterChanged();
 
+    /***********************************************************
+     * @brief Called when game has been displayed.
+     *        Refresh status bar.
+     ***********************************************************/
+    void                        on_gameDisplayed();
+
 
 private:
 
@@ -226,13 +232,6 @@ private:
      * @return emulator path
      ***********************************************************/
     QString                     _getEmulatorPath();
-
-    /***********************************************************
-     * @brief Get the rom extension filter.
-     * @param a_pPlatform : platform
-     * @return rom filter
-     ***********************************************************/
-    QStringList                 _getRomFilter(Platform* a_pPlatform);
 
     /***********************************************************
      * @brief Set the language of the application.

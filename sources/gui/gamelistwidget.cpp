@@ -108,9 +108,8 @@ void GameListWidget::on_buttonNoCover_clicked(bool checked)
     pPreferenceService->setShowNoCovers(!checked);
     pPreferenceService->save();
 
-    // Restart the grid refresh
-    m_iCurrentGameCount = 0;
-    m_iCurrentGamePosition = 0;
+    // Start the game refreshing
+    start();
 }
 
 void GameListWidget::on_horizontalSlider_sliderPressed()
@@ -196,9 +195,8 @@ void GameListWidget::on_gridSearch_returnPressed()
         // Clear games
         clearGridLayout();
 
-        // When current game count >= 0, the tick works
-        m_iCurrentGameCount = 0;
-        m_iCurrentGamePosition = 0;
+        // Start the game refreshing
+        start();
     }
 }
 
@@ -260,16 +258,13 @@ void GameListWidget::on_tickTriggered()
         }
 
         // Get rom files
-        QStringList romFilter = _getRomFilter(pGame->getPlatform());
+        QStringList romFilter = GamesFilterService::getInstance()->createRomFilter(pGame->getPlatform());
         QStringList romFiles = directory.entryList(romFilter);
 
         // Add rom if rom file exists and there is a cover (or no cover roms have to be displayed)
         if ((romFiles.size() > 0) &&
             (romCoverExists == true || displayNoCoverRom == true || m_eGameLayoutType == List ))
-        {
-            // Add game to displayed game list
-            GamesFilterService::getInstance()->addDisplayedGame(pGame);
-
+        {           
             // Add button and title to grid layout
             switch (m_eGameLayoutType)
             {
@@ -323,6 +318,12 @@ void GameListWidget::on_tickTriggered()
                 }
                 break;
             }
+
+            // Add game to displayed game list
+            GamesFilterService::getInstance()->addDisplayedGame(pGame);
+
+            // Inform that a new game has been displayed
+            emit gameDisplayed();
 
             m_iCurrentGamePosition++;
         }
@@ -691,16 +692,4 @@ void GameListWidget::_saveMetadatas()
 
     QJsonDocument saveDoc(jsonObject);
     saveFile.write(saveDoc.toJson());
-}
-
-QStringList GameListWidget::_getRomFilter(Platform* pPlatform)
-{
-    QStringList romFilter;
-    QStringList romExtensions = pPlatform->getRomExtensions();
-    for (int iExtensionIndex = 0; iExtensionIndex < romExtensions.size(); ++iExtensionIndex)
-    {
-        QString extension = romExtensions[iExtensionIndex];
-        romFilter << "*." + extension;
-    }
-    return romFilter;
 }
