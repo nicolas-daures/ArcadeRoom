@@ -93,6 +93,12 @@ private slots:
      ***********************************************************/
     void                        on_tabWidget_currentChanged(int a_iIndex);
 
+    /***********************************************************
+     * @brief Called when a roms path is changed in preferences
+     *        window.
+     ***********************************************************/
+    void                        on_romsPathChanged();
+
 
     //====================================================================================
     // Slots MenuBar

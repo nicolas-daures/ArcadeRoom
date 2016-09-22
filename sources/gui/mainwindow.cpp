@@ -88,6 +88,7 @@ MainWindow::MainWindow(QWidget* a_pParent) :
     PreferenceService* pPreferenceService = PreferenceService::getInstance();
     connect(pPreferenceService, SIGNAL(styleNameChanged(QString)), this, SLOT(on_styleNameChanged(QString)));
     connect(pPreferenceService, SIGNAL(languageChanged(QString)),  this, SLOT(on_languageChanged(QString)));
+    connect(pDatabaseService, SIGNAL(romsPathChanged()), this, SLOT(on_romsPathChanged()));
 
     // Signal when tree widget manipulated
     SelectionService* pSelectionService = SelectionService::getInstance();
@@ -202,6 +203,39 @@ void MainWindow::on_collectionCreated(Collection* a_pCollection)
 void MainWindow::on_gameRemovedFromCollection(Game*)
 {
     _refreshGridLayout();
+}
+
+void MainWindow::on_romsPathChanged()
+{
+    QString sPlatform = SelectionService::getInstance()->getCurrentPlatform();
+
+    // Check if current selection is a platform (console tab)
+    if (sPlatform != "")
+    {
+        // A platform is selected in console tab
+
+        Platform* pPlatform = DatabaseService::getInstance()->getPlatform(sPlatform);
+        if (pPlatform != NULL)
+        {
+            // Refresh game tab content
+            GamesFilterService::getInstance()->loadGames(pPlatform->getName());
+            _refreshPlatformPanel();
+            _refreshGridLayout();
+        }
+    }
+    else
+    {
+        // A collection is selected in collection tab
+
+        QString sCollection = SelectionService::getInstance()->getCurrentCollection();
+        Collection* pCollection = DatabaseService::getInstance()->getCollection(sCollection);
+        if (pCollection != NULL)
+        {
+            // Refresh game tab content
+            GamesFilterService::getInstance()->setGames(pCollection->getGames());
+            _refreshGridLayout();
+        }
+    }
 }
 
 

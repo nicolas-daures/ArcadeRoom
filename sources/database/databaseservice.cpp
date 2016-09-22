@@ -132,4 +132,5 @@ void DatabaseService::on_emulatorPathChanged(QString emulatorPath, QString platf
 void DatabaseService::on_romsPathChanged(QString romsPath, QString platformName)
 {
     m_Database.on_romsPathChanged(romsPath, platformName);
+    emit romsPathChanged();
 }

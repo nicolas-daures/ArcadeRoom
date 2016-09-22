@@ -112,6 +112,12 @@ signals:
      ***********************************************************/
     void                                collectionDeleted(Collection* a_pCollection);
 
+    /***********************************************************
+     * @brief Called when a roms path is changed in preferences
+     *        window.
+     ***********************************************************/
+    void                                romsPathChanged();
+
 
 public slots:
 
