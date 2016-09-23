@@ -90,6 +90,11 @@ void DatabaseService::deleteGame(Game* a_pGame)
     m_Database.deleteGame(a_pGame);
 }
 
+void DatabaseService::removeAllGamesFromPlatform(Platform* a_pPlatform)
+{
+    m_Database.removeAllGamesFromPlatform(a_pPlatform);
+}
+
 Collection* DatabaseService::createCollection(const QString a_sName)
 {
     Collection* pCollection = m_Database.createCollection(a_sName);

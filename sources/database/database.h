@@ -95,6 +95,12 @@ public:
     void                                deleteGame(Game* a_pGame);
 
     /***********************************************************
+     * @brief Remove all games from given platform.
+     * @param a_pPlatform : platform to clean
+     ***********************************************************/
+    void                                removeAllGamesFromPlatform(Platform* a_pPlatform);
+
+    /***********************************************************
      * @brief Create a new collection.
      * @param a_sName : collection's name
      * @return created collection

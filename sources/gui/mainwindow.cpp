@@ -209,6 +209,9 @@ void MainWindow::on_romsPathChanged()
 {
     QString sPlatform = SelectionService::getInstance()->getCurrentPlatform();
 
+    // Update game list in database
+    _parseGamesFromDirectory(DatabaseService::getInstance()->getPlatform(sPlatform));
+
     // Check if current selection is a platform (console tab)
     if (sPlatform != "")
     {
@@ -404,6 +407,10 @@ void MainWindow::_loadGeneralPreferences()
 
 void MainWindow::_parseGamesFromDirectory(Platform* a_pPlatform)
 {
+    // Remove old games
+    DatabaseService* pDatabaseService = DatabaseService::getInstance();
+    pDatabaseService->removeAllGamesFromPlatform(a_pPlatform);
+
     // Parse the roms directory
     QStringList filesAndDirectories;
     QDirIterator directories(a_pPlatform->getRomPath(),
@@ -415,17 +422,18 @@ void MainWindow::_parseGamesFromDirectory(Platform* a_pPlatform)
     }
 
     // Fill game list
+    GamesFilterService* pGamesFilterService = GamesFilterService::getInstance();
     foreach (QString sGameDir, filesAndDirectories)
     {
         // Get rom files
-        QStringList romFilter = GamesFilterService::getInstance()->createRomFilter(a_pPlatform);
+        QStringList romFilter = pGamesFilterService->createRomFilter(a_pPlatform);
         QDir directory(sGameDir);
         QStringList romFiles = directory.entryList(romFilter);
 
         if (romFiles.size() > 0)
         {
             // Add the game to database
-            DatabaseService::getInstance()->createGame(romFiles[0], QString(directory.dirName()), a_pPlatform);
+            pDatabaseService->createGame(romFiles[0], QString(directory.dirName()), a_pPlatform);
         }
     }
 }

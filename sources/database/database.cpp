@@ -122,6 +122,15 @@ void Database::deleteGame(Game* a_pGame)
     delete a_pGame;
 }
 
+void Database::removeAllGamesFromPlatform(Platform* a_pPlatform)
+{
+    QString sPlatformName = a_pPlatform->getName();
+    while(m_GameMap[sPlatformName].size() > 0)
+    {
+        deleteGame(m_GameMap[sPlatformName][0]);
+    }
+}
+
 Collection* Database::createCollection(const QString a_sName)
 {
     Collection* pCollection = new Collection(a_sName);
