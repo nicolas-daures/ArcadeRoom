@@ -95,6 +95,12 @@ public:
     void                                deleteGame(Game* a_pGame);
 
     /***********************************************************
+     * @brief Parse the rom list from given platform directory.
+     * @param a_pPlatform : platform
+     ***********************************************************/
+    void                                parseGamesFromDirectory(Platform* a_pPlatform);
+
+    /***********************************************************
      * @brief Remove all games from given platform.
      * @param a_pPlatform : platform to clean
      ***********************************************************/
@@ -117,6 +123,21 @@ public:
      * @brief Load platforms.
      ***********************************************************/
     void                                loadPlatforms();
+
+    /***********************************************************
+     * @brief Create the rom extension filter.
+     * @param a_pPlatform : platform
+     * @return rom filter
+     ***********************************************************/
+    // TODO voir dans quelle classe mettre ce service
+    QStringList                         createRomFilter(Platform* a_pPlatform);
+
+    /***********************************************************
+     * @brief Load games.
+     * @param a_sPlatformName : platform for which games to be
+     *                          loaded
+     ***********************************************************/
+    void                                loadGames(QString a_sPlatformName);
 
     /***********************************************************
      * @brief Load collections.

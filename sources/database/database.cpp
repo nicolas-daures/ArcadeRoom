@@ -1,6 +1,7 @@
 #include "database.h"
 #include <QApplication>
 #include <QDir>
+#include <QDirIterator>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -185,6 +186,92 @@ void Database::loadPlatforms()
 
         // Stock platform description file path
         m_PlatformFileMap[pPlatform->getName()] = platformAbsoluteFilePath;
+    }
+}
+
+//TODO à mettre que dans une seule classe
+QStringList Database::createRomFilter(Platform* a_pPlatform)
+{
+    QStringList romFilter;
+
+    QStringList romExtensions = a_pPlatform->getRomExtensions();
+
+
+    for (int iExtensionIndex = 0; iExtensionIndex < romExtensions.size(); ++iExtensionIndex)
+    {
+        QString extension = romExtensions[iExtensionIndex];
+        romFilter << "*." + extension;
+    }
+
+    return romFilter;
+}
+
+void Database::loadGames(QString a_sPlatformName)
+{
+    Platform* pPlatform = m_PlatformMap[a_sPlatformName];
+    if (pPlatform != NULL)
+    {
+        // Parse the roms directory
+        QStringList filesAndDirectories;
+        QDirIterator directories(pPlatform->getRomPath(),
+                                 QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+        while(directories.hasNext())
+        {
+            directories.next();
+            filesAndDirectories << directories.filePath();
+        }
+
+        // Fill game list
+        removeAllGamesFromPlatform(pPlatform);
+        foreach (QString sGameDir, filesAndDirectories)
+        {
+            // Get rom files
+            QStringList romFilter = createRomFilter(pPlatform);
+            QDir directory(sGameDir);
+            QStringList romFiles = directory.entryList(romFilter);
+
+            if (romFiles.size() > 0)
+            {
+                // Add the game to database
+                Game* pGame = getGame(a_sPlatformName, romFiles[0]);
+                if (pGame != NULL)
+                {
+                    m_GameMap[a_sPlatformName][pGame->getName()] = pGame;
+                }
+            }
+        }
+    }
+}
+
+// TODO regrouper avec load et faire un param boolean pour create.
+void Database::parseGamesFromDirectory(Platform* a_pPlatform)
+{
+    // Remove old games
+    removeAllGamesFromPlatform(a_pPlatform);
+
+    // Parse the roms directory
+    QStringList filesAndDirectories;
+    QDirIterator directories(a_pPlatform->getRomPath(),
+                             QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+    while(directories.hasNext())
+    {
+        directories.next();
+        filesAndDirectories << directories.filePath();
+    }
+
+    // Fill game list
+    foreach (QString sGameDir, filesAndDirectories)
+    {
+        // Get rom files
+        QStringList romFilter = createRomFilter(a_pPlatform);
+        QDir directory(sGameDir);
+        QStringList romFiles = directory.entryList(romFilter);
+
+        if (romFiles.size() > 0)
+        {
+            // Add the game to database
+            createGame(romFiles[0], QString(directory.dirName()), a_pPlatform);
+        }
     }
 }
 

@@ -228,12 +228,6 @@ private:
     void                        _loadGeneralPreferences();
 
     /***********************************************************
-     * @brief Parse the rom list from given platform directory.
-     * @param a_pPlatform : platform
-     ***********************************************************/
-    void                        _parseGamesFromDirectory(Platform* a_pPlatform);
-
-    /***********************************************************
      * @brief Get the path of emulator.
      * @return emulator path
      ***********************************************************/

@@ -114,6 +114,16 @@ void DatabaseService::loadPlatforms()
     m_Database.loadPlatforms();
 }
 
+void DatabaseService::loadGames(QString a_sPlatformName)
+{
+    m_Database.loadGames(a_sPlatformName);
+}
+
+void DatabaseService::parseGamesFromDirectory(Platform* a_pPlatform)
+{
+    m_Database.parseGamesFromDirectory(a_pPlatform);
+}
+
 void DatabaseService::loadCollections()
 {
     m_Database.loadCollections();

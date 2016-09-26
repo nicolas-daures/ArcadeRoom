@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget* a_pParent) :
     // Load games
     foreach (Platform* pPlatform, pDatabaseService->getPlatforms())
     {
-        _parseGamesFromDirectory(pPlatform);
+        pDatabaseService->parseGamesFromDirectory(pPlatform);
     }
 
     // Load metadatas
@@ -209,15 +209,17 @@ void MainWindow::on_romsPathChanged()
 {
     QString sPlatform = SelectionService::getInstance()->getCurrentPlatform();
 
+    DatabaseService* pDatabaseService = DatabaseService::getInstance();
+
     // Update game list in database
-    _parseGamesFromDirectory(DatabaseService::getInstance()->getPlatform(sPlatform));
+    pDatabaseService->parseGamesFromDirectory(DatabaseService::getInstance()->getPlatform(sPlatform));
 
     // Check if current selection is a platform (console tab)
     if (sPlatform != "")
     {
         // A platform is selected in console tab
 
-        Platform* pPlatform = DatabaseService::getInstance()->getPlatform(sPlatform);
+        Platform* pPlatform = pDatabaseService->getPlatform(sPlatform);
         if (pPlatform != NULL)
         {
             // Refresh game tab content
@@ -231,7 +233,7 @@ void MainWindow::on_romsPathChanged()
         // A collection is selected in collection tab
 
         QString sCollection = SelectionService::getInstance()->getCurrentCollection();
-        Collection* pCollection = DatabaseService::getInstance()->getCollection(sCollection);
+        Collection* pCollection = pDatabaseService->getCollection(sCollection);
         if (pCollection != NULL)
         {
             // Refresh game tab content
@@ -403,39 +405,6 @@ void MainWindow::_loadGeneralPreferences()
     // Qt5 crash when set current index of combobox. Maybe the combo box is not ready.
     //int iLayoutType = PreferenceService::getInstance()->getLayoutType();
     //m_pGameListWidget->getLayoutTypeComboBox()->setCurrentIndex(iLayoutType);
-}
-
-void MainWindow::_parseGamesFromDirectory(Platform* a_pPlatform)
-{
-    // Remove old games
-    DatabaseService* pDatabaseService = DatabaseService::getInstance();
-    pDatabaseService->removeAllGamesFromPlatform(a_pPlatform);
-
-    // Parse the roms directory
-    QStringList filesAndDirectories;
-    QDirIterator directories(a_pPlatform->getRomPath(),
-                             QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
-    while(directories.hasNext())
-    {
-        directories.next();
-        filesAndDirectories << directories.filePath();
-    }
-
-    // Fill game list
-    GamesFilterService* pGamesFilterService = GamesFilterService::getInstance();
-    foreach (QString sGameDir, filesAndDirectories)
-    {
-        // Get rom files
-        QStringList romFilter = pGamesFilterService->createRomFilter(a_pPlatform);
-        QDir directory(sGameDir);
-        QStringList romFiles = directory.entryList(romFilter);
-
-        if (romFiles.size() > 0)
-        {
-            // Add the game to database
-            pDatabaseService->createGame(romFiles[0], QString(directory.dirName()), a_pPlatform);
-        }
-    }
 }
 
 void MainWindow::_setLanguage(QString a_sLanguage)
