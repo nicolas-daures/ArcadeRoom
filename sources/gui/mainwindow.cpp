@@ -88,7 +88,7 @@ MainWindow::MainWindow(QWidget* a_pParent) :
     PreferenceService* pPreferenceService = PreferenceService::getInstance();
     connect(pPreferenceService, SIGNAL(styleNameChanged(QString)), this, SLOT(on_styleNameChanged(QString)));
     connect(pPreferenceService, SIGNAL(languageChanged(QString)),  this, SLOT(on_languageChanged(QString)));
-    connect(pDatabaseService, SIGNAL(romsPathChanged()), this, SLOT(on_romsPathChanged()));
+    connect(pDatabaseService, SIGNAL(romsPathChanged(QString)), this, SLOT(on_romsPathChanged(QString)));
 
     // Signal when tree widget manipulated
     SelectionService* pSelectionService = SelectionService::getInstance();
@@ -112,8 +112,10 @@ MainWindow::MainWindow(QWidget* a_pParent) :
     _refreshPlatformPanel();
 
     // Create a simple grid layout to display roms
-    GamesFilterService::getInstance()->loadGames(pSelectionService->getCurrentPlatform());
-    _refreshPlatformGridLayout(pSelectionService->getCurrentPlatform());
+    QString sPlatformName = pSelectionService->getCurrentPlatform();
+    DatabaseService::getInstance()->loadGames(sPlatformName);
+    GamesFilterService::getInstance()->setGames(DatabaseService::getInstance()->getGames(sPlatformName));
+    _refreshPlatformGridLayout(sPlatformName);
 
     // Translate application if requiered
     _setLanguage(pPreferenceService->getLanguage());
@@ -144,7 +146,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_platformSelected(QString a_sPlatform)
 {
-     GamesFilterService::getInstance()->loadGames(a_sPlatform);
+     DatabaseService* pDatabaseService = DatabaseService::getInstance();
+     GamesFilterService::getInstance()->setGames(pDatabaseService->getGames(a_sPlatform));
 
     _refreshPlatformPanel();
     _refreshGridLayout();
@@ -205,25 +208,23 @@ void MainWindow::on_gameRemovedFromCollection(Game*)
     _refreshGridLayout();
 }
 
-void MainWindow::on_romsPathChanged()
+void MainWindow::on_romsPathChanged(QString a_sPlatformName)
 {
-    QString sPlatform = SelectionService::getInstance()->getCurrentPlatform();
-
     DatabaseService* pDatabaseService = DatabaseService::getInstance();
 
     // Update game list in database
-    pDatabaseService->parseGamesFromDirectory(DatabaseService::getInstance()->getPlatform(sPlatform));
+    pDatabaseService->parseGamesFromDirectory(DatabaseService::getInstance()->getPlatform(a_sPlatformName));
 
     // Check if current selection is a platform (console tab)
-    if (sPlatform != "")
+    if (a_sPlatformName != "")
     {
         // A platform is selected in console tab
 
-        Platform* pPlatform = pDatabaseService->getPlatform(sPlatform);
+        Platform* pPlatform = pDatabaseService->getPlatform(a_sPlatformName);
         if (pPlatform != NULL)
         {
             // Refresh game tab content
-            GamesFilterService::getInstance()->loadGames(pPlatform->getName());
+            GamesFilterService::getInstance()->setGames(pDatabaseService->getGames(a_sPlatformName));
             _refreshPlatformPanel();
             _refreshGridLayout();
         }

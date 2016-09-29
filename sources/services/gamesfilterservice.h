@@ -67,12 +67,6 @@ public:
      ***********************************************************/
     QStringList                         createRomFilter(Platform* a_pPlatform);
 
-    /***********************************************************
-     * @brief Load games from a platform name.
-     * @param a_sPlatformName : name of the platform.
-     ***********************************************************/
-    void                                loadGames(QString a_sPlatformName);
-
 
     //====================================================================================
     // Queries

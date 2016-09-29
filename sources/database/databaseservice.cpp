@@ -40,6 +40,11 @@ Game* DatabaseService::getGame(const QString& a_sPlatformName, const QString& a_
     return m_Database.getGame(a_sPlatformName, a_sGameName);
 }
 
+QList<Game*> DatabaseService::getGames(const QString& a_sPlatformName)
+{
+    return m_Database.getGames(a_sPlatformName);
+}
+
 Collection* DatabaseService::getCollection(const QString& a_sName) const
 {
     return m_Database.getCollection(a_sName);
@@ -139,13 +144,13 @@ void DatabaseService::saveCollection(const QString& a_sName)
 // Slots
 //====================================================================================
 
-void DatabaseService::on_emulatorPathChanged(QString emulatorPath, QString platformName)
+void DatabaseService::on_emulatorPathChanged(QString a_sEmulatorPath, QString a_sPlatformName)
 {
-    m_Database.on_emulatorPathChanged(emulatorPath, platformName);
+    m_Database.on_emulatorPathChanged(a_sEmulatorPath, a_sPlatformName);
 }
 
-void DatabaseService::on_romsPathChanged(QString romsPath, QString platformName)
+void DatabaseService::on_romsPathChanged(QString a_sRomsPath, QString a_sPlatformName)
 {
-    m_Database.on_romsPathChanged(romsPath, platformName);
-    emit romsPathChanged();
+    m_Database.on_romsPathChanged(a_sRomsPath, a_sPlatformName);
+    emit romsPathChanged(a_sPlatformName);
 }

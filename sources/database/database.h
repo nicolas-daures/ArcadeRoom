@@ -36,6 +36,7 @@ public:
 
     QList<Platform*>                    getPlatforms() const;
     QList<QMap<QString, Game*> >        getGames();
+    QList<Game*>                        getGames(const QString& a_sPlatformName);
     uint                                getGamesCount() const;
     QList<Collection*>                  getCollections();
     QList<QString>                      getPlatformFiles() const;
@@ -123,14 +124,6 @@ public:
      * @brief Load platforms.
      ***********************************************************/
     void                                loadPlatforms();
-
-    /***********************************************************
-     * @brief Create the rom extension filter.
-     * @param a_pPlatform : platform
-     * @return rom filter
-     ***********************************************************/
-    // TODO voir dans quelle classe mettre ce service
-    QStringList                         createRomFilter(Platform* a_pPlatform);
 
     /***********************************************************
      * @brief Load games.

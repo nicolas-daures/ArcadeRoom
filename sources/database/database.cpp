@@ -8,6 +8,8 @@
 #include "platform.h"
 #include "game.h"
 #include "collection.h"
+#include "sources/services/gamesfilterservice.h"
+
 
 
 //====================================================================================
@@ -57,6 +59,17 @@ QList<Platform*> Database::getPlatforms() const
 QList<QMap<QString, Game*> > Database::getGames()
 {
     return m_GameMap.values();
+}
+
+QList<Game*> Database::getGames(const QString& a_sPlatformName)
+{
+    if (m_GameMap.contains(a_sPlatformName) == false)
+    {
+        return QList<Game*>();
+    }
+
+    return m_GameMap[a_sPlatformName].values();
+
 }
 
 uint Database::getGamesCount() const
@@ -189,23 +202,6 @@ void Database::loadPlatforms()
     }
 }
 
-//TODO à mettre que dans une seule classe
-QStringList Database::createRomFilter(Platform* a_pPlatform)
-{
-    QStringList romFilter;
-
-    QStringList romExtensions = a_pPlatform->getRomExtensions();
-
-
-    for (int iExtensionIndex = 0; iExtensionIndex < romExtensions.size(); ++iExtensionIndex)
-    {
-        QString extension = romExtensions[iExtensionIndex];
-        romFilter << "*." + extension;
-    }
-
-    return romFilter;
-}
-
 void Database::loadGames(QString a_sPlatformName)
 {
     Platform* pPlatform = m_PlatformMap[a_sPlatformName];
@@ -226,7 +222,7 @@ void Database::loadGames(QString a_sPlatformName)
         foreach (QString sGameDir, filesAndDirectories)
         {
             // Get rom files
-            QStringList romFilter = createRomFilter(pPlatform);
+            QStringList romFilter = GamesFilterService::getInstance()->createRomFilter(pPlatform);
             QDir directory(sGameDir);
             QStringList romFiles = directory.entryList(romFilter);
 
@@ -263,7 +259,7 @@ void Database::parseGamesFromDirectory(Platform* a_pPlatform)
     foreach (QString sGameDir, filesAndDirectories)
     {
         // Get rom files
-        QStringList romFilter = createRomFilter(a_pPlatform);
+        QStringList romFilter = GamesFilterService::getInstance()->createRomFilter(a_pPlatform);
         QDir directory(sGameDir);
         QStringList romFiles = directory.entryList(romFilter);
 

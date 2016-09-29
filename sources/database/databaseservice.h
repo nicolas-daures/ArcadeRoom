@@ -38,6 +38,7 @@ public:
 
     QList<Platform*>                    getPlatforms() const;
     QList<QMap<QString, Game*> >        getGames();
+    QList<Game*>                        getGames(const QString& a_sPlatformName);
     uint                                getGamesCount() const;
     QList<Collection*>                  getCollections();
     QList<QString>                      getPlatformFiles() const;
@@ -134,8 +135,10 @@ signals:
     /***********************************************************
      * @brief Called when a roms path is changed in preferences
      *        window.
+     * @param a_sPlatformName : platform name on which roms
+     *                          path has changed
      ***********************************************************/
-    void                                romsPathChanged();
+    void                                romsPathChanged(QString a_sPlatformName);
 
 
 public slots:
@@ -149,24 +152,24 @@ public slots:
      *        preferences window.
      *        Save this emulator path in matching platform
      *        description file.
-     * @param emulatorPath : emulator path
-     * @param PlatformName : platform name on which emulator
-     *                       path has changed
+     * @param a_sEmulatorPath : emulator path
+     * @param a_sPlatformName : platform name on which emulator
+     *                          path has changed
      ***********************************************************/
-    void                                on_emulatorPathChanged(QString emulatorPath,
-                                                               QString platformName);
+    void                                on_emulatorPathChanged(QString a_sEmulatorPath,
+                                                               QString a_sPlatformName);
 
     /***********************************************************
      * @brief Called when a roms path is changed in preferences
      *        window.
      *        Save this roms path in matching platform
      *        description file.
-     * @param romsPath     : roms path
-     * @param PlatformName : platform name on which roms
-     *                       path has changed
+     * @param a_sRomsPath     : roms path
+     * @param a_sPlatformName : platform name on which roms
+     *                          path has changed
      ***********************************************************/
-    void                                on_romsPathChanged(QString romsPath,
-                                                           QString platformName);
+    void                                on_romsPathChanged(QString a_sRomsPath,
+                                                           QString a_sPlatformName);
 
 
 private:

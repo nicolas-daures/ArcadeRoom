@@ -96,8 +96,10 @@ private slots:
     /***********************************************************
      * @brief Called when a roms path is changed in preferences
      *        window.
+     * @param a_sPlatformName : platform name on which roms
+     *                          path has changed
      ***********************************************************/
-    void                        on_romsPathChanged();
+    void                        on_romsPathChanged(QString a_sPlatformName);
 
 
     //====================================================================================

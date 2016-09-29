@@ -17,6 +17,7 @@ GamesFilterService::GamesFilterService()
 {
     m_Games = QList<Game*>();
     m_FilteredGames = QList<Game*>();
+    m_DisplayedGames = QList<Game*>();
     m_SearchedString = "";
 }
 
@@ -42,11 +43,6 @@ QList<Game*> GamesFilterService::getDisplayedGames()
 QList<Game*> GamesFilterService::getFilteredGames()
 {
     return m_FilteredGames;
-}
-
-QList<Game*> GamesFilterService::getGames()
-{
-    return m_Games;
 }
 
 QString GamesFilterService::getSearchedString()
@@ -84,6 +80,9 @@ void GamesFilterService::addDisplayedGame(Game* a_pGame)
     m_DisplayedGames.push_back(a_pGame);
 }
 
+// TODO obligé de faire un setgames avant applyfilter
+// il est préférable peut etre de ne plus avoir de m_games
+// et de lire directement la database dans apply filter.
 void GamesFilterService::applyFilter()
 {
     // Apply filter only if a filter has been set
@@ -132,46 +131,6 @@ QStringList GamesFilterService::createRomFilter(Platform* a_pPlatform)
     }
 
     return romFilter;
-}
-
-void GamesFilterService::loadGames(QString a_sPlatformName)
-{
-    Platform* pPlatform = DatabaseService::getInstance()->getPlatform(a_sPlatformName);
-    if (pPlatform != NULL)
-    {
-        // Parse the roms directory
-        QStringList filesAndDirectories;
-        QDirIterator directories(pPlatform->getRomPath(),
-                                 QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
-        while(directories.hasNext())
-        {
-            directories.next();
-            filesAndDirectories << directories.filePath();
-        }
-
-        // Get the platform
-        QString sPlatformName = pPlatform->getName();
-
-        // Fill game list
-        m_Games = QList<Game*>();
-        foreach (QString sGameDir, filesAndDirectories)
-        {
-            // Get rom files
-            QStringList romFilter = createRomFilter(pPlatform);
-            QDir directory(sGameDir);
-            QStringList romFiles = directory.entryList(romFilter);
-
-            if (romFiles.size() > 0)
-            {
-                // Add the game to database
-                Game* pGame = DatabaseService::getInstance()->getGame(sPlatformName, romFiles[0]);
-                if (pGame != NULL)
-                {
-                    m_Games.append(pGame);
-                }
-            }
-        }
-    }
 }
 
 
