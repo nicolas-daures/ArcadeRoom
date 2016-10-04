@@ -210,15 +210,23 @@ void MainWindow::on_gameRemovedFromCollection(Game*)
 
 void MainWindow::on_romsPathChanged(QString a_sPlatformName)
 {
+    if (a_sPlatformName == "")
+    {
+        qWarning("[MainWindow::on_romsPathChanged]Platform name '%s' is invalid. Nothing to do.",a_sPlatformName.toStdString().data());
+        return;
+    }
+
     DatabaseService* pDatabaseService = DatabaseService::getInstance();
 
     // Update game list in database
     pDatabaseService->parseGamesFromDirectory(DatabaseService::getInstance()->getPlatform(a_sPlatformName));
 
+    QString sCurrentPlatformName = SelectionService::getInstance()->getCurrentPlatform();
+
     // Check if current selection is a platform (console tab)
-    if (a_sPlatformName != "")
+    if ((sCurrentPlatformName == a_sPlatformName) && (sCurrentPlatformName != ""))
     {
-        // A platform is selected in console tab
+        // Modified platform is selected in console tab, content must be updated.
 
         Platform* pPlatform = pDatabaseService->getPlatform(a_sPlatformName);
         if (pPlatform != NULL)
@@ -231,7 +239,7 @@ void MainWindow::on_romsPathChanged(QString a_sPlatformName)
     }
     else
     {
-        // A collection is selected in collection tab
+        // A collection is selected in collection tab, content must be updated
 
         QString sCollection = SelectionService::getInstance()->getCurrentCollection();
         Collection* pCollection = pDatabaseService->getCollection(sCollection);
