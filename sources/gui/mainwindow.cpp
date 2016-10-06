@@ -221,6 +221,9 @@ void MainWindow::on_romsPathChanged(QString a_sPlatformName)
     // Update game list in database
     pDatabaseService->parseGamesFromDirectory(DatabaseService::getInstance()->getPlatform(a_sPlatformName));
 
+    // Load collections to update content
+    pDatabaseService->loadCollections();
+
     QString sCurrentPlatformName = SelectionService::getInstance()->getCurrentPlatform();
 
     // Check if current selection is a platform (console tab)
