@@ -273,6 +273,15 @@ void Database::parseGamesFromDirectory(Platform* a_pPlatform)
 
 void Database::loadCollections()
 {
+
+    // Remove all previous loaded collections (deletion of collection pointers, keep map keys)
+    QMap<QString, Collection*>::iterator it = m_CollectionMap.begin();
+    QMap<QString, Collection*>::iterator end = m_CollectionMap.end();
+    for (; it != end; ++it)
+    {
+        delete it.value();
+    }
+
     // Get collection description files
     QStringList collectionFilter;
     collectionFilter << "*.json";
@@ -311,6 +320,7 @@ void Database::loadCollections()
                 pCollection->addGame(pGame);
             }
         }
+
         m_CollectionMap[pCollection->getName()] = pCollection;
 
         connect(pCollection, SIGNAL(gameAdded(Game*)), this, SLOT(on_gameAddedToCollection(Game*)));
