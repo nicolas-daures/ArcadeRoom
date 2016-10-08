@@ -239,7 +239,6 @@ void Database::loadGames(QString a_sPlatformName)
     }
 }
 
-// TODO regrouper avec load et faire un param boolean pour create.
 void Database::parseGamesFromDirectory(Platform* a_pPlatform)
 {
     // Remove old games
